@@ -1,5 +1,4 @@
-# WiMAngularTemplate
-> Template based on USGS-WiM Streamstats application
+# GroundWaterWatch
 
 ## Project setup
 
