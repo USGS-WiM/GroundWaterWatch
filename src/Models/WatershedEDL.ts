@@ -22,7 +22,7 @@
 
 //Imports"
 // Interface
-module WiMapper.Models {
+module GroundWaterWatch.Models {
     export interface IEditDecisionList {
         append: Array<any>;
         remove: Array<any>;

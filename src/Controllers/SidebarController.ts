@@ -23,7 +23,7 @@
 //04.14.2015 jkn - Created
 
 //Imports"
-module WiMapper.Controllers {
+module GroundWaterWatch.Controllers {
 
     declare var search_api;
 
@@ -53,7 +53,7 @@ module WiMapper.Controllers {
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'WiMapper.Services.ModalService', 'WiM.Event.EventManager'];
+        static $inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'WiM.Event.EventManager'];
         constructor($scope: ISidebarControllerScope, toaster, $analytics, service: WiM.Services.ISearchAPIService, modal: Services.IModalService, private EventManager:WiM.Event.IEventManager) {
             $scope.vm = this;
             this.init();
@@ -168,8 +168,8 @@ module WiMapper.Controllers {
         BUILD = 4
     }
 
-    angular.module('WiMapper.Controllers')
-        .controller('WiMapper.Controllers.SidebarController', SidebarController)
+    angular.module('GroundWaterWatch.Controllers')
+        .controller('GroundWaterWatch.Controllers.SidebarController', SidebarController)
     
 }//end module
  

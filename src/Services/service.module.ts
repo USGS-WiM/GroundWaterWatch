@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('WiMapper.Services', []);
+        .module('GroundWaterWatch.Services', []);
 })();

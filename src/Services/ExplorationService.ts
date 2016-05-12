@@ -22,7 +22,7 @@
 //04.15.2015 jkn - Created
 
 //Import
-module WiMapper.Services {
+module GroundWaterWatch.Services {
     'use strict'
     export interface IExplorationService {
         elevationProfile(any);
@@ -51,7 +51,7 @@ module WiMapper.Services {
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
         constructor($http: ng.IHttpService, private $q: ng.IQService, toaster) {
-            super($http, configuration.baseurls['WiMapper'])
+            super($http, configuration.baseurls['GroundWaterWatch'])
 
             this.toaster = toaster;
             this.drawElevationProfile = false;
@@ -103,6 +103,6 @@ module WiMapper.Services {
     function factory($http: ng.IHttpService, $q: ng.IQService, toaster: any) {
         return new ExplorationService($http, $q, toaster)
     }
-    angular.module('WiMapper.Services')
-        .factory('WiMapper.Services.ExplorationService', factory)
+    angular.module('GroundWaterWatch.Services')
+        .factory('GroundWaterWatch.Services.ExplorationService', factory)
 }//end module 

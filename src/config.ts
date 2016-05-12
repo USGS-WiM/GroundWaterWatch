@@ -2,7 +2,7 @@
 //http://www.funnyant.com/angularjs-ui-router/
 
 declare var configuration: any;
-module WiMapper {
+module GroundWaterWatch {
     //'use strict';
 
     class config {
@@ -15,16 +15,16 @@ module WiMapper {
                 views: {
                     'map': {
                         templateUrl: "Views/mapview.html",
-                        controller: "WiMapper.Controllers.MapController"
+                        controller: "GroundWaterWatch.Controllers.MapController"
                     },
                     'sidebar': {
                         templateUrl: "Views/sidebarview.html",
-                        controller: "WiMapper.Controllers.SidebarController"
+                        controller: "GroundWaterWatch.Controllers.SidebarController"
 
                     },
                     'navbar': {
                         templateUrl: "Views/navigationview.html",
-                        controller: "WiMapper.Controllers.NavbarController"
+                        controller: "GroundWaterWatch.Controllers.NavbarController"
                     }
                 }
             })//end main state 
@@ -38,14 +38,14 @@ module WiMapper {
         }//end constructor
     }//end class
 
-    angular.module('WiMapper',[
+    angular.module('GroundWaterWatch',[
         'ui.router', 'ui.bootstrap','ui.checkbox',
         'mobile-angular-ui',
         'angulartics', 'angulartics.google.analytics',
         'toaster', 'ngAnimate', 'ngFileUpload',
         'leaflet-directive',
-        'WiMapper.Services',
-        'WiMapper.Controllers',
+        'GroundWaterWatch.Services',
+        'GroundWaterWatch.Controllers',
         'WiM.Services', 'WiM.Event', 'wim_angular'
         ])
         .config(config);

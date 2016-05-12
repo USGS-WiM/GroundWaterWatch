@@ -22,7 +22,7 @@
 
 //Imports"
 // Interface
-module WiMapper.Models {
+module GroundWaterWatch.Models {
     export interface IStudyArea {
         RegionID: string;
         Pourpoint: WiM.Models.IPoint;

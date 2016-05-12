@@ -23,7 +23,7 @@
 //06.16.2015 mjs - Created
 
 //Import
-module WiMapper.Services {
+module GroundWaterWatch.Services {
     'use strict'
     export interface IModalService {
         openModal(mType: ModalType, options?: IModalOptions);
@@ -75,7 +75,7 @@ module WiMapper.Services {
                     default:
                         return {
                             templateUrl: 'Views/defaultmodal.html',
-                            controller: 'WiMapper.Controllers.DefaultModalController',
+                            controller: 'GroundWaterWatch.Controllers.DefaultModalController',
                             size: 'lg',
                             backdropClass: 'backdropZ',
                             backdrop: 'static',
@@ -97,6 +97,6 @@ module WiMapper.Services {
     function factory($modal: ng.ui.bootstrap.IModalService) {
         return new ModalService($modal)
     }
-    angular.module('WiMapper.Services')
-        .factory('WiMapper.Services.ModalService', factory)
+    angular.module('GroundWaterWatch.Services')
+        .factory('GroundWaterWatch.Services.ModalService', factory)
 }//end module  

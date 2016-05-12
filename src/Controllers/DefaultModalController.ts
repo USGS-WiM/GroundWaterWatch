@@ -21,7 +21,7 @@
 
 //Import
 
-module WiMapper.Controllers {
+module GroundWaterWatch.Controllers {
     'use string';
     interface IDefaultModalControllerScope extends ng.IScope {
         vm: IDefaultModalController;
@@ -61,6 +61,6 @@ module WiMapper.Controllers {
       
     }//end  class
 
-    angular.module('WiMapper.Controllers')
-        .controller('WiMapper.Controllers.DefaultModalController', DefaultModalController);
+    angular.module('GroundWaterWatch.Controllers')
+        .controller('GroundWaterWatch.Controllers.DefaultModalController', DefaultModalController);
 }//end module 

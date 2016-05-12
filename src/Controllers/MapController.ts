@@ -23,7 +23,7 @@
 //04.15.2015 jkn - Created
 
 //Imports"
-module WiMapper.Controllers {
+module GroundWaterWatch.Controllers {
 
     declare var greinerHormann;
     declare var ga;
@@ -162,7 +162,7 @@ module WiMapper.Controllers {
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'WiMapper.Services.ExplorationService','WiM.Event.EventManager'];
+        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService','WiM.Event.EventManager'];
         constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager:WiM.Event.IEventManager) {
             $scope.vm = this;
             this.init();
@@ -569,7 +569,7 @@ module WiMapper.Controllers {
 
     }//end class
 
-    angular.module('WiMapper.Controllers')
-        .controller('WiMapper.Controllers.MapController', MapController)
+    angular.module('GroundWaterWatch.Controllers')
+        .controller('GroundWaterWatch.Controllers.MapController', MapController)
 }//end module
  

@@ -23,7 +23,7 @@
 //04.14.2015 jkn - Created
 
 //Imports"
-module WiMapper.Controllers {
+module GroundWaterWatch.Controllers {
     'use strict';
     interface INavbarControllerScope extends ng.IScope {
         vm: NavbarController;
@@ -43,9 +43,9 @@ module WiMapper.Controllers {
         }
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', '$http', 'WiMapper.Services.ModalService'];
+        static $inject = ['$scope', '$http', 'GroundWaterWatch.Services.ModalService'];
         constructor($scope: INavbarControllerScope, $http: ng.IHttpService, modal: Services.IModalService) {
-            super($http, configuration.baseurls.WiMapperServices);
+            super($http, configuration.baseurls.GroundWaterWatchServices);
             $scope.vm = this;
             this.modalService = modal;
         }
@@ -81,8 +81,8 @@ module WiMapper.Controllers {
         }
 
     }//end class
-    angular.module('WiMapper.Controllers')
-        .controller('WiMapper.Controllers.NavbarController', NavbarController)
+    angular.module('GroundWaterWatch.Controllers')
+        .controller('GroundWaterWatch.Controllers.NavbarController', NavbarController)
 
 }//end module
   

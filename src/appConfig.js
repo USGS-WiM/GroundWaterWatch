@@ -7,8 +7,8 @@ configuration.baseurls =
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services'
 }
 
-//override WiMapper services URL if on production
-if (window.location.origin == 'http://WiMapperags.cr.usgs.gov') configuration.baseurls.WiMapperServices = 'http://WiMapperags.cr.usgs.gov';
+//override GroundWaterWatch services URL if on production
+if (window.location.origin == 'http://GroundWaterWatchags.cr.usgs.gov') configuration.baseurls.GroundWaterWatchServices = 'http://GroundWaterWatchags.cr.usgs.gov';
 
 configuration.queryparams =
 {

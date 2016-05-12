@@ -1,7 +1,7 @@
 {
-  "name": "WiMapper",
+  "name": "GroundWaterWatch",
   "version": "0.0.1",
-  "homepage": "https://github.com/USGS-WiM/WiMapper",
+  "homepage": "https://github.com/USGS-WiM/GroundWaterWatch",
   "authors": [
     "Jeremy Newson <jknewson@usgs.gov>",
     "Martyn Smith <marsmith@usgs.gov>"

@@ -20,7 +20,7 @@
 //08.20.2014 jkn - Created
 
 // Class
-module WiMapper.Models {
+module GroundWaterWatch.Models {
     export interface IRegulationParameter extends WiM.Models.IParameter {
         operationField: string;
         operation: string;
