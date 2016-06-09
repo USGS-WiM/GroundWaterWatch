@@ -65,8 +65,8 @@
     <Content Include="src\Assets\images\usgs-logo.png" />
     <Content Include="src\Assets\images\usgs_logo.png" />
     <Content Include="src\css\main.css" />
-    <Content Include="src\css\wim.css" />
     <Content Include="src\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="src\gwwtestsites.js" />
     <Content Include="src\images\arrows.gif" />
     <Content Include="src\images\multi_sw_act.png" />
     <Content Include="src\images\multi_sw_act_blank.png" />
@@ -75,14 +75,17 @@
     <Content Include="src\images\usgs_logo.png" />
     <Content Include="src\index.html" />
     <Content Include="bower.json" />
-    <Content Include="src\Views\defaultmodal.html" />
+    <Content Include="src\Views\filtermodal.html" />
+    <Content Include="src\Views\aboutmodal.html" />
     <Content Include="src\Views\mapview.html" />
     <Content Include="src\Views\navigationview.html" />
     <Content Include="src\Views\sidebarview.html" />
+    <Content Include="src\Views\sitelistview.html" />
     <Content Include="web.config" />
     <Content Include="typings.json" />
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
+    <None Include="custom.pubxml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -98,15 +101,18 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\config.ts" />
-    <TypeScriptCompile Include="src\Controllers\DefaultModalController.ts" />
+    <TypeScriptCompile Include="src\Controllers\FilterModalController.ts" />
+    <TypeScriptCompile Include="src\Controllers\AboutModalController.ts" />
     <TypeScriptCompile Include="src\Controllers\controller.module.ts" />
     <TypeScriptCompile Include="src\Controllers\MapController.ts" />
     <TypeScriptCompile Include="src\Controllers\Navbarcontroller.ts" />
     <TypeScriptCompile Include="src\Controllers\SidebarController.ts" />
-    <TypeScriptCompile Include="src\Models\RegulationParameter.ts" />
-    <TypeScriptCompile Include="src\Models\StudyArea.ts" />
-    <TypeScriptCompile Include="src\Models\WatershedEDL.ts" />
+    <TypeScriptCompile Include="src\Controllers\SiteListController.ts" />
+    <TypeScriptCompile Include="src\Models\SitesFilter.ts" />
+    <TypeScriptCompile Include="src\Models\GroundWaterWatchSite.ts" />
+    <TypeScriptCompile Include="src\Models\Models.module.ts" />
     <TypeScriptCompile Include="src\Services\ExplorationService.ts" />
+    <TypeScriptCompile Include="src\Services\GroundWaterWatchService.ts" />
     <TypeScriptCompile Include="src\Services\ModalService.ts" />
     <TypeScriptCompile Include="src\Services\service.module.ts" />
     <TypeScriptCompile Include="_references.ts">

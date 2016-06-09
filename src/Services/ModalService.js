@@ -18,8 +18,8 @@
 //Comments
 //06.16.2015 mjs - Created
 //Import
-var WiMapper;
-(function (WiMapper) {
+var GroundWaterWatch;
+(function (GroundWaterWatch) {
     var Services;
     (function (Services) {
         'use strict';
@@ -46,10 +46,28 @@ var WiMapper;
                 var msg;
                 try {
                     switch (mType) {
+                        case ModalType.e_filter:
+                            return {
+                                templateUrl: 'Views/filtermodal.html',
+                                controller: 'GroundWaterWatch.Controllers.FilterModalController',
+                                size: 'lg',
+                                backdropClass: 'backdropZ',
+                                backdrop: 'static',
+                                windowClass: 'windowZ'
+                            };
+                        case ModalType.e_about:
+                            return {
+                                templateUrl: 'Views/aboutmodal.html',
+                                controller: 'GroundWaterWatch.Controllers.AboutModalController',
+                                size: 'lg',
+                                backdropClass: 'backdropZ',
+                                backdrop: 'static',
+                                windowClass: 'windowZ'
+                            };
                         default:
                             return {
-                                templateUrl: 'Views/defaultmodal.html',
-                                controller: 'WiMapper.Controllers.DefaultModalController',
+                                templateUrl: 'Views/aboutmodal.html',
+                                controller: 'GroundWaterWatch.Controllers.AboutModalController',
                                 size: 'lg',
                                 backdropClass: 'backdropZ',
                                 backdrop: 'static',
@@ -64,15 +82,16 @@ var WiMapper;
             return ModalService;
         })(); //end class
         (function (ModalType) {
-            ModalType[ModalType["e_default1"] = 1] = "e_default1";
+            ModalType[ModalType["e_filter"] = 1] = "e_filter";
+            ModalType[ModalType["e_about"] = 2] = "e_about";
         })(Services.ModalType || (Services.ModalType = {}));
         var ModalType = Services.ModalType;
         factory.$inject = ['$modal'];
         function factory($modal) {
             return new ModalService($modal);
         }
-        angular.module('WiMapper.Services')
-            .factory('WiMapper.Services.ModalService', factory);
-    })(Services = WiMapper.Services || (WiMapper.Services = {}));
-})(WiMapper || (WiMapper = {})); //end module  
+        angular.module('GroundWaterWatch.Services')
+            .factory('GroundWaterWatch.Services.ModalService', factory);
+    })(Services = GroundWaterWatch.Services || (GroundWaterWatch.Services = {}));
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module  
 //# sourceMappingURL=ModalService.js.map

@@ -1,6 +1,6 @@
 (function () {
     'use strict';
     angular
-        .module('WiMapper.Controllers', []);
+        .module('GroundWaterWatch.Controllers', []);
 })();
 //# sourceMappingURL=controller.module.js.map

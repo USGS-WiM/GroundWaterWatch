@@ -42,42 +42,40 @@ module GroundWaterWatch.Controllers {
     }
     
     class SidebarController implements ISidebarController {
+        private searchService: WiM.Services.ISearchAPIService;
+        private groundwaterwatchService: Services.IGroundWaterWatchService;
+        private angulartics: any;
+        private toaster: any;
+        private modalService: Services.IModalService;
+
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
         public sideBarCollapsed: boolean;
         public selectedProcedure: ProcedureType;
-        public toaster: any;
-        public angulartics: any;
-        private searchService: WiM.Services.ISearchAPIService;
-        private modalService: Services.IModalService;    
+        public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
+
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'WiM.Event.EventManager'];
-        constructor($scope: ISidebarControllerScope, toaster, $analytics, service: WiM.Services.ISearchAPIService, modal: Services.IModalService, private EventManager:WiM.Event.IEventManager) {
+        static $inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
+        constructor($scope: ISidebarControllerScope, toaster, $analytics, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService) {
             $scope.vm = this;
-            this.init();
-
+           
             this.toaster = toaster;
             this.angulartics = $analytics;
             this.searchService = service;
-            this.sideBarCollapsed = false;
-            this.selectedProcedure = ProcedureType.INIT;
-            this.modalService = modal;
+            this.groundwaterwatchService = gwwService;
+            this.modalService = modalService;
 
+            this.init();
         }
 
         public getLocations(term: string):ng.IPromise<Array<WiM.Services.ISearchAPIOutput>> {
             return this.searchService.getLocations(term);
         }
-        public setProcedureType(pType: ProcedureType) {    
-            //console.log('in setProcedureType', this.selectedProcedure, pType, !this.canUpdateProcedure(pType));     
-
+        public setProcedureType(pType: ProcedureType) {
             if (this.selectedProcedure == pType || !this.canUpdateProcedure(pType)) {
-                //capture issues and send notifications here
-                if (this.selectedProcedure == 3 && (pType == 4 )) this.toaster.pop("warning", "Warning", "Make sure you calculate selected basin characteristics before continuing", 5000);
-                if (this.selectedProcedure == 2 && (pType == 3 || pType == 4 )) this.toaster.pop("warning", "Warning", "Make sure you have delineated a basin and clicked continue", 5000);
-                return;
+               return;
             }
             this.selectedProcedure = pType;
         }
@@ -85,20 +83,23 @@ module GroundWaterWatch.Controllers {
             if (this.sideBarCollapsed) this.sideBarCollapsed = false;
             else this.sideBarCollapsed = true;          
         }
-        public onAOISelect(item: WiM.Services.ISearchAPIOutput) {
-            this.EventManager.RaiseEvent(WiM.Services.onSelectedAreaOfInterestChanged,this, new WiM.Services.SearchAPIEventArgs(item));          
-        }
         public zoomRegion(inRegion: string) {
-            var region = angular.fromJson(inRegion);
-            //console.log('zooming to region: ', region);
-            
+            var region = angular.fromJson(inRegion);            
         }
-
         public startSearch(e) {
             e.stopPropagation(); e.preventDefault();
             $("#sapi-searchTextBox").trigger($.Event("keyup", { "keyCode": 13 }));
         }
-
+        public removeFilter(filter: Models.IGroundWaterFilterSite) {
+            var index = this.SelectedFilters.indexOf(filter);
+            this.SelectedFilters.splice(index);
+        }
+        public ClearFilters() {
+            this.SelectedFilters.splice(0, this.SelectedFilters.length);
+        }
+        public AddFilter() {
+            this.modalService.openModal(Services.ModalType.e_filter)
+        }
         //special function for searching arrays but ignoring angular hashkey
         public checkArrayForObj(arr, obj) {
             for (var i = 0; i < arr.length; i++) {
@@ -109,28 +110,27 @@ module GroundWaterWatch.Controllers {
             return -1;
         }
 
-        public selectScenarios() {
-
-            //if not, just continue
-            this.setProcedureType(3);
-        }
-
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void { 
             //init event handler
-           
-        }
 
+            this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
+            this.sideBarCollapsed = false;
+            this.selectedProcedure = ProcedureType.Search;
+        }
         private canUpdateProcedure(pType: ProcedureType): boolean {
             //console.log('in canUpdateProcedure');
             //Project flow:
             var msg: string;
             try {               
                 switch (pType) {
-                    case ProcedureType.INIT:
+                    case ProcedureType.Search:
                         return true;
-                    
+                    case ProcedureType.NetworkType:
+                        return true;
+                    case ProcedureType.Filter:
+                        return true;
                     default:
                         return false;
                 }//end switch          
@@ -162,10 +162,9 @@ module GroundWaterWatch.Controllers {
     }//end class
 
     enum ProcedureType {
-        INIT = 1,
-        IDENTIFY = 2,
-        SELECT = 3,
-        BUILD = 4
+        Search = 1,
+        NetworkType = 2,
+        Filter = 3
     }
 
     angular.module('GroundWaterWatch.Controllers')

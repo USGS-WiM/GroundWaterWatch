@@ -1,7 +1,7 @@
 //http://lgorithms.blogspot.com/2013/07/angularui-router-as-infrastructure-of.html
 //http://www.funnyant.com/angularjs-ui-router/
-var WiMapper;
-(function (WiMapper) {
+var GroundWaterWatch;
+(function (GroundWaterWatch) {
     //'use strict';
     var config = (function () {
         function config($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) {
@@ -16,15 +16,15 @@ var WiMapper;
                 views: {
                     'map': {
                         templateUrl: "Views/mapview.html",
-                        controller: "WiMapper.Controllers.MapController"
+                        controller: "GroundWaterWatch.Controllers.MapController"
                     },
                     'sidebar': {
                         templateUrl: "Views/sidebarview.html",
-                        controller: "WiMapper.Controllers.SidebarController"
+                        controller: "GroundWaterWatch.Controllers.SidebarController"
                     },
                     'navbar': {
                         templateUrl: "Views/navigationview.html",
-                        controller: "WiMapper.Controllers.NavbarController"
+                        controller: "GroundWaterWatch.Controllers.NavbarController"
                     }
                 }
             }); //end main state 
@@ -36,16 +36,16 @@ var WiMapper;
         config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         return config;
     })(); //end class
-    angular.module('WiMapper', [
+    angular.module('GroundWaterWatch', [
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
         'angulartics', 'angulartics.google.analytics',
         'toaster', 'ngAnimate', 'ngFileUpload',
         'leaflet-directive',
-        'WiMapper.Services',
-        'WiMapper.Controllers',
-        'WiM.Services', 'WiM.Event', 'wim_angular'
+        'GroundWaterWatch.Services',
+        'GroundWaterWatch.Controllers',
+        'WiM.Services', 'WiM.Event', 'wim_angular', 'angularResizable'
     ])
         .config(config);
-})(WiMapper || (WiMapper = {})); //end module 
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module 
 //# sourceMappingURL=config.js.map

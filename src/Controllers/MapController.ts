@@ -140,6 +140,10 @@ module GroundWaterWatch.Controllers {
         private leafletData: ILeafletData;
         private explorationService: Services.IExplorationService;
         private eventManager: WiM.Event.IEventManager;
+        private gwwServices: Services.IGroundWaterWatchService;
+
+        public SiteList: Array<Models.GroundWaterSite>;
+        public isShown: boolean;
 
         public cursorStyle: string;
         public center: ICenter = null;
@@ -162,8 +166,8 @@ module GroundWaterWatch.Controllers {
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService','WiM.Event.EventManager'];
-        constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager:WiM.Event.IEventManager) {
+        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams','leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager','GroundWaterWatch.Services.GroundWaterWatchService'];
+        constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService ) {
             $scope.vm = this;
             this.init();
 
@@ -175,6 +179,9 @@ module GroundWaterWatch.Controllers {
             this.leafletData = leafletData;
             this.explorationService = exploration;
             this.eventManager = eventManager;
+            this.gwwServices = gwwservice;
+            this.SiteList = gwwservice.GWSiteList;
+            this.isShown = true;
 
             //subscribe to Events
 
@@ -216,7 +223,9 @@ module GroundWaterWatch.Controllers {
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
-        
+        public toggleShown() {
+            this.isShown = !this.isShown;
+        }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void { 

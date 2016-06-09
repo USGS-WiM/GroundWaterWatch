@@ -9,11 +9,10 @@
                     </div>  
 
                     <div id="searchWrapper">
-                        <div class="wim-alert">Use the map or the search tool identify an area of interest</div>
+                        <div class="wim-alert">Use the map or the search tool to zoom to an area of interest</div>
 
                         <div class="row">
                             <div class="col-md-9">
-
                                 <div class="input-group">
                                   <div id="sapi_searchTextBoxDiv">Loading Search Bar...</div>
                                   <span class="input-group-btn">
@@ -42,8 +41,26 @@
 
                 </div>
             </div>
+            <div class="sidebar-item">
+                <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Network Types<div></div><h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <div class="list-group-body" ng-hide="vm.selectedProcedure != 2">
+                    <div class="wim-alert">Select Network Type</div>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Filters<div></div><i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <div class="list-group-body" ng-hide="vm.selectedProcedure != 3">
+                    <div class="wim-alert">something about filters</div>
+                    <div ng-repeat="filter in vm.SelectedFilters track by $index">
+                        <button class="btn-wim-sm btn-wim-default btn-group-justified" ng-click="vm.removeFilter($index,filter)"><i class="fa fa-times pull-right"></i>&nbsp;&nbsp;<span>{{filter.Name}} </span></button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><button ng-click=" vm.ClearFilters()" type="button" class="btn-wim-sm btn-wim btn-wim-group-1"><i class="fa fa-ban"></i>&nbsp;&nbsp;Clear Filters</button></div>
+                        <div class="col-md-6"><button ng-click=" vm.AddFilter()" type="button" class="btn-wim-sm btn-wim-info btn-wim-group-1"><i class="fa fa-filter"></i>&nbsp;&nbsp;Add Filter</button></div>
+                    </div>
+                </div>
+            </div>
         </div>
-
         <div class="identification pull-right">powered by <a href="http://wim.usgs.gov/" target="_blank">WiM</a></div>
     </div>
 </div>

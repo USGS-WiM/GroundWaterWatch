@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <title>GroundWaterWatch 4.0</title>
+    <title>Groundwater Watch</title>
      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script>document.write('<base href="' + document.location + '" />');</script>
     <!-- build:css styles/vendor.min.css -->
@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="../bower_components/nvd3/build/nv.d3.css" />
     <link rel="stylesheet" href="../bower_components/wim-styles/core/css/wim.css" />
     <link rel="stylesheet" href="../bower_components/wim_angular/dist/css/wimLegend.css" />
+    <link rel="stylesheet" href="../bower_components/angular-resizable/angular-resizable.min.css" />
     <!-- endbuild -->
     <!-- build:css styles/custom.min.css -->
     <link rel="stylesheet" href="css/main.css" />
@@ -53,6 +54,7 @@
     <script src="../bower_components/nvd3/build/nv.d3.js"></script>
     <script src="../bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
     <script src="../bower_components/angularjs-slider/dist/rzslider.min.js"></script>
+    <script src="../bower_components/angular-resizable/angular-resizable.min.js"></script>
     <script src="../bower_components/wim_angular/dist/Directives/directives.module.js"></script>
     <script src="../bower_components/wim_angular/dist/Extensions/String.js"></script>
     <script src="../bower_components/wim_angular/dist/Extensions/SurveyRound.js"></script>
@@ -68,22 +70,25 @@
     <script src="../bower_components/wim_angular/dist/Services/Helpers/RequestTransform.js"></script>
     <script src="../bower_components/wim_angular/dist/Events/EventManager.js"></script>
     <script src="../bower_components/wim_angular/dist/Directives/wimLegend.js"></script>
-
     <!-- endbuild -->
     
     <!-- build:js scripts/custom.min.js -->
     <script src="Config.js"></script>
     <!-- Models ref-->
+    <script src="Models/GroundWaterWatchSite.js"></script>
+    <script src="Models/SitesFilter.js"></script>
     <!-- Services ref-->
     <script src="Services/service.module.js"></script>
     <script src="Services/ExplorationService.js"></script>
     <script src="Services/ModalService.js"></script>
+    <script src="Services/GroundWaterWatchService.js"></script>
     <!-- Controllers ref-->
     <script src="Controllers/controller.module.js"></script>
     <script src="Controllers/MapController.js"></script>
     <script src="Controllers/SidebarController.js"></script>
     <script src="Controllers/NavbarController.js"></script>
-    <script src="Controllers/DefaultModalController.js"></script>
+    <script src="Controllers/FilterModalController.js"></script>
+    <script src="Controllers/AboutModalController.js"></script>
 
     <!-- Directives ref-->
     <!-- endbower -->
@@ -99,8 +104,8 @@
 </head>
 <body>
     <div ui-view="navbar" class="navbar-app navbar-absolute-top"></div>
-    <div ui-view="sidebar" class="sidebar sidebar-left"></div>  
-    <div ui-view="map" class="app app-body"></div>   
-    <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>    
+    <div ui-view="sidebar" class="sidebar sidebar-left"></div>     
+    <div ui-view="map" class="app app-body"></div>
+    <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
 </body>
 </html>
