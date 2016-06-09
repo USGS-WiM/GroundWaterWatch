@@ -1,0 +1,25 @@
+﻿<div ng-click="vm.toggleShown()"><i ng-class="vm.isShown ? 'fa fa-chevron-down fa-3x': 'fa fa-chevron-up fa-3x'"></i></div>
+    <pageslide ps-open="vm.isShown">
+        <!--sitelist Table if just-->
+        <div class="well well-sm" ng-show="vm.SiteList.length > 0">
+            <h4>Available Sites</h4>
+            <table class="table table-condensed">
+                <thead class="param-table">
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Well Depth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="s in vm.SiteList">
+                        <td ng-bind="s.siteNO"></td>
+                        <td ng-bind="s.siteName"></td>
+                        <td ng-bind="s.measurement"></td>
+                        <td ng-bind="s.wellDepth"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </pageslide>

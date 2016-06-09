@@ -57,7 +57,6 @@ module GroundWaterWatch.Services {
             
             if (options) {
                 this.modalOptions = options
-                //console.log('in modal open function', this.modalOptions);
             }
             this.modal.open(this.getModalSettings(mType));
         }  
@@ -71,11 +70,28 @@ module GroundWaterWatch.Services {
             var msg: string;
             try {
                 switch (mType) {
-                    
+                    case ModalType.e_filter:
+                    return {
+                        templateUrl: 'Views/filtermodal.html',
+                        controller: 'GroundWaterWatch.Controllers.FilterModalController',
+                        size: 'lg',
+                        backdropClass: 'backdropZ',
+                        backdrop: 'static',
+                        windowClass: 'windowZ'
+                        };
+                    case ModalType.e_about:
+                        return {
+                            templateUrl: 'Views/aboutmodal.html',
+                            controller: 'GroundWaterWatch.Controllers.AboutModalController',
+                            size: 'lg',
+                            backdropClass: 'backdropZ',
+                            backdrop: 'static',
+                            windowClass: 'windowZ'
+                        };
                     default:
                         return {
-                            templateUrl: 'Views/defaultmodal.html',
-                            controller: 'GroundWaterWatch.Controllers.DefaultModalController',
+                            templateUrl: 'Views/aboutmodal.html',
+                            controller: 'GroundWaterWatch.Controllers.AboutModalController',
                             size: 'lg',
                             backdropClass: 'backdropZ',
                             backdrop: 'static',
@@ -90,7 +106,8 @@ module GroundWaterWatch.Services {
 
     }//end class
     export enum ModalType {
-        e_default1 = 1        
+        e_filter = 1,
+        e_about =2        
     }
 
     factory.$inject = ['$modal'];

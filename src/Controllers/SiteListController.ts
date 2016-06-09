@@ -1,17 +1,17 @@
 ﻿//------------------------------------------------------------------------------
-//----- NavbarController ------------------------------------------------------
+//----- SiteListController ------------------------------------------------------
 //------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2014 WiM - USGS
+// copyright:   2016 WiM - USGS
 
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
 
 
-//   purpose:  
+//   purpose:   
 
 //discussion:   Controllers are typically built to reflect a View. 
 //              and should only contailn business logic needed for a single view. For example, if a View 
@@ -20,48 +20,49 @@
 //              Model SelectedObject, and SaveCommand.
 
 //Comments
-//04.14.2015 jkn - Created
+//05.13.2016 jkn - Created
 
 //Imports"
 module GroundWaterWatch.Controllers {
     'use strict';
-    interface INavbarControllerScope extends ng.IScope {
-        vm: NavbarController;
+    interface ISiteListControllerScope extends ng.IScope {
+        vm: SiteListController;
     }
-    interface INavbarController {
-        ProjectName: string; 
+    interface ISiteListController {
+
     }
 
-    class NavbarController implements INavbarController {
+    class SiteListController implements ISiteListController {
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
-        private modalService: Services.IModalService;
-        private cookies: any;
-        private newArticleCount: number;
-        public get ProjectName(): string {
-            return configuration.projectName;
-        }
+        private gwwServices: Services.IGroundWaterWatchService;
+        public SiteList: Array<Models.GroundWaterSite>;
+        public isShown: boolean;
+
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'GroundWaterWatch.Services.ModalService'];
-        constructor($scope: INavbarControllerScope, modal: Services.IModalService) {            
+        static $inject = ['$scope','GroundWaterWatch.Services.GroundWaterWatchService'];
+        constructor($scope: ISiteListControllerScope, gwwservice:Services.IGroundWaterWatchService) {
             $scope.vm = this;
-            this.modalService = modal;
+            this.gwwServices = gwwservice;
+            this.SiteList = gwwservice.GWSiteList;
+            this.isShown = true;
         }
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
-
-        public openAboutModal(): void {
-            this.modalService.openModal(Services.ModalType.e_about);
+        public toggleShown() {
+            this.isShown = !this.isShown;
         }
+ 
 
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
+        
 
     }//end class
     angular.module('GroundWaterWatch.Controllers')
-        .controller('GroundWaterWatch.Controllers.NavbarController', NavbarController)
+       .controller('GroundWaterWatch.Controllers.SiteListController', SiteListController)
 
 }//end module
   

@@ -22,8 +22,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 //Comments
 //04.15.2015 jkn - Created
 //Import
-var WiMapper;
-(function (WiMapper) {
+var GroundWaterWatch;
+(function (GroundWaterWatch) {
     var Services;
     (function (Services) {
         'use strict';
@@ -32,7 +32,7 @@ var WiMapper;
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             function ExplorationService($http, $q, toaster) {
-                _super.call(this, $http, configuration.baseurls['WiMapper']);
+                _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
                 this.$q = $q;
                 this.toaster = toaster;
                 this.drawElevationProfile = false;
@@ -71,8 +71,8 @@ var WiMapper;
         function factory($http, $q, toaster) {
             return new ExplorationService($http, $q, toaster);
         }
-        angular.module('WiMapper.Services')
-            .factory('WiMapper.Services.ExplorationService', factory);
-    })(Services = WiMapper.Services || (WiMapper.Services = {}));
-})(WiMapper || (WiMapper = {})); //end module 
+        angular.module('GroundWaterWatch.Services')
+            .factory('GroundWaterWatch.Services.ExplorationService', factory);
+    })(Services = GroundWaterWatch.Services || (GroundWaterWatch.Services = {}));
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module 
 //# sourceMappingURL=ExplorationService.js.map

@@ -15,8 +15,8 @@
 //Comments
 //04.15.2015 jkn - Created
 //Imports"
-var WiMapper;
-(function (WiMapper) {
+var GroundWaterWatch;
+(function (GroundWaterWatch) {
     var Controllers;
     (function (Controllers) {
         'use strict';
@@ -60,7 +60,7 @@ var WiMapper;
             return MapDefault;
         })();
         var MapController = (function () {
-            function MapController($scope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager) {
+            function MapController($scope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice) {
                 var _this = this;
                 this.$scope = $scope;
                 this.center = null;
@@ -83,6 +83,9 @@ var WiMapper;
                 this.leafletData = leafletData;
                 this.explorationService = exploration;
                 this.eventManager = eventManager;
+                this.gwwServices = gwwservice;
+                this.SiteList = gwwservice.GWSiteList;
+                this.isShown = true;
                 //subscribe to Events
                 this.eventManager.SubscribeToEvent(WiM.Directives.onLayerChanged, new WiM.Event.EventHandler(function (sender, e) {
                     _this.onLayerChanged(sender, e);
@@ -117,6 +120,9 @@ var WiMapper;
             }
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
+            MapController.prototype.toggleShown = function () {
+                this.isShown = !this.isShown;
+            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.prototype.init = function () {
@@ -407,11 +413,11 @@ var WiMapper;
             };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
-            MapController.$inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'WiMapper.Services.ExplorationService', 'WiM.Event.EventManager'];
+            MapController.$inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return MapController;
         })(); //end class
-        angular.module('WiMapper.Controllers')
-            .controller('WiMapper.Controllers.MapController', MapController);
-    })(Controllers = WiMapper.Controllers || (WiMapper.Controllers = {}));
-})(WiMapper || (WiMapper = {})); //end module
+        angular.module('GroundWaterWatch.Controllers')
+            .controller('GroundWaterWatch.Controllers.MapController', MapController);
+    })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module
 //# sourceMappingURL=MapController.js.map

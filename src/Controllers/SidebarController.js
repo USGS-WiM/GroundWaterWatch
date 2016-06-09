@@ -15,34 +15,26 @@
 //Comments
 //04.14.2015 jkn - Created
 //Imports"
-var WiMapper;
-(function (WiMapper) {
+var GroundWaterWatch;
+(function (GroundWaterWatch) {
     var Controllers;
     (function (Controllers) {
         'use strinct';
         var SidebarController = (function () {
-            function SidebarController($scope, toaster, $analytics, service, modal, EventManager) {
-                this.EventManager = EventManager;
+            function SidebarController($scope, toaster, $analytics, service, modalService, gwwService) {
                 $scope.vm = this;
-                this.init();
                 this.toaster = toaster;
                 this.angulartics = $analytics;
                 this.searchService = service;
-                this.sideBarCollapsed = false;
-                this.selectedProcedure = ProcedureType.INIT;
-                this.modalService = modal;
+                this.groundwaterwatchService = gwwService;
+                this.modalService = modalService;
+                this.init();
             }
             SidebarController.prototype.getLocations = function (term) {
                 return this.searchService.getLocations(term);
             };
             SidebarController.prototype.setProcedureType = function (pType) {
-                //console.log('in setProcedureType', this.selectedProcedure, pType, !this.canUpdateProcedure(pType));     
                 if (this.selectedProcedure == pType || !this.canUpdateProcedure(pType)) {
-                    //capture issues and send notifications here
-                    if (this.selectedProcedure == 3 && (pType == 4))
-                        this.toaster.pop("warning", "Warning", "Make sure you calculate selected basin characteristics before continuing", 5000);
-                    if (this.selectedProcedure == 2 && (pType == 3 || pType == 4))
-                        this.toaster.pop("warning", "Warning", "Make sure you have delineated a basin and clicked continue", 5000);
                     return;
                 }
                 this.selectedProcedure = pType;
@@ -53,17 +45,23 @@ var WiMapper;
                 else
                     this.sideBarCollapsed = true;
             };
-            SidebarController.prototype.onAOISelect = function (item) {
-                this.EventManager.RaiseEvent(WiM.Services.onSelectedAreaOfInterestChanged, this, new WiM.Services.SearchAPIEventArgs(item));
-            };
             SidebarController.prototype.zoomRegion = function (inRegion) {
                 var region = angular.fromJson(inRegion);
-                //console.log('zooming to region: ', region);
             };
             SidebarController.prototype.startSearch = function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 $("#sapi-searchTextBox").trigger($.Event("keyup", { "keyCode": 13 }));
+            };
+            SidebarController.prototype.removeFilter = function (filter) {
+                var index = this.SelectedFilters.indexOf(filter);
+                this.SelectedFilters.splice(index);
+            };
+            SidebarController.prototype.ClearFilters = function () {
+                this.SelectedFilters.splice(0, this.SelectedFilters.length);
+            };
+            SidebarController.prototype.AddFilter = function () {
+                this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_filter);
             };
             //special function for searching arrays but ignoring angular hashkey
             SidebarController.prototype.checkArrayForObj = function (arr, obj) {
@@ -75,14 +73,13 @@ var WiMapper;
                 ;
                 return -1;
             };
-            SidebarController.prototype.selectScenarios = function () {
-                //if not, just continue
-                this.setProcedureType(3);
-            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.prototype.init = function () {
                 //init event handler
+                this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
+                this.sideBarCollapsed = false;
+                this.selectedProcedure = ProcedureType.Search;
             };
             SidebarController.prototype.canUpdateProcedure = function (pType) {
                 //console.log('in canUpdateProcedure');
@@ -90,7 +87,11 @@ var WiMapper;
                 var msg;
                 try {
                     switch (pType) {
-                        case ProcedureType.INIT:
+                        case ProcedureType.Search:
+                            return true;
+                        case ProcedureType.NetworkType:
+                            return true;
+                        case ProcedureType.Filter:
                             return true;
                         default:
                             return false;
@@ -109,18 +110,17 @@ var WiMapper;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            SidebarController.$inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'WiMapper.Services.ModalService', 'WiM.Event.EventManager'];
+            SidebarController.$inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return SidebarController;
         })(); //end class
         var ProcedureType;
         (function (ProcedureType) {
-            ProcedureType[ProcedureType["INIT"] = 1] = "INIT";
-            ProcedureType[ProcedureType["IDENTIFY"] = 2] = "IDENTIFY";
-            ProcedureType[ProcedureType["SELECT"] = 3] = "SELECT";
-            ProcedureType[ProcedureType["BUILD"] = 4] = "BUILD";
+            ProcedureType[ProcedureType["Search"] = 1] = "Search";
+            ProcedureType[ProcedureType["NetworkType"] = 2] = "NetworkType";
+            ProcedureType[ProcedureType["Filter"] = 3] = "Filter";
         })(ProcedureType || (ProcedureType = {}));
-        angular.module('WiMapper.Controllers')
-            .controller('WiMapper.Controllers.SidebarController', SidebarController);
-    })(Controllers = WiMapper.Controllers || (WiMapper.Controllers = {}));
-})(WiMapper || (WiMapper = {})); //end module
+        angular.module('GroundWaterWatch.Controllers')
+            .controller('GroundWaterWatch.Controllers.SidebarController', SidebarController);
+    })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module
 //# sourceMappingURL=SidebarController.js.map

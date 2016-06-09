@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-//----- DefaultModalController -------------------------------------------------
+//----- AboutModalController -------------------------------------------------
 //------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
@@ -23,15 +23,15 @@
 
 module GroundWaterWatch.Controllers {
     'use string';
-    interface IDefaultModalControllerScope extends ng.IScope {
-        vm: IDefaultModalController;
+    interface IAboutModalControllerScope extends ng.IScope {
+        vm: IAboutModalController;
     }
     interface IModal {
         Close():void
     }    
-    interface IDefaultModalController extends IModal {
+    interface IAboutModalController extends IModal {
     }
-    class DefaultModalController implements IDefaultModalController {
+    class AboutModalController implements IAboutModalController {
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
         private modalInstance: ng.ui.bootstrap.IModalServiceInstance;
@@ -40,7 +40,7 @@ module GroundWaterWatch.Controllers {
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
         static $inject = ['$scope','$modalInstance'];
-        constructor($scope: IDefaultModalControllerScope, modal:ng.ui.bootstrap.IModalServiceInstance) {
+        constructor($scope: IAboutModalControllerScope, modal:ng.ui.bootstrap.IModalServiceInstance) {
             $scope.vm = this;
             this.modalInstance = modal;
             this.init();  
@@ -62,5 +62,5 @@ module GroundWaterWatch.Controllers {
     }//end  class
 
     angular.module('GroundWaterWatch.Controllers')
-        .controller('GroundWaterWatch.Controllers.DefaultModalController', DefaultModalController);
+        .controller('GroundWaterWatch.Controllers.AboutModalController', AboutModalController);
 }//end module 
