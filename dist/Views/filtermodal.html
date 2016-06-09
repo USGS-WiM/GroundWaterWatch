@@ -1,0 +1,24 @@
+<!-- Modal -->
+
+<div class="modal-header">
+    <button class="close"
+            ng-click="vm.Close()">
+        &times;
+    </button>
+    <h4 class="modal-title">Groundwater Watch Filters</h4>
+</div>
+<div class="modal-body">
+
+    <div style="padding-top: 10px;">
+        <div id="default">
+            <span>Filters</span>
+            <button ng-click=" vm.AddStateFilter('new state')")" type="button" class="btn-wim-sm btn-wim-info btn-wim-group-1"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add New STATE Filter</button>
+            <button ng-click=" vm.AddCountyFilter('new county')" )" type="button" class="btn-wim-sm btn-wim-info btn-wim-group-1"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add New COUNTY Filter</button>
+            <button ng-click=" vm.AddAquiferFilter('new aquifer')" )" type="button" class="btn-wim-sm btn-wim-info btn-wim-group-1"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add New AQUIFER Filter</button>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-click="vm.Close()" class="btn-wim-default"><i class="fa fa-close"></i><span >&nbsp;&nbsp;Close</span></button>
+</div>
