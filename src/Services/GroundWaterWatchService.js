@@ -68,18 +68,30 @@ var GroundWaterWatch;
             //HelperMethods
             //-+-+-+-+-+-+-+-+-+-+-+-
             GroundWaterWatchService.prototype.init = function () {
+                var _this = this;
+                this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
-                this.loadGWSites();
-                this.SelectedGWFilters.push(new GroundWaterWatch.Models.GroundWaterFilterSite("State1 Test Filter", GroundWaterWatch.Models.FilterType.STATE));
-                this.SelectedGWFilters.push(new GroundWaterWatch.Models.GroundWaterFilterSite("State2 Test Filter", GroundWaterWatch.Models.FilterType.STATE));
+                this._eventManager.SubscribeToEvent(GroundWaterWatch.Controllers.onBoundingBoxChanged, new WiM.Event.EventHandler(function (sender, e) {
+                    _this.onBoundingBoxChanged(sender, e);
+                }));
             };
             GroundWaterWatchService.prototype.loadGWSites = function () {
                 var _this = this;
-                var url = "http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=ngwmn%3ALatest_WL_Percentile&STYLES&LAYERS=ngwmn%3ALatest_WL_Percentile&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4269&WIDTH=101&HEIGHT=101&BBOX=-114.0380859375%2C28.3447265625%2C-105.1611328125%2C37.2216796875";
-                var request = new WiM.Services.Helpers.RequestInfo(url, true);
-                this._GWSiteList = [];
+                var url = "/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image/png" +
+                    "&TRANSPARENT=true" +
+                    "&QUERY_LAYERS=ngwmn:Latest_WL_Percentile" +
+                    "&STYLES" +
+                    "&LAYERS=ngwmn:Latest_WL_Percentile" +
+                    "&INFO_FORMAT=application/json" +
+                    "&FEATURE_COUNT=50" +
+                    "&X=50&Y=50&SRS=EPSG:4269" +
+                    "&WIDTH=101&HEIGHT=101" +
+                    "&BBOX=-159.78515625, 1.7578125, -24.78515625, 59.765625" +
+                    "&CQL_FILTER=STATE_NM in ('Florida', 'Texas')";
+                var request = new WiM.Services.Helpers.RequestInfo(url);
                 this.Execute(request).then(function (response) {
                     if (response.data.features) {
+                        _this._GWSiteList.length = 0;
                         response.data.features.forEach(function (item) {
                             _this._GWSiteList.push(GroundWaterWatch.Models.GroundWaterSite.FromJson(item));
                         }); //next
@@ -88,6 +100,12 @@ var GroundWaterWatch;
                     console.log('No gww sites found');
                 }).finally(function () {
                 });
+            };
+            //Event Handlers
+            //-+-+-+-+-+-+-+-+-+-+-+-
+            GroundWaterWatchService.prototype.onBoundingBoxChanged = function (sender, e) {
+                if (e.zoomlevel >= 8)
+                    console.log([e.southern, e.western, e.northern, e.eastern].join(','));
             };
             return GroundWaterWatchService;
         })(WiM.Services.HTTPServiceBase); //end class

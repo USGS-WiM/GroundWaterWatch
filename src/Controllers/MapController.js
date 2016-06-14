@@ -1,6 +1,11 @@
 //------------------------------------------------------------------------------
 //----- MapController ----------------------------------------------------------
 //------------------------------------------------------------------------------
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
@@ -59,10 +64,25 @@ var GroundWaterWatch;
             }
             return MapDefault;
         })();
+        Controllers.onBoundingBoxChanged = "onBoundingBoxChanged";
+        var BoundingBoxChangedEventArgs = (function (_super) {
+            __extends(BoundingBoxChangedEventArgs, _super);
+            function BoundingBoxChangedEventArgs(bbox, zoomlevel) {
+                _super.call(this);
+                this.zoomlevel = zoomlevel;
+                this.northern = bbox.northEast.lng;
+                this.southern = bbox.southWest.lng;
+                this.eastern = bbox.northEast.lat;
+                this.western = bbox.southWest.lat;
+            }
+            return BoundingBoxChangedEventArgs;
+        })(WiM.Event.EventArgs);
+        Controllers.BoundingBoxChangedEventArgs = BoundingBoxChangedEventArgs;
         var MapController = (function () {
-            function MapController($scope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice) {
+            function MapController($scope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice, $timeout) {
                 var _this = this;
                 this.$scope = $scope;
+                this.initialized = false;
                 this.center = null;
                 this.layers = null;
                 this.mapDefaults = null;
@@ -85,7 +105,9 @@ var GroundWaterWatch;
                 this.eventManager = eventManager;
                 this.gwwServices = gwwservice;
                 this.SiteList = gwwservice.GWSiteList;
-                this.isShown = true;
+                this.SiteListEnabled = false;
+                //register event
+                this.eventManager.AddEvent(Controllers.onBoundingBoxChanged);
                 //subscribe to Events
                 this.eventManager.SubscribeToEvent(WiM.Directives.onLayerChanged, new WiM.Event.EventHandler(function (sender, e) {
                     _this.onLayerChanged(sender, e);
@@ -104,6 +126,7 @@ var GroundWaterWatch;
                 $scope.$on('leafletDirectiveMap.dragend', function (event, args) {
                     _this.cursorStyle = 'pointer';
                 });
+                $scope.$watch(function () { return _this.bounds; }, function (newval, oldval) { return _this.mapBoundsChange(oldval, newval); });
                 $scope.$watch(function () { return _this.explorationService.elevationProfileGeoJSON; }, function (newval, oldval) {
                     if (newval)
                         _this.displayElevationProfile();
@@ -117,12 +140,24 @@ var GroundWaterWatch;
                     if (newval)
                         _this.measurement();
                 });
+                $scope.$watch(function () { return _this.SiteList; }, function (newval, oldval) {
+                    //console.log('measurementListener ', newval, oldval);
+                    if (newval.length > 0)
+                        _this.SiteListEnabled = true;
+                    else
+                        _this.SiteListEnabled = false;
+                });
+                $scope.$watchCollection(function () { return _this.gwwServices.SelectedGWFilters; }, function (newval, oldval) {
+                    if (newval)
+                        _this.updateMapFilters();
+                });
+                $timeout(function () {
+                    _this.leafletData.getMap().then(function (map) { map.invalidateSize(); });
+                });
+                this.initialized = true;
             }
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
-            MapController.prototype.toggleShown = function () {
-                this.isShown = !this.isShown;
-            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.prototype.init = function () {
@@ -383,6 +418,12 @@ var GroundWaterWatch;
                     } //end if  
                 } //end if
             };
+            MapController.prototype.mapBoundsChange = function (oldValue, newValue) {
+                if (oldValue !== newValue) {
+                    this.nomnimalZoomLevel = this.scaleLookup(this.center.zoom);
+                    this.eventManager.RaiseEvent(Controllers.onBoundingBoxChanged, this, new BoundingBoxChangedEventArgs(this.bounds, this.center.zoom));
+                }
+            };
             MapController.prototype.removeOverlayLayers = function (name, isPartial) {
                 var _this = this;
                 if (isPartial === void 0) { isPartial = false; }
@@ -411,9 +452,29 @@ var GroundWaterWatch;
                 } //next variable
                 return layeridList;
             };
+            MapController.prototype.updateMapFilters = function () {
+                if (!this.initialized)
+                    return;
+                var statesfilter = "";
+                var groupedFeature = this.gwwServices.SelectedGWFilters.group("Type");
+                this.leafletData.getLayers().then(function (maplayers) {
+                    var states = groupedFeature.hasOwnProperty("1") ? groupedFeature["1"].map(function (item) { return item.Name; }) : null;
+                    if (states !== null)
+                        statesfilter = "STATE_NM in ('" + states.join("','") + "')";
+                    if (states !== null) {
+                        console.log(statesfilter);
+                        maplayers.overlays["gww"].wmsParams.CQL_FILTER = statesfilter;
+                        maplayers.overlays["gww"].redraw();
+                    }
+                    else {
+                        delete maplayers.overlays["gww"].wmsParams.CQL_FILTER;
+                    }
+                    maplayers.overlays["gww"].redraw();
+                }); //end get layers
+            };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
-            MapController.$inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService'];
+            MapController.$inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', '$timeout'];
             return MapController;
         })(); //end class
         angular.module('GroundWaterWatch.Controllers')
