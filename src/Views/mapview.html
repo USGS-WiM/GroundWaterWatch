@@ -1,4 +1,4 @@
-﻿<div id="resizableMapTop" class="map-wrapper" resizable r-directions="['bottom']">
+﻿<div ng-class="vm.SiteListEnabled? 'map-wrapper resizableMapTop-enabled':'map-wrapper'" resizable r-directions=" ['bottom']">
     <leaflet layers=" vm.layers" geojson="vm.geojson" geojson-nested="true" center="vm.center" controls="vm.controls" markers="vm.markers" defaults="vm.mapDefaults" bounds="vm.bounds" ng-style="{cursor:vm.cursorStyle}">
         <!--<i id="loadingSpinner" class="fa fa-spinner fa-5x fa-spin"></i>-->
         <wim-legend></wim-legend>
@@ -35,7 +35,7 @@
     </leaflet>
     <!--sitelist Table if just-->
 </div>
-<div id="resizableMapBottom" resizable r-directions="['top']" class="well well-sm" ng-show="vm.SiteList.length > 0">
+<div ng-if="vm.SiteListEnabled" class="well well-sm" ng-show="vm.SiteList.length > 0">
     <h4>Available Sites</h4>
     <table class="table table-condensed">
         <thead class="param-table">

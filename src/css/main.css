@@ -240,19 +240,15 @@ div.leaflet-top > .elevation {
     ===========================
 */
 .map-wrapper{  
-    width:inherit;
-    height:inherit;
+    width:100%;
+    height:100%;
     padding-left: 0;
     padding-right: 0;
 }
 
-#resizableMapTop{
-    max-height:75% !important;
+.resizableMapTop-enabled{
+    max-height:85% !important;
 }
-#resizableMapBottom{
-    min-height:25% !important;
-}
-
 /*
     ===========================
     ===========================

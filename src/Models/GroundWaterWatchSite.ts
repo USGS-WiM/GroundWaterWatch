@@ -62,8 +62,8 @@ module GroundWaterWatch.Models {
             gww.measurementDate = obj.hasOwnProperty("LATEST_DATE") ? <Date> obj["LATEST_DATE"] : null;
             gww.wellDepth = obj.hasOwnProperty("WELL_DEPTH") ? <number>obj["WELL_DEPTH"] : Number.NaN; 
             gww.localAquiferName = obj.hasOwnProperty("LOCAL_AQUIFER_NAME") ? <string>obj["LOCAL_AQUIFER_NAME"] : "---";
-            gww.stateName = obj.hasOwnProperty("STATE_NAME") ? obj["STATE_NAME"] : "---";
-            gww.countyName = obj.hasOwnProperty("COUNTY_NAME") ? obj["COUNTY_NAME"] : "---";
+            gww.stateName = obj.hasOwnProperty("STATE_NM") ? obj["STATE_NM"] : "---";
+            gww.countyName = obj.hasOwnProperty("COUNTY_NM") ? obj["COUNTY_NM"] : "---";
 
             gww.geometry = feature.hasOwnProperty("geometry") ? obj["geometry"] : null;
 

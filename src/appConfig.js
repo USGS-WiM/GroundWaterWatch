@@ -4,11 +4,9 @@ configuration.baseurls =
 {   
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
-    'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services'
+    'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
+    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/ngwmn-geoserver'
 }
-
-//override GroundWaterWatch services URL if on production
-if (window.location.origin == 'http://GroundWaterWatchags.cr.usgs.gov') configuration.baseurls.GroundWaterWatchServices = 'http://GroundWaterWatchags.cr.usgs.gov';
 
 configuration.queryparams =
 {
@@ -153,13 +151,6 @@ configuration.overlayedLayers = {
             opacity: 1
         }
     },
-    nwis: {
-        name: "USGS real-time streamgages",
-        type: "agsFeature",
-        url: "https://stnmapservices.wim.usgs.gov:6443/arcgis/rest/services/STN/STN_nwis_rt/MapServer/0",
-        visible: false,
-        layerOptions: {}
-    },
     gww: {
         name: 'Groundwater Sites',
         type: 'wms',
@@ -169,9 +160,9 @@ configuration.overlayedLayers = {
             layers: 'ngwmn:Latest_WL_Percentile',
             format: 'image/png',
             transparent: true,
-            version:'1.1.0'
+            version: '1.1.0'
+            
             }
     }
-    //http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=ngwmn%3ALatest_WL_Percentile&STYLES&LAYERS=ngwmn%3ALatest_WL_Percentile&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4269&WIDTH=101&HEIGHT=101&BBOX=-114.0380859375,28.3447265625,-105.1611328125,37.2216796875
     //http://docs.geoserver.org/stable/en/user/services/wms/reference.html#wms-getmap
 }//end overlayedLayers
