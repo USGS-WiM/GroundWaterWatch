@@ -74,6 +74,7 @@
     <Content Include="src\images\usgs_logo.png" />
     <Content Include="src\index.html" />
     <Content Include="bower.json" />
+    <Content Include="src\Views\siteinfomodal.html" />
     <Content Include="src\Views\filtermodal.html" />
     <Content Include="src\Views\aboutmodal.html" />
     <Content Include="src\Views\mapview.html" />
@@ -81,7 +82,6 @@
     <Content Include="src\Views\sidebarview.html" />
     <Content Include="src\Views\sitelistview.html" />
     <Content Include="web.config" />
-    <Content Include="typings.json" />
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <None Include="custom.pubxml" />
@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\config.ts" />
+    <TypeScriptCompile Include="src\Controllers\SiteInfoModalController.ts" />
     <TypeScriptCompile Include="src\Controllers\FilterModalController.ts" />
     <TypeScriptCompile Include="src\Controllers\AboutModalController.ts" />
     <TypeScriptCompile Include="src\Controllers\controller.module.ts" />

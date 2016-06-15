@@ -7,7 +7,7 @@ module GroundWaterWatch {
 
     class config {
         static $inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
-        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProvider) {
+        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProviderr) {
             this.$stateProvider
                 .state("main", {
                 url: '/?rcode&workspaceID',
@@ -34,7 +34,9 @@ module GroundWaterWatch {
             this.$locationProvider.html5Mode(true);   
             
             //turns of angular-leaflet console spam
-            this.$logProvider.debugEnabled(false);                        
+            this.$logProvider.debugEnabled(false);    
+
+                                
         }//end constructor
     }//end class
 

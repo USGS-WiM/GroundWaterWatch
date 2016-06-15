@@ -88,6 +88,15 @@ module GroundWaterWatch.Services {
                             backdrop: 'static',
                             windowClass: 'windowZ'
                         };
+                    case ModalType.e_siteinfo:
+                        return {
+                            templateUrl: 'Views/siteinfomodal.html',
+                            controller: 'GroundWaterWatch.Controllers.SiteInfoModalController',
+                            size: 'lg',
+                            backdropClass: 'backdropZ',
+                            backdrop: 'static',
+                            windowClass: 'windowZ'
+                        };
                     default:
                         return {
                             templateUrl: 'Views/aboutmodal.html',
@@ -107,7 +116,8 @@ module GroundWaterWatch.Services {
     }//end class
     export enum ModalType {
         e_filter = 1,
-        e_about =2        
+        e_about = 2,
+        e_siteinfo = 3  
     }
 
     factory.$inject = ['$modal'];
