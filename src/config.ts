@@ -7,7 +7,7 @@ module GroundWaterWatch {
 
     class config {
         static $inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
-        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProviderr) {
+        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProvider) {
             this.$stateProvider
                 .state("main", {
                 url: '/?rcode&workspaceID',
