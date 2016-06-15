@@ -98,10 +98,6 @@ var GroundWaterWatch;
                     _this.onSelectedAreaOfInterestChanged(sender, e);
                 }));
 
-                this.eventManager.SubscribeToEvent(GroundWaterWatch.Services.onSelectedGWSiteChanged, new WiM.Event.EventHandler(function () {
-                    _this.onSelectedGWSiteChanged();
-                }));
-
                 $scope.$on('leafletDirectiveMap.mousemove', function (event, args) {
                     var latlng = args.leafletEvent.latlng;
                     _this.mapPoint.lat = latlng.lat;
@@ -117,6 +113,9 @@ var GroundWaterWatch;
                 });
 
                 $scope.$on('leafletDirectiveMap.click', function (event, args) {
+                    _this.gwwServices.SelectedGWSite = null;
+                    _this.modalService.openModal(3 /* e_siteinfo */);
+
                     _this.leafletData.getMap().then(function (map) {
                         var boundsString = map.getBounds().toBBoxString();
                         var x = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).x);

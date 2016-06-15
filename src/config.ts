@@ -6,8 +6,8 @@ module GroundWaterWatch {
     //'use strict';
 
     class config {
-        static $inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider', '$sceDelegateProvider'];
-        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProvider, private $sceDelegateProvider: ng.ISceDelegateProvider) {
+        static $inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
+        constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProviderr) {
             this.$stateProvider
                 .state("main", {
                 url: '/?rcode&workspaceID',
@@ -35,13 +35,7 @@ module GroundWaterWatch {
             
             //turns of angular-leaflet console spam
             this.$logProvider.debugEnabled(false);    
-            
-            $sceDelegateProvider.resourceUrlWhitelist([
-            // Allow same origin resource loads.
-                'self',
-            // Allow loading from our assets domain.  Notice the difference between * and **.
-                'http://groundwaterwatch.usgs.gov/**'
-            ]);
+
                                 
         }//end constructor
     }//end class

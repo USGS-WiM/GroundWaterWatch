@@ -38,6 +38,7 @@ var GroundWaterWatch;
                 _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
                 this.SelectedGWFilters = [];
                 this._eventManager = evntmngr;
+                this.queriedGWsite = false;
                 this.init();
             }
             Object.defineProperty(GroundWaterWatchService.prototype, "GWSiteList", {
@@ -97,21 +98,28 @@ var GroundWaterWatch;
             };
 
             GroundWaterWatchService.prototype.queryGWsite = function (latlong, boundsString, x, y, width, height) {
+                var _this = this;
+                this.queriedGWsite = false;
+
                 //create false bounding box
                 //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
-                var _this = this;
                 var url = "http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?&INFO_FORMAT=application/json&EXCEPTIONS=application/vnd.ogc.se_xml&REQUEST=GetFeatureInfo&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString + "&LAYERS=ngwmn:Latest_WL_Percentile&QUERY_LAYERS=ngwmn:Latest_WL_Percentile&buffer=10";
 
                 var request = new WiM.Services.Helpers.RequestInfo(url, true);
 
                 this.Execute(request).then(function (response) {
-                    if (response.data.features) {
+                    _this.queriedGWsite = true;
+
+                    if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach(function (item) {
                             console.log(item);
 
                             _this.SelectedGWSite = item;
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         }); //next
+                    } else {
+                        console.log('No gww sites found');
+                        _this.SelectedGWSite = null;
                     }
                 }, function (error) {
                     console.log('No gww sites found');

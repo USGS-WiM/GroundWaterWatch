@@ -61,6 +61,7 @@ module GroundWaterWatch.Services {
                 this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
             }//endif
         }
+        public queriedGWsite: boolean;
 
         public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> =[];
         //Constructor
@@ -68,6 +69,7 @@ module GroundWaterWatch.Services {
         constructor($http: ng.IHttpService, evntmngr:WiM.Event.IEventManager) {
             super($http, configuration.baseurls['GroundWaterWatch'])
             this._eventManager = evntmngr;
+            this.queriedGWsite = false;
             this.init();
         }
 
@@ -103,7 +105,9 @@ module GroundWaterWatch.Services {
                 });
         }
 
-        public queryGWsite(latlong: any, boundsString:any, x:any, y:any, width:any, height:any) {
+        public queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any) {
+
+            this.queriedGWsite = false;
             //create false bounding box
             //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
 
@@ -114,7 +118,9 @@ module GroundWaterWatch.Services {
 
             this.Execute(request).then(
                 (response: any) => {
-                    if (response.data.features) {
+                    this.queriedGWsite = true;
+
+                    if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach((item) => {
                             console.log(item);
 
@@ -122,6 +128,10 @@ module GroundWaterWatch.Services {
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         });//next
                     }//endif
+                    else {
+                        console.log('No gww sites found');
+                        this.SelectedGWSite = null;
+                    }
                 }, (error) => {
                     console.log('No gww sites found');
                 }).finally(() => {

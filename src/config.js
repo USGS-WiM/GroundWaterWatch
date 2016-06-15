@@ -4,12 +4,11 @@ var GroundWaterWatch;
 (function (GroundWaterWatch) {
     //'use strict';
     var config = (function () {
-        function config($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $sceDelegateProvider) {
+        function config($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) {
             this.$stateProvider = $stateProvider;
             this.$urlRouterProvider = $urlRouterProvider;
             this.$locationProvider = $locationProvider;
             this.$logProvider = $logProvider;
-            this.$sceDelegateProvider = $sceDelegateProvider;
             this.$stateProvider.state("main", {
                 url: '/?rcode&workspaceID',
                 template: '<ui-view/>',
@@ -35,13 +34,8 @@ var GroundWaterWatch;
 
             //turns of angular-leaflet console spam
             this.$logProvider.debugEnabled(false);
-
-            $sceDelegateProvider.resourceUrlWhitelist([
-                'self',
-                'http://groundwaterwatch.usgs.gov/**'
-            ]);
         }
-        config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider', '$sceDelegateProvider'];
+        config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         return config;
     })();
 

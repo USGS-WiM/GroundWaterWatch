@@ -193,11 +193,6 @@ module GroundWaterWatch.Controllers {
             this.eventManager.SubscribeToEvent(WiM.Services.onSelectedAreaOfInterestChanged, new WiM.Event.EventHandler<WiM.Event.EventArgs>((sender: any, e: WiM.Services.SearchAPIEventArgs) => {
                 this.onSelectedAreaOfInterestChanged(sender, e);
             }));          
-            
-            this.eventManager.SubscribeToEvent(Services.onSelectedGWSiteChanged, new WiM.Event.EventHandler<Services.StudyAreaEventArgs>(() => {
-                this.onSelectedGWSiteChanged();
-            })); 
-            
 
             $scope.$on('leafletDirectiveMap.mousemove',(event, args) => {
                 var latlng = args.leafletEvent.latlng;
@@ -214,6 +209,10 @@ module GroundWaterWatch.Controllers {
             }); 
 
             $scope.$on('leafletDirectiveMap.click', (event, args) => {
+
+                this.gwwServices.SelectedGWSite = null;
+                this.modalService.openModal(Services.ModalType.e_siteinfo);
+
                 this.leafletData.getMap().then((map: any) => {
                     var boundsString = map.getBounds().toBBoxString();
                     var x = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).x);
