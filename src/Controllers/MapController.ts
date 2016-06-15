@@ -183,7 +183,7 @@ module GroundWaterWatch.Controllers {
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService','$timeout'];
+        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService','GroundWaterWatch.Services.ModalService','$timeout'];
         constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService, modal: Services.IModalService,$timeout: ng.ITimeoutService ) {
             $scope.vm = this;
             this.init();
@@ -199,7 +199,6 @@ module GroundWaterWatch.Controllers {
             this.gwwServices = gwwservice;
             this.SiteList = gwwservice.GWSiteList;
             this.modalService = modal;
-            this.isShown = true;
             this.SiteListEnabled = false;
 
             //register event
@@ -587,7 +586,7 @@ module GroundWaterWatch.Controllers {
         }
         private mapBoundsChange(oldValue, newValue) {            
             if (oldValue !== newValue) {
-                this.nomnimalZoomLevel = this.scaleLookup(this.center.zoom);
+                this.nominalZoomLevel = this.scaleLookup(this.center.zoom);
                 this.eventManager.RaiseEvent(onBoundingBoxChanged, this, new BoundingBoxChangedEventArgs(this.bounds, this.center.zoom));
             }
         }
@@ -624,25 +623,19 @@ module GroundWaterWatch.Controllers {
         private updateMapFilters() {
             if (!this.initialized) return;
             var statesfilter = "";
-            var groupedFeature = this.gwwServices.SelectedGWFilters.group("Type");            
-                this.leafletData.getLayers().then((maplayers: any) => {                    
-                    var states = groupedFeature.hasOwnProperty("1") ? groupedFeature["1"].map((item: Models.GroundWaterFilterSite) => { return item.Name }):null;
-                    if (states !== null) statesfilter = "STATE_NM in ('" + states.join("','") + "')"
-                    if (states !== null) {
-                        console.log(statesfilter);
-                        maplayers.overlays["gww"].wmsParams.CQL_FILTER = statesfilter;
-                        maplayers.overlays["gww"].redraw()
-                    }
-                    else
-                    {
-                        delete maplayers.overlays["gww"].wmsParams.CQL_FILTER;
-                    }
-                    maplayers.overlays["gww"].redraw()
-                });//end get layers
-
-
-        private mapBoundsChange(oldValue, newValue) {
-            this.nominalZoomLevel = this.scaleLookup(this.center.zoom);
+            var groupedFeature = this.gwwServices.SelectedGWFilters.group("Type");
+            this.leafletData.getLayers().then((maplayers: any) => {
+                var states = groupedFeature.hasOwnProperty("1") ? groupedFeature["1"].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
+                if (states !== null) statesfilter = "STATE_NM in ('" + states.join("','") + "')"
+                if (states !== null) {
+                    console.log(statesfilter);
+                    maplayers.overlays["gww"].wmsParams.CQL_FILTER = statesfilter;                    
+                }
+                else {
+                    delete maplayers.overlays["gww"].wmsParams.CQL_FILTER;
+                }
+                maplayers.overlays["gww"].redraw()
+            });//end get layers
         }
 
     }//end class
