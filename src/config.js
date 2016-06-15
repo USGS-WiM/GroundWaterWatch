@@ -1,16 +1,16 @@
-//http://lgorithms.blogspot.com/2013/07/angularui-router-as-infrastructure-of.html
+﻿//http://lgorithms.blogspot.com/2013/07/angularui-router-as-infrastructure-of.html
 //http://www.funnyant.com/angularjs-ui-router/
 var GroundWaterWatch;
 (function (GroundWaterWatch) {
     //'use strict';
     var config = (function () {
-        function config($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) {
+        function config($stateProvider, $urlRouterProvider, $locationProvider, $logProvider, $sceDelegateProvider) {
             this.$stateProvider = $stateProvider;
             this.$urlRouterProvider = $urlRouterProvider;
             this.$locationProvider = $locationProvider;
             this.$logProvider = $logProvider;
-            this.$stateProvider
-                .state("main", {
+            this.$sceDelegateProvider = $sceDelegateProvider;
+            this.$stateProvider.state("main", {
                 url: '/?rcode&workspaceID',
                 template: '<ui-view/>',
                 views: {
@@ -27,15 +27,24 @@ var GroundWaterWatch;
                         controller: "GroundWaterWatch.Controllers.NavbarController"
                     }
                 }
-            }); //end main state 
+            });
+
             this.$urlRouterProvider.otherwise('/');
+
             this.$locationProvider.html5Mode(true);
+
             //turns of angular-leaflet console spam
             this.$logProvider.debugEnabled(false);
-        } //end constructor
-        config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
+
+            $sceDelegateProvider.resourceUrlWhitelist([
+                'self',
+                'http://groundwaterwatch.usgs.gov/**'
+            ]);
+        }
+        config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider', '$sceDelegateProvider'];
         return config;
-    })(); //end class
+    })();
+
     angular.module('GroundWaterWatch', [
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
@@ -45,7 +54,6 @@ var GroundWaterWatch;
         'GroundWaterWatch.Services',
         'GroundWaterWatch.Controllers',
         'WiM.Services', 'WiM.Event', 'wim_angular', 'angularResizable'
-    ])
-        .config(config);
-})(GroundWaterWatch || (GroundWaterWatch = {})); //end module 
+    ]).config(config);
+})(GroundWaterWatch || (GroundWaterWatch = {})); //end module
 //# sourceMappingURL=config.js.map

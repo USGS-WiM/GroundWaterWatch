@@ -141,6 +141,7 @@ module GroundWaterWatch.Controllers {
         private explorationService: Services.IExplorationService;
         private eventManager: WiM.Event.IEventManager;
         private gwwServices: Services.IGroundWaterWatchService;
+        private modalService: Services.IModalService;   
 
         public SiteList: Array<Models.GroundWaterSite>;
         public isShown: boolean;
@@ -161,13 +162,13 @@ module GroundWaterWatch.Controllers {
         public drawControl: any;
         public toaster: any;
         public angulartics: any;
-        public nomnimalZoomLevel: string;
+        public nominalZoomLevel: string;
 
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams','leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager','GroundWaterWatch.Services.GroundWaterWatchService'];
-        constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService ) {
+        static $inject = ['$scope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
+        constructor(public $scope: IMapControllerScope, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService, modal: Services.IModalService ) {
             $scope.vm = this;
             this.init();
 
@@ -181,6 +182,7 @@ module GroundWaterWatch.Controllers {
             this.eventManager = eventManager;
             this.gwwServices = gwwservice;
             this.SiteList = gwwservice.GWSiteList;
+            this.modalService = modal;
             this.isShown = true;
 
             //subscribe to Events
@@ -190,7 +192,11 @@ module GroundWaterWatch.Controllers {
             }));
             this.eventManager.SubscribeToEvent(WiM.Services.onSelectedAreaOfInterestChanged, new WiM.Event.EventHandler<WiM.Event.EventArgs>((sender: any, e: WiM.Services.SearchAPIEventArgs) => {
                 this.onSelectedAreaOfInterestChanged(sender, e);
-            }));           
+            }));          
+            
+            this.eventManager.SubscribeToEvent(Services.onSelectedGWSiteChanged, new WiM.Event.EventHandler<Services.StudyAreaEventArgs>(() => {
+                this.onSelectedGWSiteChanged();
+            })); 
             
 
             $scope.$on('leafletDirectiveMap.mousemove',(event, args) => {
@@ -205,7 +211,21 @@ module GroundWaterWatch.Controllers {
 
             $scope.$on('leafletDirectiveMap.dragend',(event, args) => {
                 this.cursorStyle = 'pointer';
-            });
+            }); 
+
+            $scope.$on('leafletDirectiveMap.click', (event, args) => {
+                this.leafletData.getMap().then((map: any) => {
+                    var boundsString = map.getBounds().toBBoxString();
+                    var x = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).x);
+                    var y = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).y);
+                    var width = map.getSize().x;
+                    var height = map.getSize().y;
+
+                    this.gwwServices.queryGWsite(args.leafletEvent.latlng, boundsString,x,y,width,height)
+                });
+            }); 
+
+            $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
 
             $scope.$watch(() => this.explorationService.elevationProfileGeoJSON,(newval, oldval) => {
                 if (newval) this.displayElevationProfile()
@@ -229,9 +249,11 @@ module GroundWaterWatch.Controllers {
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void { 
-
-            //init map           
+            
+            //init map         
+            this.cursorStyle = 'pointer';  
             this.center = new Center(39, -100, 3);
+            this.nominalZoomLevel = this.scaleLookup(this.center.zoom); 
             this.layers = {
                 baselayers: configuration.basemaps,
                 overlays: configuration.overlayedLayers
@@ -489,6 +511,9 @@ module GroundWaterWatch.Controllers {
             });
         }
 
+        private onSelectedGWSiteChanged() {
+            this.modalService.openModal(Services.ModalType.e_siteinfo);
+        }
 
         private onSelectedAreaOfInterestChanged(sender: any, e: WiM.Services.SearchAPIEventArgs) {
 
@@ -574,6 +599,11 @@ module GroundWaterWatch.Controllers {
                 }
             }//next variable
             return layeridList;
+        }
+
+
+        private mapBoundsChange(oldValue, newValue) {
+            this.nominalZoomLevel = this.scaleLookup(this.center.zoom);
         }
 
     }//end class

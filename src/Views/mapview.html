@@ -4,7 +4,7 @@
         <wim-legend></wim-legend>
         <div class="map-position leaflet-bottom leaflet-left">
             <span>Zoom Level: {{vm.center.zoom}}</span> <br />
-            <span id="mapscale">Map Scale: 1:{{vm.nomnimalZoomLevel}}</span> <br />
+            <span id="mapscale">Map Scale: 1:{{vm.nominalZoomLevel}}</span> <br />
             <span>Lat: {{(vm.mapPoint.lat).toFixed(4)}}, Lon: {{(vm.mapPoint.lng).toFixed(4)}}</span>
         </div>
         <div ng-class="vm.explorationToolsExpanded ? 'exploration-tools-expanded ' : 'exploration-tools-collapsed '" ng-click="vm.explorationToolsExpanded = true; $event.stopPropagation(); $event.preventDefault();" ng-init="vm.explorationToolsExpanded == false">

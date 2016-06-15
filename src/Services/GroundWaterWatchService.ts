@@ -33,6 +33,8 @@ module GroundWaterWatch.Services {
         //GetFilterType(fType: Models.FilterType): ng.IPromise<Array<Models.IGroundWaterFilterSite>>
         AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void;
 
+        queryGWsite(latlong: any, boundsString:any, x:any, y:any, width:any, height:any)
+
     }
     export var onSelectedGWSiteChanged: string = "onSelectedGWSiteChanged";
     class GroundWaterWatchService extends WiM.Services.HTTPServiceBase implements IGroundWaterWatchService{       
@@ -100,6 +102,32 @@ module GroundWaterWatch.Services {
                 }).finally(() => {
                 });
         }
+
+        public queryGWsite(latlong: any, boundsString:any, x:any, y:any, width:any, height:any) {
+            //create false bounding box
+            //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
+
+
+            var url = "http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?&INFO_FORMAT=application/json&EXCEPTIONS=application/vnd.ogc.se_xml&REQUEST=GetFeatureInfo&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString + "&LAYERS=ngwmn:Latest_WL_Percentile&QUERY_LAYERS=ngwmn:Latest_WL_Percentile&buffer=10";
+
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
+
+            this.Execute(request).then(
+                (response: any) => {
+                    if (response.data.features) {
+                        response.data.features.forEach((item) => {
+                            console.log(item);
+
+                            this.SelectedGWSite = item;
+                            //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
+                        });//next
+                    }//endif
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+        }
+
     }//end class
 
     factory.$inject = ['$http', 'WiM.Event.EventManager'];
