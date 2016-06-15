@@ -63,7 +63,8 @@ module GroundWaterWatch.Services {
         }
         public queriedGWsite: boolean;
 
-        public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> =[];
+        public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> = [];
+
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
         constructor($http: ng.IHttpService, evntmngr:WiM.Event.IEventManager) {
@@ -83,18 +84,30 @@ module GroundWaterWatch.Services {
         //HelperMethods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
+            this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
-            this.loadGWSites();
-            this.SelectedGWFilters.push(new Models.GroundWaterFilterSite("State1 Test Filter", Models.FilterType.STATE));
-            this.SelectedGWFilters.push(new Models.GroundWaterFilterSite("State2 Test Filter", Models.FilterType.STATE));
+            this._eventManager.SubscribeToEvent(Controllers.onBoundingBoxChanged, new WiM.Event.EventHandler<Controllers.BoundingBoxChangedEventArgs>((sender, e) => {
+                this.onBoundingBoxChanged(sender, e);
+            }));
         }
         private loadGWSites() {
-            var url = "http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=ngwmn%3ALatest_WL_Percentile&STYLES&LAYERS=ngwmn%3ALatest_WL_Percentile&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4269&WIDTH=101&HEIGHT=101&BBOX=-114.0380859375%2C28.3447265625%2C-105.1611328125%2C37.2216796875";
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
-            this._GWSiteList = [];
+            var url = "/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image/png" +
+                "&TRANSPARENT=true" +
+                "&QUERY_LAYERS=ngwmn:Latest_WL_Percentile" +
+                "&STYLES"+
+                "&LAYERS=ngwmn:Latest_WL_Percentile" +
+                "&INFO_FORMAT=application/json" +
+                "&FEATURE_COUNT=50" +
+                "&X=50&Y=50&SRS=EPSG:4269" +
+                "&WIDTH=101&HEIGHT=101" +
+                "&BBOX=-159.78515625, 1.7578125, -24.78515625, 59.765625" +
+                "&CQL_FILTER=STATE_NM in ('Florida', 'Texas')";
+
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url);
             this.Execute(request).then(
                 (response: any) => {
                     if (response.data.features) {
+                        this._GWSiteList.length = 0;
                         response.data.features.forEach((item) => {
                             this._GWSiteList.push(Models.GroundWaterSite.FromJson(item));
                         });//next
@@ -133,11 +146,16 @@ module GroundWaterWatch.Services {
                         this.SelectedGWSite = null;
                     }
                 }, (error) => {
-                    console.log('No gww sites found');
+                    console.log('No gww sites found');                    
                 }).finally(() => {
                 });
         }
 
+        //Event Handlers
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        private onBoundingBoxChanged(sender: any, e: Controllers.BoundingBoxChangedEventArgs) {
+            if (e.zoomlevel >= 8) console.log([e.southern, e.western, e.northern, e.eastern].join(','));
+        }
     }//end class
 
     factory.$inject = ['$http', 'WiM.Event.EventManager'];
