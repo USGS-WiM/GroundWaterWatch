@@ -112,7 +112,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.$inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return SidebarController;
-        })(); //end class
+        }()); //end class
         var ProcedureType;
         (function (ProcedureType) {
             ProcedureType[ProcedureType["Search"] = 1] = "Search";

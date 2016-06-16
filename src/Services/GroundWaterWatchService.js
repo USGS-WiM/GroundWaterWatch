@@ -134,7 +134,7 @@ var GroundWaterWatch;
                     console.log([e.southern, e.western, e.northern, e.eastern].join(','));
             };
             return GroundWaterWatchService;
-        })(WiM.Services.HTTPServiceBase); //end class
+        }(WiM.Services.HTTPServiceBase)); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager'];
         function factory($http, evntmngr) {
             return new GroundWaterWatchService($http, evntmngr);
