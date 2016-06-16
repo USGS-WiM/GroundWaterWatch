@@ -115,18 +115,6 @@
     <TypeScriptCompile Include="src\Services\GroundWaterWatchService.ts" />
     <TypeScriptCompile Include="src\Services\ModalService.ts" />
     <TypeScriptCompile Include="src\Services\service.module.ts" />
-    <TypeScriptCompile Include="typings\browser.d.ts" />
-    <TypeScriptCompile Include="typings\browser\ambient\angular-ui-bootstrap\index.d.ts" />
-    <TypeScriptCompile Include="typings\browser\ambient\angular-ui-router\index.d.ts" />
-    <TypeScriptCompile Include="typings\browser\ambient\angular\index.d.ts" />
-    <TypeScriptCompile Include="typings\browser\ambient\jquery\index.d.ts" />
-    <TypeScriptCompile Include="typings\browser\ambient\leaflet\index.d.ts" />
-    <TypeScriptCompile Include="typings\main.d.ts" />
-    <TypeScriptCompile Include="typings\main\ambient\angular-ui-bootstrap\index.d.ts" />
-    <TypeScriptCompile Include="typings\main\ambient\angular-ui-router\index.d.ts" />
-    <TypeScriptCompile Include="typings\main\ambient\angular\index.d.ts" />
-    <TypeScriptCompile Include="typings\main\ambient\jquery\index.d.ts" />
-    <TypeScriptCompile Include="typings\main\ambient\leaflet\index.d.ts" />
     <TypeScriptCompile Include="_references.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
