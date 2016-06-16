@@ -100,8 +100,8 @@ module GroundWaterWatch.Controllers {
                         //hide footer
                         replaced = replaced.replace('<div id="usgsfooter">', '<div id="usgsfooter" style="display:none;">');
 
-                            //change relative URLs
-                            replaced = this.replaceAll(replaced, 'iframe', 'div')
+                        //change relative URLs
+                        replaced = this.replaceAll(replaced, 'iframe', 'div')
                         replaced = this.replaceAll(replaced, '<td valign="top" width="550">', '<td valign="top" width="550" style="display:none;">')
                         replaced = this.replaceAll(replaced, 'src="../', 'src="http://groundwaterwatch.usgs.gov/')
                         replaced = this.replaceAll(replaced, 'src="images/', 'src="http://groundwaterwatch.usgs.gov/images/')
