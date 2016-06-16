@@ -41,7 +41,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             NavbarController.$inject = ['$scope', 'GroundWaterWatch.Services.ModalService'];
             return NavbarController;
-        })(); //end class
+        }()); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.NavbarController', NavbarController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

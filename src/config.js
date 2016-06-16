@@ -35,7 +35,7 @@ var GroundWaterWatch;
         } //end constructor
         config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         return config;
-    })(); //end class
+    }()); //end class
     angular.module('GroundWaterWatch', [
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
