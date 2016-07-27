@@ -5,7 +5,7 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/ngwmn-geoserver'
+    'GroundWaterWatch': 'http://cida-eros-gwwqa.cr.usgs.gov:8082/geoserver'
 }
 
 configuration.queryparams =
@@ -155,13 +155,12 @@ configuration.overlayedLayers = {
         name: 'Groundwater Sites',
         type: 'wms',
         visible: true,
-        url: 'http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms',
+        url: configuration.baseurls['GroundWaterWatch'] + '/groundwaterwatch/wms',
         layerParams: {
-            layers: 'ngwmn:Latest_WL_Percentile',
+            layers: 'groundwaterwatch:Latest_WL_Percentile',
             format: 'image/png',
             transparent: true,
             version: '1.1.0'
-            
             }
     }
     //http://docs.geoserver.org/stable/en/user/services/wms/reference.html#wms-getmap

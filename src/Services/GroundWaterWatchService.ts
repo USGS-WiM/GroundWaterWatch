@@ -86,36 +86,6 @@ module GroundWaterWatch.Services {
         private init(): void {
             this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
-            this._eventManager.SubscribeToEvent(Controllers.onBoundingBoxChanged, new WiM.Event.EventHandler<Controllers.BoundingBoxChangedEventArgs>((sender, e) => {
-                this.onBoundingBoxChanged(sender, e);
-            }));
-        }
-        private loadGWSites() {
-            var url = "/ngwmn/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image/png" +
-                "&TRANSPARENT=true" +
-                "&QUERY_LAYERS=ngwmn:Latest_WL_Percentile" +
-                "&STYLES"+
-                "&LAYERS=ngwmn:Latest_WL_Percentile" +
-                "&INFO_FORMAT=application/json" +
-                "&FEATURE_COUNT=50" +
-                "&X=50&Y=50&SRS=EPSG:4269" +
-                "&WIDTH=101&HEIGHT=101" +
-                "&BBOX=-159.78515625, 1.7578125, -24.78515625, 59.765625" +
-                "&CQL_FILTER=STATE_NM in ('Florida', 'Texas')";
-
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url);
-            this.Execute(request).then(
-                (response: any) => {
-                    if (response.data.features) {
-                        this._GWSiteList.length = 0;
-                        response.data.features.forEach((item) => {
-                            this._GWSiteList.push(Models.GroundWaterSite.FromJson(item));
-                        });//next
-                    }//endif
-                }, (error) => {
-                    console.log('No gww sites found');                    
-                }).finally(() => {
-                });
         }
 
         public queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any) {
@@ -124,8 +94,13 @@ module GroundWaterWatch.Services {
             //create false bounding box
             //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
 
-
-            var url = "http://cida-test.er.usgs.gov/ngwmn-geoserver/ngwmn/wms?&INFO_FORMAT=application/json&EXCEPTIONS=application/vnd.ogc.se_xml&REQUEST=GetFeatureInfo&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString + "&LAYERS=ngwmn:Latest_WL_Percentile&QUERY_LAYERS=ngwmn:Latest_WL_Percentile&buffer=10";
+            //groundwaterwatch:Latest_WL_Percentile
+            var url = configuration.baseurls['GroundWaterWatch'] + "/groundwaterwatch/wms?";
+            url += "&INFO_FORMAT=application/json";
+            url += "&EXCEPTIONS=application/json";
+            url += "&REQUEST=GetFeatureInfo";
+            url += "&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
+            url += "&LAYERS=groundwaterwatch:Latest_WL_Percentile&QUERY_LAYERS=groundwaterwatch:Latest_WL_Percentile&buffer=10";
 
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
 
@@ -153,9 +128,7 @@ module GroundWaterWatch.Services {
 
         //Event Handlers
         //-+-+-+-+-+-+-+-+-+-+-+-
-        private onBoundingBoxChanged(sender: any, e: Controllers.BoundingBoxChangedEventArgs) {
-            if (e.zoomlevel >= 8) console.log([e.southern, e.western, e.northern, e.eastern].join(','));
-        }
+
     }//end class
 
     factory.$inject = ['$http', 'WiM.Event.EventManager'];
