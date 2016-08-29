@@ -50,15 +50,15 @@ module GroundWaterWatch.Controllers {
 
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
-        public sideBarCollapsed: boolean;
+         public sideBarCollapsed: boolean;
         public selectedProcedure: ProcedureType;
         public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
 
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
-        constructor($scope: ISidebarControllerScope, toaster, $analytics, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService) {
+        static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
+        constructor($scope: ISidebarControllerScope, toaster, $analytics,$stateParams, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService) {
             $scope.vm = this;
            
             this.toaster = toaster;

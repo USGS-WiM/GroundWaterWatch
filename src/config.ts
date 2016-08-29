@@ -9,8 +9,16 @@ module GroundWaterWatch {
         static $inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         constructor(private $stateProvider: ng.ui.IStateProvider, private $urlRouterProvider: ng.ui.IUrlRouterProvider, private $locationProvider: ng.ILocationProvider, private $logProvider: ng.ILogProvider) {
             this.$stateProvider
+                //NETWORK_CD         = ncd
+                //STATE_CD           = sc
+                //COUNTY_CD          = cc
+                //SITE_NO            = S
+                
+                //NAT_AQUIFER_CD     = 
+                //LOCAL_AQUIFER_CD   =
+                //AGENCY_CD          =
                 .state("main", {
-                url: '/?rcode&workspaceID',
+                url: '/?ncd&sc&cc&S',
                 template:'<ui-view/>',
                 views: {
                     'map': {

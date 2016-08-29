@@ -270,6 +270,11 @@ div.leaflet-top > .elevation {
     margin-left: 0px !important;
     border-radius: 2px !important;
     border: 2px solid rgba(45, 49, 70, 0.23) !important;
+
+}
+#sapi_searchTextBoxDiv {
+/*hides the default searchtextbox div*/
+    position:unset !important;
 }
 
 .sapi .ui-autocomplete {
