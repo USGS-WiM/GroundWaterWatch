@@ -5,7 +5,7 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatch': 'http://cida-eros-gwwqa.cr.usgs.gov:8082/geoserver'
+    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver'
 }
 
 configuration.queryparams =
@@ -86,57 +86,6 @@ configuration.basemaps =
         type: "agsBase",
         layer: "Imagery",
         visible: false
-    },
-    "MapquestOAM": {
-        "name": "Mapquest Areal",
-        "url": "http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png",
-        "visible": false,
-        "type": 'xyz',
-        "layerOptions": {
-            "maxZoom": 19,
-            "subdomains": ['oatile1', 'oatile2', 'oatile3', 'oatile4'],
-            "attribution": 'Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>. Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
-        }
-    },
-    "MapquestHYB": {
-        "name": "Mapquest Hybrid",
-        "type": 'group',
-        "visible": false,
-        "layerOptions": {
-            "maxZoom": 19,
-            "layers": [
-                {
-                    "name": "tiles",
-                    "url": "http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg",
-                    "type": 'xyz',
-                    "layerOptions": {
-                        "maxZoom": 19,
-                        "subdomains": ['oatile1', 'oatile2', 'oatile3', 'oatile4']
-                    }
-                },
-                {
-                    "name": "roads",
-                    "url": "http://{s}.mqcdn.com/tiles/1.0.0/hyb/{z}/{x}/{y}.png",
-                    "type": 'xyz',
-                    "layerOptions": {
-                        "maxZoom": 19,
-                        "subdomains": ['oatile1', 'oatile2', 'oatile3', 'oatile4'],
-                        "attribution": 'Labels courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA. Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
-                    }
-                }
-            ],
-        }
-    },
-    "mapquestOSM": {
-        "name": "Mapquest Streets",
-        "url": "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png",
-        "visible": false,
-        "type": 'xyz',
-        "layerOptions": {
-            "maxZoom": 19,
-            "subdomains": ['otile1', 'otile2', 'otile3', 'otile4'],
-            "attribution": "Tiles courtesy of <a href='http://www.mapquest.com/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png'>. Map data (c) <a href='http://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors, CC-BY-SA."
-        }
     }
 }// end baselayer
 
@@ -144,10 +93,22 @@ configuration.overlayedLayers = {
     states: {
         name: 'States',
         type: 'agsDynamic',
-        url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer',
+        url: 'https://gis.geo.census.gov/arcgis/rest/services/cedr/sahie_cedr/MapServer',
         visible: true,
         layerOptions: {
-            layers: [3],
+            layers: [7],
+            opacity: 1
+        }
+    },
+    counties: {
+        name: 'Counties',
+        type: 'agsDynamic',
+        url: 'https://gis.geo.census.gov/arcgis/rest/services/cedr/sahie_cedr/MapServer',
+        visible: true,
+        layerOptions: {
+            layers: [15],
+            minZoom: 7,
+            maxZoom: 20,
             opacity: 1
         }
     },

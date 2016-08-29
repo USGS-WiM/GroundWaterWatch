@@ -43,6 +43,8 @@ module GroundWaterWatch.Models {
     export enum FilterType {
         STATE = 1,
         COUNTY = 2,
-        AQUIFER = 3
+        NETWORK =3,
+        AQUIFER = 4,
+        SITE=5
     }
 }//end module 

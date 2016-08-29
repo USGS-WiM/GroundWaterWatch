@@ -41,10 +41,11 @@ module GroundWaterWatch.Controllers {
         public get ProjectName(): string {
             return configuration.projectName;
         }
+
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'GroundWaterWatch.Services.ModalService'];
-        constructor($scope: INavbarControllerScope, modal: Services.IModalService) {            
+        static $inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService'];
+        constructor($scope: INavbarControllerScope, $stateParams, modal: Services.IModalService) {            
             $scope.vm = this;
             this.modalService = modal;
         }

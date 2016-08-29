@@ -72,10 +72,10 @@ module GroundWaterWatch.Controllers {
         }
 
         public AddStateFilter(item: string) {
-            this.SelectedStates.push(new Models.GroundWaterFilterSite(item, Models.FilterType.STATE));
+            this.SelectedStates.push(new Models.GroundWaterFilterSite('08', Models.FilterType.STATE));
         }
         public AddCountyFilter(item: string) {
-            this.SelectedCounties.push(new Models.GroundWaterFilterSite(item, Models.FilterType.COUNTY));
+            this.SelectedCounties.push(new Models.GroundWaterFilterSite('003', Models.FilterType.COUNTY));
         }
         public AddAquiferFilter(item: string) {
             this.SelectedAquifers.push(new Models.GroundWaterFilterSite(item, Models.FilterType.AQUIFER));
