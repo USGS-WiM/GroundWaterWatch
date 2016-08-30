@@ -5,7 +5,8 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver'
+    'GroundWaterWatchTest': 'http://cida-test.er.usgs.gov/gww-geoserver',
+    'GroundWaterWatch': 'http://cida-eros-gwwqa.cr.usgs.gov:8082/gww-geoserver'
 }
 
 configuration.queryparams =
