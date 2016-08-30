@@ -44,8 +44,21 @@
             <div class="sidebar-item">
                 <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Network Types<div></div><h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-hide="vm.selectedProcedure != 2">
-                    <div class="wim-alert">Select Network Type</div>
-                </div>
+                    <div class="wim-alert">Click or Tap a minimap to switch network display</div>
+                    <div ng-controller="GroundWaterWatch.Controllers.MiniMapController">
+
+                        <div class="miniMapPanel" ng-class="vm.selectedNetwork == networkType.networkCode  ? 'panel panel-success': 'panel panel-default'" ng-repeat="networkType in vm.networkTypes" ng-init="vm.setMapLayer(networkType.networkCode,networkType.networkCode)" ng-click="vm.setMapLayer(networkType.networkCode,'mainMap')">
+                            <div class=panel-heading> <h3 class=panel-title>{{networkType.networkDescription}}</h3> </div>
+                            <div class="panel-body nopadding">
+                                <leaflet ng-attr-id="{{networkType.networkCode}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
+                            </div>
+                          </div>
+
+                        <!--<div class="well well-sm" ng-repeat="networkType in vm.networkTypes" ng-init="vm.setMiniMapLayer(networkType.networkCode)" ng-click="vm.setMainMapLayer(networkType.networkCode)">
+                            <h3 ng-class="vm.selectedNetwork == networkType.networkCode  ? 'list-group-item-active': 'list-group-item'" >{{networkType.networkDescription}}</h3>
+                            <leaflet ng-attr-id="{{networkType.networkCode}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
+                        </div>-->
+                    </div>
             </div>
             <div class="sidebar-item">
                 <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Filters<div></div><i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
