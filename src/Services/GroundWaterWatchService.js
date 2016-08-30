@@ -29,6 +29,16 @@ var GroundWaterWatch;
     (function (Services) {
         'use strict';
         Services.onSelectedGWSiteChanged = "onSelectedGWSiteChanged";
+        var Center = (function () {
+            //Constructor
+            //-+-+-+-+-+-+-+-+-+-+-+-
+            function Center(lt, lg, zm) {
+                this.lat = lt;
+                this.lng = lg;
+                this.zoom = zm;
+            }
+            return Center;
+        }());
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -36,6 +46,7 @@ var GroundWaterWatch;
             function GroundWaterWatchService($http, evntmngr) {
                 _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
                 this.SelectedGWFilters = [];
+                this.mapCenter = null;
                 this._eventManager = evntmngr;
                 this.queriedGWsite = false;
                 this.init();
@@ -83,7 +94,7 @@ var GroundWaterWatch;
                 var network = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.NETWORK.toString()) ?
                     groupedFeature[GroundWaterWatch.Models.FilterType.NETWORK.toString()].map(function (item) { return item.Name; }) : null;
                 if (network !== null)
-                    filter.push("NETWORK_CD in ('" + network.join("','") + "')");
+                    filter.push("NETWORK_CD='" + network + "'");
                 var county = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
                     groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.Name; }) : null;
                 if (county !== null)
@@ -130,6 +141,7 @@ var GroundWaterWatch;
             GroundWaterWatchService.prototype.init = function () {
                 this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
+                this.mapCenter = new Center(39, -100, 3);
             };
             //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
             //ABBREV = 'CO'
@@ -164,7 +176,7 @@ var GroundWaterWatch;
                 });
             };
             return GroundWaterWatchService;
-        })(WiM.Services.HTTPServiceBase); //end class
+        }(WiM.Services.HTTPServiceBase)); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager'];
         function factory($http, evntmngr) {
             return new GroundWaterWatchService($http, evntmngr);

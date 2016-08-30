@@ -13,7 +13,33 @@ configuration.queryparams =
     "NWISsite": '/site/?format=mapper,1.0&stateCd={0}&siteType=GL,OC,OC-CO,ES,LK,ST,ST-CA,ST-DCH,ST-TS&hasDataTypeCd=iv',
     'NLCDQueryService': '/LandCover/USGS_EROS_LandCover_NLCD/MapServer/4'
 }
-
+configuration.networkTypes = [
+    {
+        networkCode:"AWL",
+        networkDescription: "Active Groundwater Level Network"
+    },
+    {
+        networkCode:"LWL",
+        networkDescription: "Below Normal Groundwater Levels"
+    },
+    {
+        networkCode:"CRN",
+        networkDescription: "Climate Response Network"
+    },
+    {
+        networkCode:"RTN",
+        networkDescription: "Real-Time Groundwater Level Network"
+    },
+    {
+        networkCode:"LTN",
+        networkDescription: "Long-Term Groundwater Data Network"
+    },
+    {
+        networkCode:"SPR",
+        networkDescription: "Active Spring Monitoring Sites"
+    },
+]
+    
 configuration.basemaps =
 {
     national: {

@@ -52,8 +52,7 @@ module GroundWaterWatch.Controllers {
         //-+-+-+-+-+-+-+-+-+-+-+-
          public sideBarCollapsed: boolean;
         public selectedProcedure: ProcedureType;
-        public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
-
+        public SelectedFilters: Array<Models.IGroundWaterFilterSite>;  
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -66,6 +65,7 @@ module GroundWaterWatch.Controllers {
             this.searchService = service;
             this.groundwaterwatchService = gwwService;
             this.modalService = modalService;
+            
 
             this.init();
         }
@@ -118,6 +118,7 @@ module GroundWaterWatch.Controllers {
             this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
             this.sideBarCollapsed = false;
             this.selectedProcedure = ProcedureType.Search;
+
         }
         private canUpdateProcedure(pType: ProcedureType): boolean {
             //console.log('in canUpdateProcedure');

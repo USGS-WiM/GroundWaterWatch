@@ -34,9 +34,31 @@ module GroundWaterWatch.Services {
         AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void;
         getFilterRequest(): string;
         queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any);
-
+        mapCenter: ICenter;
     }
     export var onSelectedGWSiteChanged: string = "onSelectedGWSiteChanged";
+
+    interface ICenter {
+        lat: number;
+        lng: number;
+        zoom: number;
+    }
+    class Center implements ICenter {
+        //Properties
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        public lat: number;
+        public lng: number;
+        public zoom: number;
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        constructor(lt: number, lg: number, zm: number) {
+            this.lat = lt;
+            this.lng = lg;
+            this.zoom = zm;
+        }
+    }
+
+
     class GroundWaterWatchService extends WiM.Services.HTTPServiceBase implements IGroundWaterWatchService{       
         //Events
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -64,6 +86,7 @@ module GroundWaterWatch.Services {
         public queriedGWsite: boolean;
 
         public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> = [];
+        public mapCenter: ICenter = null;
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -71,8 +94,9 @@ module GroundWaterWatch.Services {
             super($http, configuration.baseurls['GroundWaterWatch'])
             this._eventManager = evntmngr;
             this.queriedGWsite = false;
-            
+
             this.init();
+         
         }
 
         //Methods
@@ -98,7 +122,7 @@ module GroundWaterWatch.Services {
 
             var network = groupedFeature.hasOwnProperty(Models.FilterType.NETWORK.toString()) ?
                 groupedFeature[Models.FilterType.NETWORK.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
-            if (network !== null) filter.push("NETWORK_CD in ('" + network.join("','") + "')");
+            if (network !== null) filter.push("NETWORK_CD='" + network + "'");
 
             var county = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
                 groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
@@ -153,6 +177,8 @@ module GroundWaterWatch.Services {
         private init(): void {
             this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
+
+            this.mapCenter = new Center(39, -100, 3);
         }
         //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
         //ABBREV = 'CO'

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//----- IGroundWaterFilterSite -------------------------------------------------
+//----- IMapCenter -------------------------------------------------
 //------------------------------------------------------------------------------
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
@@ -8,7 +8,7 @@
 //    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
 //             
 // 
-//   purpose:  filter for GWW site
+//   purpose:  mapCenter
 //          
 //discussion:
 //
@@ -20,22 +20,16 @@ var GroundWaterWatch;
 (function (GroundWaterWatch) {
     var Models;
     (function (Models) {
-        var GroundWaterFilterSite = (function () {
-            function GroundWaterFilterSite(n, t) {
-                this.Name = n;
-                this.Type = t;
+        var MapCenter = (function () {
+            //Constructor
+            //-+-+-+-+-+-+-+-+-+-+-+-
+            function MapCenter(lt, lg, zm) {
+                this.lat = lt;
+                this.lng = lg;
+                this.zoom = zm;
             }
-            return GroundWaterFilterSite;
+            return MapCenter;
         }());
-        Models.GroundWaterFilterSite = GroundWaterFilterSite; //end class
-        (function (FilterType) {
-            FilterType[FilterType["STATE"] = 1] = "STATE";
-            FilterType[FilterType["COUNTY"] = 2] = "COUNTY";
-            FilterType[FilterType["NETWORK"] = 3] = "NETWORK";
-            FilterType[FilterType["AQUIFER"] = 4] = "AQUIFER";
-            FilterType[FilterType["SITE"] = 5] = "SITE";
-        })(Models.FilterType || (Models.FilterType = {}));
-        var FilterType = Models.FilterType;
     })(Models = GroundWaterWatch.Models || (GroundWaterWatch.Models = {}));
 })(GroundWaterWatch || (GroundWaterWatch = {})); //end module 
-//# sourceMappingURL=SitesFilter.js.map
+//# sourceMappingURL=MapCenter.js.map
