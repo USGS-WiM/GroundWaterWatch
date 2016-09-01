@@ -74,6 +74,8 @@
     <Content Include="src\images\usgs_logo.png" />
     <Content Include="src\index.html" />
     <Content Include="bower.json" />
+    <Content Include="src\principalAquifers.js" />
+    <Content Include="src\stateLocalNetworks.js" />
     <Content Include="src\Views\siteinfomodal.html" />
     <Content Include="src\Views\filtermodal.html" />
     <Content Include="src\Views\aboutmodal.html" />
@@ -85,6 +87,7 @@
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <None Include="custom.pubxml" />
+    <Content Include="src\statecodes.js" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -108,6 +111,7 @@
     <TypeScriptCompile Include="src\Controllers\Navbarcontroller.ts" />
     <TypeScriptCompile Include="src\Controllers\SidebarController.ts" />
     <TypeScriptCompile Include="src\Controllers\SiteListController.ts" />
+    <TypeScriptCompile Include="src\Models\IFilterSite.ts" />
     <TypeScriptCompile Include="src\Models\SitesFilter.ts" />
     <TypeScriptCompile Include="src\Models\GroundWaterWatchSite.ts" />
     <TypeScriptCompile Include="src\Models\Models.module.ts" />

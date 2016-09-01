@@ -50,7 +50,7 @@ var GroundWaterWatch;
                             return {
                                 templateUrl: 'Views/filtermodal.html',
                                 controller: 'GroundWaterWatch.Controllers.FilterModalController',
-                                size: 'lg',
+                                size: 'sm',
                                 backdropClass: 'backdropZ',
                                 backdrop: 'static',
                                 windowClass: 'windowZ'

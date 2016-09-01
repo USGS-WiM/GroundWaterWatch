@@ -29,10 +29,14 @@ module GroundWaterWatch.Services {
         GWSiteList: Array<Models.ISimpleGroundWaterSite>;
         SelectedGWSite: Models.ISimpleGroundWaterSite;
         SelectedGWFilters: Array<Models.IGroundWaterFilterSite>;
+        StateList: Array<Models.IState>;
+        AquiferList: Array<Models.IAquifer>
+        NetworkList: Array<Models.INetwork>
 
         //GetFilterType(fType: Models.FilterType): ng.IPromise<Array<Models.IGroundWaterFilterSite>>
         AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void;
         getFilterRequest(): string;
+        loadCounties(state: Models.IState);
         queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any);
 
     }
@@ -64,6 +68,20 @@ module GroundWaterWatch.Services {
         public queriedGWsite: boolean;
 
         public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> = [];
+        
+        private _states: Array<Models.IState>
+        public get StateList(): Array<Models.IState> {
+            return this._states;
+        }
+        private _aquifers: Array<Models.IState>
+        public get AquiferList(): Array<Models.IAquifer> {
+            return this._aquifers;
+        }
+        private _networks: Array<Models.IState>
+        public get NetworkList(): Array<Models.INetwork> {
+            return this._networks;
+        }
+
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -91,21 +109,24 @@ module GroundWaterWatch.Services {
             var filter:Array<string> = [];
             
             var groupedFeature = this.SelectedGWFilters.group("Type");
+            var county = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
+                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
+            if (county !== null) filter.push("COUNTY_CD in ('" + county.join("','") + "')");
+
+            var StateCounty = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
+                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return (<Models.ICounty>item.item).statecode }) : null;
+            if (StateCounty !== null) filter.push("STATE_CD in ('" + StateCounty.join("','") + "')"); 
 
             var states = groupedFeature.hasOwnProperty(Models.FilterType.STATE.toString()) ?
-                groupedFeature[Models.FilterType.STATE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
+                groupedFeature[Models.FilterType.STATE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
             if (states !== null) filter.push("STATE_CD in ('" + states.join("','") + "')"); 
 
             var network = groupedFeature.hasOwnProperty(Models.FilterType.NETWORK.toString()) ?
-                groupedFeature[Models.FilterType.NETWORK.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
-            if (network !== null) filter.push("NETWORK_CD in ('" + network.join("','") + "')");
-
-            var county = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
-                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
-            if (county !== null) filter.push("COUNTY_CD in ('" + county.join("','") + "')");
+                groupedFeature[Models.FilterType.NETWORK.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
+            if (network !== null) filter.push("NETWORK_CD in ('" + network.join("','") + "')");       
 
             var site = groupedFeature.hasOwnProperty(Models.FilterType.SITE.toString()) ?
-                groupedFeature[Models.FilterType.SITE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.Name }) : null;
+                groupedFeature[Models.FilterType.SITE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
             if (site !== null) filter.push("SITE_NO in ('" + site.join("','") + "')");
 
             return filter.join(" AND ");
@@ -117,14 +138,10 @@ module GroundWaterWatch.Services {
             //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
 
             //groundwaterwatch:Latest_WL_Percentile
-            var url = configuration.baseurls['GroundWaterWatch'] + "/groundwaterwatch/wms?";
-            url += "&INFO_FORMAT=application/json";
-            url += "&EXCEPTIONS=application/json";
-            url += "&REQUEST=GetFeatureInfo";
-            url += "&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
-            url += "&LAYERS=groundwaterwatch:Latest_WL_Percentile&QUERY_LAYERS=groundwaterwatch:Latest_WL_Percentile&buffer=10";
+            var url = configuration.baseurls['siteservices']+"/site.ashx";
+            url += "?WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
 
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true, WiM.Services.Helpers.methodType.GET, "", null, { 'Accept-Encoding': 'gzip' });
 
             this.Execute(request).then(
                 (response: any) => {
@@ -132,8 +149,6 @@ module GroundWaterWatch.Services {
 
                     if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach((item) => {
-                            console.log(item);
-
                             this.SelectedGWSite = item;
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         });//next
@@ -147,12 +162,36 @@ module GroundWaterWatch.Services {
                 }).finally(() => {
                 });
         }
-        
+        public loadCounties(state: Models.IState):void {
+           
+            var url = configuration.overlayedLayers['counties'].url +"/15/query?returnGeometry=false&where=STATE='{0}'&outSr=4326&outFields=COUNTY,STATE,ABBREV,NAME&f=json".format(state.code);
+            
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
+
+            this.Execute(request).then(
+                (response: any) => {
+                    this.queriedGWsite = true;
+
+                    if (response.data.features.length > 0) {
+                        state.Counties = response.data.features.map((c: any) => { return { name: c.attributes.NAME +", "+c.attributes.ABBREV, code: c.attributes.COUNTY, statecode: c.attributes.STATE} })
+                    }//endif
+                    else {
+                        console.log('No gww sites found');
+                        this.SelectedGWSite = null;
+                    }
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+        }
         //HelperMethods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
             this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
+            this.loadStates();
+            this.loadAquifers();
+            this.loadNetworks();
         }
         //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
         //ABBREV = 'CO'
@@ -161,12 +200,8 @@ module GroundWaterWatch.Services {
         private updateGWWSiteList() {
             var filter = this.getFilterRequest();
             
-            var url = configuration.baseurls['GroundWaterWatch'] + "/groundwaterwatch/wfs?";
-            url += "&SERVICE=wfs&VERSION=1.1.1";
-            url += "&outputFormat=application/json";
-            url += "&REQUEST=getfeature";
-            url += "&typename=groundwaterwatch:Latest_WL_Percentile";
-            if (filter != "") url += "&CQL_FILTER=" + filter;
+            var url = configuration.baseurls['siteservices'] +"/sites.ashx";
+            if (filter != "") url += "?CQL_FILTER=" + filter;
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
 
             this.Execute(request).then(
@@ -175,7 +210,7 @@ module GroundWaterWatch.Services {
 
                     if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach((item) => {
-                            console.log(item);
+                            //console.log(item);
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         });//next
                     }//endif
@@ -189,8 +224,45 @@ module GroundWaterWatch.Services {
                 });
 
         }
+        private loadStates(): void {
 
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("statecodes.js",true);
 
+            this.Execute(request).then(
+                (response: any) => {
+                    this._states = response.data;
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+
+        }
+        private loadAquifers(): void {
+            console.log("Loading Aquifers");
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("principalAquifers.js", true);
+
+            this.Execute(request).then(
+                (response: any) => {
+                    this._aquifers = response.data;
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+
+        }
+        private loadNetworks(): void {
+            console.log("Loading networks");
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("stateLocalNetworks.js", true);
+
+            this.Execute(request).then(
+                (response: any) => {
+                    this._networks = response.data;
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+
+        }
         //Event Handlers
         //-+-+-+-+-+-+-+-+-+-+-+-
 

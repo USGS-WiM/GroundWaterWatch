@@ -24,17 +24,17 @@
 // Interface
 module GroundWaterWatch.Models {
     export interface IGroundWaterFilterSite {
-        Name: string
+        item: IFilterSite
         Type:FilterType
     }
 
     export class GroundWaterFilterSite implements IGroundWaterFilterSite {
         //properties
-        public Name: string
-        public Type: any
+        public item: IFilterSite
+        public Type: FilterType
 
-        constructor(n:string, t:FilterType) {
-            this.Name = n;
+        constructor(n:IFilterSite, t:FilterType) {
+            this.item = n;
             this.Type = t;
         }
 

@@ -47,6 +47,7 @@ module GroundWaterWatch.Controllers {
         private angulartics: any;
         private toaster: any;
         private modalService: Services.IModalService;
+        private eventManager: WiM.Event.IEventManager;
 
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -57,8 +58,8 @@ module GroundWaterWatch.Controllers {
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
-        constructor($scope: ISidebarControllerScope, toaster, $analytics,$stateParams, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService) {
+        static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService','WiM.Event.EventManager'];
+        constructor($scope: ISidebarControllerScope, toaster, $analytics,$stateParams, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService, eventmanager:WiM.Event.IEventManager) {
             $scope.vm = this;
            
             this.toaster = toaster;
@@ -66,6 +67,7 @@ module GroundWaterWatch.Controllers {
             this.searchService = service;
             this.groundwaterwatchService = gwwService;
             this.modalService = modalService;
+            this.eventManager = eventmanager;
 
             this.init();
         }
@@ -90,11 +92,18 @@ module GroundWaterWatch.Controllers {
             e.stopPropagation(); e.preventDefault();
             $("#sapi-searchTextBox").trigger($.Event("keyup", { "keyCode": 13 }));
         }
-        public removeFilter(filter: Models.IGroundWaterFilterSite) {
-            var index = this.SelectedFilters.indexOf(filter);
-            this.SelectedFilters.splice(index);
+        public removeFilter(index:number, filter: Models.IGroundWaterFilterSite) {
+            this.SelectedFilters.splice(index, 1);
+            if (filter.Type == Models.FilterType.COUNTY || filter.Type == Models.FilterType.STATE) { 
+                var fname = filter.Type == Models.FilterType.COUNTY ? "COUNTY" : "STATE";
+                this.eventManager.RaiseEvent(WiM.Directives.onLayerChanged, this, new WiM.Directives.LegendLayerChangedEventArgs(fname + filter.item.code, "visible", false));
+            }
         }
         public ClearFilters() {
+            this.SelectedFilters.forEach((f) => {
+                var fname = f.Type == Models.FilterType.COUNTY ? "COUNTY" : "STATE";
+                this.eventManager.RaiseEvent(WiM.Directives.onLayerChanged, this, new WiM.Directives.LegendLayerChangedEventArgs(fname + f.item.code, "visible", false));
+            });
             this.SelectedFilters.splice(0, this.SelectedFilters.length);
         }
         public AddFilter() {

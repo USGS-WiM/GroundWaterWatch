@@ -45,6 +45,30 @@ body {
 .wim-btn-group {
     margin-bottom:4px;
 }
+/*
+    ===========================
+    ===========================
+         Overrides
+    ===========================
+    ===========================
+*/
+.ams-button {
+    font-size: 10pt;
+    padding: 6px 14px;
+    background-color: #ffffff;
+    border: 2px solid rgba(45, 49, 70, 0.23);
+    border-radius: 2px;
+    box-sizing: border-box;
+    color: rgba(45, 49, 70, 0.8);
+    font-family: "Source Sans Pro",sans-serif;
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 0.75px;
+    margin: 5px 0;
+    padding: 8px 17px;
+    transition: all 0.15s ease 0s;
+    background-image:none;
+}
 
 /*
     ===========================
@@ -395,7 +419,7 @@ div.leaflet-top > .elevation {
     .dropdown-menu{
     max-height: 150px;
     width: 90%;
-    /*overflow-y:scroll;*/ 
+    overflow-y:auto; 
   }
 
 /*Active sidebar item*/

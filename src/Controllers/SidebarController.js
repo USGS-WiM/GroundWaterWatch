@@ -21,13 +21,14 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use strinct';
         var SidebarController = (function () {
-            function SidebarController($scope, toaster, $analytics, $stateParams, service, modalService, gwwService) {
+            function SidebarController($scope, toaster, $analytics, $stateParams, service, modalService, gwwService, eventmanager) {
                 $scope.vm = this;
                 this.toaster = toaster;
                 this.angulartics = $analytics;
                 this.searchService = service;
                 this.groundwaterwatchService = gwwService;
                 this.modalService = modalService;
+                this.eventManager = eventmanager;
                 this.init();
             }
             SidebarController.prototype.getLocations = function (term) {
@@ -53,11 +54,19 @@ var GroundWaterWatch;
                 e.preventDefault();
                 $("#sapi-searchTextBox").trigger($.Event("keyup", { "keyCode": 13 }));
             };
-            SidebarController.prototype.removeFilter = function (filter) {
-                var index = this.SelectedFilters.indexOf(filter);
-                this.SelectedFilters.splice(index);
+            SidebarController.prototype.removeFilter = function (index, filter) {
+                this.SelectedFilters.splice(index, 1);
+                if (filter.Type == GroundWaterWatch.Models.FilterType.COUNTY || filter.Type == GroundWaterWatch.Models.FilterType.STATE) {
+                    var fname = filter.Type == GroundWaterWatch.Models.FilterType.COUNTY ? "COUNTY" : "STATE";
+                    this.eventManager.RaiseEvent(WiM.Directives.onLayerChanged, this, new WiM.Directives.LegendLayerChangedEventArgs(fname + filter.item.code, "visible", false));
+                }
             };
             SidebarController.prototype.ClearFilters = function () {
+                var _this = this;
+                this.SelectedFilters.forEach(function (f) {
+                    var fname = f.Type == GroundWaterWatch.Models.FilterType.COUNTY ? "COUNTY" : "STATE";
+                    _this.eventManager.RaiseEvent(WiM.Directives.onLayerChanged, _this, new WiM.Directives.LegendLayerChangedEventArgs(fname + f.item.code, "visible", false));
+                });
                 this.SelectedFilters.splice(0, this.SelectedFilters.length);
             };
             SidebarController.prototype.AddFilter = function () {
@@ -110,7 +119,7 @@ var GroundWaterWatch;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
+            SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
             return SidebarController;
         })(); //end class
         var ProcedureType;

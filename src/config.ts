@@ -56,7 +56,7 @@ module GroundWaterWatch {
         'leaflet-directive',
         'GroundWaterWatch.Services',
         'GroundWaterWatch.Controllers',
-        'WiM.Services', 'WiM.Event', 'wim_angular','angularResizable'
+        'WiM.Services', 'WiM.Event', 'wim_angular', 'angularResizable','angular-multi-select'
         ])
         .config(config);
 }//end module 
