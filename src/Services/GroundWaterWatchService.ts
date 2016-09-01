@@ -38,9 +38,31 @@ module GroundWaterWatch.Services {
         getFilterRequest(): string;
         loadCounties(state: Models.IState);
         queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any);
-
+        mapCenter: ICenter;
     }
     export var onSelectedGWSiteChanged: string = "onSelectedGWSiteChanged";
+
+    interface ICenter {
+        lat: number;
+        lng: number;
+        zoom: number;
+    }
+    class Center implements ICenter {
+        //Properties
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        public lat: number;
+        public lng: number;
+        public zoom: number;
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        constructor(lt: number, lg: number, zm: number) {
+            this.lat = lt;
+            this.lng = lg;
+            this.zoom = zm;
+    }
+    }
+
+
     class GroundWaterWatchService extends WiM.Services.HTTPServiceBase implements IGroundWaterWatchService{       
         //Events
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -68,7 +90,8 @@ module GroundWaterWatch.Services {
         public queriedGWsite: boolean;
 
         public SelectedGWFilters: Array<Models.IGroundWaterFilterSite> = [];
-        
+        public mapCenter: ICenter = null;
+
         private _states: Array<Models.IState>
         public get StateList(): Array<Models.IState> {
             return this._states;
@@ -91,6 +114,7 @@ module GroundWaterWatch.Services {
             this.queriedGWsite = false;
             
             this.init();
+         
         }
 
         //Methods
@@ -163,7 +187,7 @@ module GroundWaterWatch.Services {
                 });
         }
         public loadCounties(state: Models.IState):void {
-           
+        
             var url = configuration.overlayedLayers['counties'].url +"/15/query?returnGeometry=false&where=STATE='{0}'&outSr=4326&outFields=COUNTY,STATE,ABBREV,NAME&f=json".format(state.code);
             
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
@@ -189,6 +213,8 @@ module GroundWaterWatch.Services {
         private init(): void {
             this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
+
+            this.mapCenter = new Center(39, -100, 3);
             this.loadStates();
             this.loadAquifers();
             this.loadNetworks();

@@ -187,8 +187,7 @@ module GroundWaterWatch.Controllers {
         constructor(public $scope: IMapControllerScope,$rootscope:ng.IRootScopeService ,toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, search: WiM.Services.ISearchAPIService, exploration: Services.IExplorationService, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService, modal: Services.IModalService,$timeout: ng.ITimeoutService ) {
             $scope.vm = this;
             $rootscope["isShown"] = true;
-            this.init();
-
+            
             this.toaster = toaster;
             this.angulartics = $analytics;
             this.searchService = search;
@@ -201,6 +200,8 @@ module GroundWaterWatch.Controllers {
             this.SiteList = gwwservice.GWSiteList;
             this.modalService = modal;
             this.SiteListEnabled = false;
+
+            this.init();
 
             //register event
             this.eventManager.AddEvent(onBoundingBoxChanged);
@@ -285,7 +286,7 @@ module GroundWaterWatch.Controllers {
 
             //init map           
             this.cursorStyle = 'pointer';  
-            this.center = new Center(39, -100, 3);
+            this.center = this.gwwServices.mapCenter;
             this.nominalZoomLevel = this.scaleLookup(this.center.zoom); 
             this.layers = {
                 baselayers: configuration.basemaps,
@@ -323,6 +324,9 @@ module GroundWaterWatch.Controllers {
             }
             this.mapPoint = new MapPoint();
             L.Icon.Default.imagePath = 'images';
+
+            //ADD INITIAL MAP FILTER
+            //this.gwwServices.AddFilterTypes([new Models.GroundWaterFilterSite('AWL', Models.FilterType.NETWORK)])
         }
         private scaleLookup(mapZoom: number) {
             switch (mapZoom) {

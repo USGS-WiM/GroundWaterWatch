@@ -55,7 +55,6 @@ module GroundWaterWatch.Controllers {
         public selectedProcedure: ProcedureType;
         public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
 
-
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
         static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService','WiM.Event.EventManager'];
@@ -68,6 +67,7 @@ module GroundWaterWatch.Controllers {
             this.groundwaterwatchService = gwwService;
             this.modalService = modalService;
             this.eventManager = eventmanager;
+
 
             this.init();
         }
@@ -127,6 +127,7 @@ module GroundWaterWatch.Controllers {
             this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
             this.sideBarCollapsed = false;
             this.selectedProcedure = ProcedureType.Search;
+
         }
         private canUpdateProcedure(pType: ProcedureType): boolean {
             //console.log('in canUpdateProcedure');
