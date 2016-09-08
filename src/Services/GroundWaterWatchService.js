@@ -38,7 +38,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        })();
+        }());
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -245,7 +245,7 @@ var GroundWaterWatch;
                 });
             };
             return GroundWaterWatchService;
-        })(WiM.Services.HTTPServiceBase); //end class
+        }(WiM.Services.HTTPServiceBase)); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager'];
         function factory($http, evntmngr) {
             return new GroundWaterWatchService($http, evntmngr);
