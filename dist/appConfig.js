@@ -5,8 +5,8 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatchTest': 'http://cida-test.er.usgs.gov/gww-geoserver',
-    'GroundWaterWatch': 'http://cida-eros-gwwqa.cr.usgs.gov:8082/gww-geoserver'
+    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver',
+    'siteservices': 'http://services.wim.usgs.gov/groundwaterwatch'
 }
 
 configuration.queryparams =
@@ -40,7 +40,7 @@ configuration.networkTypes = [
         networkDescription: "Active Spring Monitoring Sites"
     },
 ]
-    
+
 configuration.basemaps =
 {
     national: {

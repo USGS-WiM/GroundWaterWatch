@@ -30,8 +30,8 @@ module GroundWaterWatch.Controllers {
 
     'use strict';
     interface ILeafletData {
-        getMap(): ng.IPromise<any>;
-        getLayers(): ng.IPromise<any>;
+        getMap(any): ng.IPromise<any>;
+        getLayers(any): ng.IPromise<any>;
     }
     interface ICenter {
         lat: number;
@@ -213,24 +213,25 @@ module GroundWaterWatch.Controllers {
                 this.onSelectedAreaOfInterestChanged(sender, e);
             }));           
             
-            $scope.$on('leafletDirectiveMap.mousemove',(event, args) => {
+            $scope.$on('leafletDirectiveMap.mainMap.mousemove',(event, args) => {
                 var latlng = args.leafletEvent.latlng;
                 this.mapPoint.lat = latlng.lat;
                 this.mapPoint.lng = latlng.lng;
             });
-            $scope.$on('leafletDirectiveMap.drag',(event, args) => {
+            $scope.$on('leafletDirectiveMap.mainMap.drag',(event, args) => {
                 this.cursorStyle = 'grabbing';
             });
-            $scope.$on('leafletDirectiveMap.dragend',(event, args) => {
+            $scope.$on('leafletDirectiveMap.mainMap.dragend',(event, args) => {
                 this.cursorStyle = 'pointer';
             });
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
-            $scope.$on('leafletDirectiveMap.click', (event, args) => {
+            $scope.$on('leafletDirectiveMap.mainMap.click', (event, args) => {
+
 
                 this.gwwServices.SelectedGWSite = null;
                 this.modalService.openModal(Services.ModalType.e_siteinfo);
 
-                this.leafletData.getMap().then((map: any) => {
+                this.leafletData.getMap("mainMap").then((map: any) => {
                     var boundsString = map.getBounds().toBBoxString();
                     var x = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).x);
                     var y = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).y);
@@ -260,7 +261,7 @@ module GroundWaterWatch.Controllers {
                 if (newval) this.updateMapFilters()
             });
             $timeout(() => {
-                this.leafletData.getMap().then((map: any) => { map.invalidateSize() })
+                this.leafletData.getMap("mainMap").then((map: any) => { map.invalidateSize() })
             });
 
             // check if parameters are being explicitly set. ncd&sc&cc&S
@@ -368,8 +369,8 @@ module GroundWaterWatch.Controllers {
             //report ga event
             this.angulartics.eventTrack('explorationTools', { category: 'Map', label: 'elevationProfile' });
 
-            this.leafletData.getMap().then((map: any) => {
-                this.leafletData.getLayers().then((maplayers: any) => {
+            this.leafletData.getMap("mainMap").then((map: any) => {
+                this.leafletData.getLayers("mainMap").then((maplayers: any) => {
 
                     //create draw control
                     var drawnItems = maplayers.overlays.draw;
@@ -417,7 +418,7 @@ module GroundWaterWatch.Controllers {
                 //console.log('removing drawControl', this.drawControl);
                 return;
             }
-            this.leafletData.getMap().then((map: any) => {
+            this.leafletData.getMap("mainMap").then((map: any) => {
                 //console.log('enable drawControl');
                 this.drawControl = new (<any>L).Draw.Polyline(map, options);
                 this.drawControl.enable();
@@ -442,7 +443,7 @@ module GroundWaterWatch.Controllers {
                 onEachFeature: el.addData.bind(el)
             }
 
-            this.leafletData.getMap().then((map: any) => {
+            this.leafletData.getMap("mainMap").then((map: any) => {
                 var container = el.onAdd(map);
                 document.getElementById('elevation-div').innerHTML = '';
                 document.getElementById('elevation-div').appendChild(container);
@@ -485,9 +486,9 @@ module GroundWaterWatch.Controllers {
             //report ga event
             this.angulartics.eventTrack('explorationTools', { category: 'Map', label: 'measurement' });
 
-            this.leafletData.getMap().then((map: any) => {
+            this.leafletData.getMap("mainMap").then((map: any) => {
                 //console.log('got map: ', map);
-                this.leafletData.getLayers().then((maplayers: any) => {
+                this.leafletData.getLayers("mainMap").then((maplayers: any) => {
                     //console.log('got maplayers: ', maplayers);
                     var stopclick = false; //to prevent more than one click listener
 
@@ -555,7 +556,7 @@ module GroundWaterWatch.Controllers {
 
             //this.center = new Center(AOI.Latitude, AOI.Longitude, zoomlevel);
 
-            this.leafletData.getMap().then((map: any) => {
+            this.leafletData.getMap("mainMap").then((map: any) => {
                 map.setView([AOI.Latitude, AOI.Longitude], zoomlevel)
             });
         }
@@ -635,7 +636,7 @@ module GroundWaterWatch.Controllers {
         }
         private updateMapFilters() {
             if (!this.initialized) return;
-            this.leafletData.getLayers().then((maplayers: any) => {
+            this.leafletData.getLayers("mainMap").then((maplayers: any) => {
                 //gww sites
                 var frequest = this.gwwServices.getFilterRequest();
                 if(frequest !=''){
