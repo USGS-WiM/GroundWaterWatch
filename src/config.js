@@ -35,7 +35,7 @@ var GroundWaterWatch;
         } //end constructor
         config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         return config;
-    }()); //end class
+    })(); //end class
     angular.module('GroundWaterWatch', [
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
@@ -44,7 +44,7 @@ var GroundWaterWatch;
         'leaflet-directive',
         'GroundWaterWatch.Services',
         'GroundWaterWatch.Controllers',
-        'WiM.Services', 'WiM.Event', 'wim_angular', 'angularResizable'
+        'WiM.Services', 'WiM.Event', 'wim_angular', 'angularResizable', 'angular-multi-select'
     ])
         .config(config);
 })(GroundWaterWatch || (GroundWaterWatch = {})); //end module 

@@ -22,11 +22,11 @@ var GroundWaterWatch;
     (function (Models) {
         var GroundWaterFilterSite = (function () {
             function GroundWaterFilterSite(n, t) {
-                this.Name = n;
+                this.item = n;
                 this.Type = t;
             }
             return GroundWaterFilterSite;
-        }());
+        })();
         Models.GroundWaterFilterSite = GroundWaterFilterSite; //end class
         (function (FilterType) {
             FilterType[FilterType["STATE"] = 1] = "STATE";

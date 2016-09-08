@@ -50,7 +50,7 @@ var GroundWaterWatch;
                             return {
                                 templateUrl: 'Views/filtermodal.html',
                                 controller: 'GroundWaterWatch.Controllers.FilterModalController',
-                                size: 'lg',
+                                size: 'sm',
                                 backdropClass: 'backdropZ',
                                 backdrop: 'static',
                                 windowClass: 'windowZ'
@@ -89,7 +89,7 @@ var GroundWaterWatch;
                 }
             };
             return ModalService;
-        }()); //end class
+        })(); //end class
         (function (ModalType) {
             ModalType[ModalType["e_filter"] = 1] = "e_filter";
             ModalType[ModalType["e_about"] = 2] = "e_about";

@@ -38,7 +38,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        }());
+        })();
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -71,6 +71,27 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(GroundWaterWatchService.prototype, "StateList", {
+                get: function () {
+                    return this._states;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GroundWaterWatchService.prototype, "AquiferList", {
+                get: function () {
+                    return this._aquifers;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GroundWaterWatchService.prototype, "NetworkList", {
+                get: function () {
+                    return this._networks;
+                },
+                enumerable: true,
+                configurable: true
+            });
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+- 
             GroundWaterWatchService.prototype.AddFilterTypes = function (FiltersToAdd) {
@@ -87,20 +108,24 @@ var GroundWaterWatch;
                     return "";
                 var filter = [];
                 var groupedFeature = this.SelectedGWFilters.group("Type");
+                var county = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
+                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.item.code; }) : null;
+                if (county !== null)
+                    filter.push("COUNTY_CD in ('" + county.join("','") + "')");
+                var StateCounty = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
+                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.item.statecode; }) : null;
+                if (StateCounty !== null)
+                    filter.push("STATE_CD in ('" + StateCounty.join("','") + "')");
                 var states = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.STATE.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (item) { return item.Name; }) : null;
+                    groupedFeature[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (item) { return item.item.code; }) : null;
                 if (states !== null)
                     filter.push("STATE_CD in ('" + states.join("','") + "')");
                 var network = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.NETWORK.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.NETWORK.toString()].map(function (item) { return item.Name; }) : null;
+                    groupedFeature[GroundWaterWatch.Models.FilterType.NETWORK.toString()].map(function (item) { return item.item.code; }) : null;
                 if (network !== null)
-                    filter.push("NETWORK_CD='" + network + "'");
-                var county = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.Name; }) : null;
-                if (county !== null)
-                    filter.push("COUNTY_CD in ('" + county.join("','") + "')");
+                    filter.push("NETWORK_CD in ('" + network.join("','") + "')");
                 var site = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.SITE.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (item) { return item.Name; }) : null;
+                    groupedFeature[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (item) { return item.item.code; }) : null;
                 if (site !== null)
                     filter.push("SITE_NO in ('" + site.join("','") + "')");
                 return filter.join(" AND ");
@@ -111,21 +136,34 @@ var GroundWaterWatch;
                 //create false bounding box
                 //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
                 //groundwaterwatch:Latest_WL_Percentile
-                var url = configuration.baseurls['GroundWaterWatch'] + "/groundwaterwatch/wms?";
-                url += "&INFO_FORMAT=application/json";
-                url += "&EXCEPTIONS=application/json";
-                url += "&REQUEST=GetFeatureInfo";
-                url += "&SERVICE=wms&VERSION=1.1.1&WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
-                url += "&LAYERS=groundwaterwatch:Latest_WL_Percentile&QUERY_LAYERS=groundwaterwatch:Latest_WL_Percentile&buffer=10";
-                var request = new WiM.Services.Helpers.RequestInfo(url, true);
+                var url = configuration.baseurls['siteservices'] + "/site.ashx";
+                url += "?WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
+                var request = new WiM.Services.Helpers.RequestInfo(url, true, WiM.Services.Helpers.methodType.GET, "", null, { 'Accept-Encoding': 'gzip' });
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach(function (item) {
-                            console.log(item);
                             _this.SelectedGWSite = item;
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         }); //next
+                    } //endif
+                    else {
+                        console.log('No gww sites found');
+                        _this.SelectedGWSite = null;
+                    }
+                }, function (error) {
+                    console.log('No gww sites found');
+                }).finally(function () {
+                });
+            };
+            GroundWaterWatchService.prototype.loadCounties = function (state) {
+                var _this = this;
+                var url = configuration.overlayedLayers['counties'].url + "/15/query?returnGeometry=false&where=STATE='{0}'&outSr=4326&outFields=COUNTY,STATE,ABBREV,NAME&f=json".format(state.code);
+                var request = new WiM.Services.Helpers.RequestInfo(url, true);
+                this.Execute(request).then(function (response) {
+                    _this.queriedGWsite = true;
+                    if (response.data.features.length > 0) {
+                        state.Counties = response.data.features.map(function (c) { return { name: c.attributes.NAME + ", " + c.attributes.ABBREV, code: c.attributes.COUNTY, statecode: c.attributes.STATE }; });
                     } //endif
                     else {
                         console.log('No gww sites found');
@@ -142,6 +180,9 @@ var GroundWaterWatch;
                 this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this.mapCenter = new Center(39, -100, 3);
+                this.loadStates();
+                this.loadAquifers();
+                this.loadNetworks();
             };
             //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
             //ABBREV = 'CO'
@@ -150,19 +191,15 @@ var GroundWaterWatch;
             GroundWaterWatchService.prototype.updateGWWSiteList = function () {
                 var _this = this;
                 var filter = this.getFilterRequest();
-                var url = configuration.baseurls['GroundWaterWatch'] + "/groundwaterwatch/wfs?";
-                url += "&SERVICE=wfs&VERSION=1.1.1";
-                url += "&outputFormat=application/json";
-                url += "&REQUEST=getfeature";
-                url += "&typename=groundwaterwatch:Latest_WL_Percentile";
+                var url = configuration.baseurls['siteservices'] + "/sites.ashx";
                 if (filter != "")
-                    url += "&CQL_FILTER=" + filter;
+                    url += "?FILTER=" + filter;
                 var request = new WiM.Services.Helpers.RequestInfo(url, true);
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         response.data.features.forEach(function (item) {
-                            console.log(item);
+                            //console.log(item);
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         }); //next
                     } //endif
@@ -175,8 +212,40 @@ var GroundWaterWatch;
                 }).finally(function () {
                 });
             };
+            GroundWaterWatchService.prototype.loadStates = function () {
+                var _this = this;
+                var request = new WiM.Services.Helpers.RequestInfo("statecodes.js", true);
+                this.Execute(request).then(function (response) {
+                    _this._states = response.data;
+                }, function (error) {
+                    console.log('No gww sites found');
+                }).finally(function () {
+                });
+            };
+            GroundWaterWatchService.prototype.loadAquifers = function () {
+                var _this = this;
+                console.log("Loading Aquifers");
+                var request = new WiM.Services.Helpers.RequestInfo("principalAquifers.js", true);
+                this.Execute(request).then(function (response) {
+                    _this._aquifers = response.data;
+                }, function (error) {
+                    console.log('No gww sites found');
+                }).finally(function () {
+                });
+            };
+            GroundWaterWatchService.prototype.loadNetworks = function () {
+                var _this = this;
+                console.log("Loading networks");
+                var request = new WiM.Services.Helpers.RequestInfo("stateLocalNetworks.js", true);
+                this.Execute(request).then(function (response) {
+                    _this._networks = response.data;
+                }, function (error) {
+                    console.log('No gww sites found');
+                }).finally(function () {
+                });
+            };
             return GroundWaterWatchService;
-        }(WiM.Services.HTTPServiceBase)); //end class
+        })(WiM.Services.HTTPServiceBase); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager'];
         function factory($http, evntmngr) {
             return new GroundWaterWatchService($http, evntmngr);

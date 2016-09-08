@@ -29,13 +29,15 @@ module GroundWaterWatch.Controllers {
         Close():void
     }    
     interface IFilterModalController extends IModal {
-        StateList: Array<Models.IGroundWaterFilterSite>;
-        CountyList: Array<Models.IGroundWaterFilterSite>;
-        AquiferList: Array<Models.IGroundWaterFilterSite>;
+        SelectedState: Array<Models.IState>;
+        SelectedCounties: Array<Models.ICounty>;
+        SelectedAquifers: Array<Models.IAquifer>;
+        SelectedNetworks: Array<Models.INetwork>;
 
-        SelectedStates: Array<Models.IGroundWaterFilterSite>;
-        SelectedCounties: Array<Models.IGroundWaterFilterSite>;
-        SelectedAquifers: Array<Models.IGroundWaterFilterSite>;
+        States: Array<Models.IState>;
+        Counties: Array<Models.ICounty>;
+        Aquifers: Array<Models.IAquifer>;
+        Networks: Array<Models.INetwork>;
     }
     class FilterModalController implements IFilterModalController {
         
@@ -44,13 +46,38 @@ module GroundWaterWatch.Controllers {
         private modalInstance: ng.ui.bootstrap.IModalServiceInstance;
         private GWWService: Services.IGroundWaterWatchService;
 
-        public StateList: Array<Models.IGroundWaterFilterSite>;
-        public CountyList: Array<Models.IGroundWaterFilterSite>;
-        public AquiferList: Array<Models.IGroundWaterFilterSite>;
+        public selectedProcedure: number;
 
-        public SelectedStates: Array<Models.IGroundWaterFilterSite>;
-        public SelectedCounties: Array<Models.IGroundWaterFilterSite>;
-        public SelectedAquifers: Array<Models.IGroundWaterFilterSite>;
+        public get States(): Array<Models.IState> {
+            return this.GWWService.StateList;
+        }
+        private _selectedState: Array<Models.IState>;
+        public set SelectedState(val: Array<Models.IState>) {
+            if (val != this._selectedState) this._selectedState = val;
+            if (this._selectedState.length < 1) return;            
+            if (!val[0].hasOwnProperty("Counties") || val[0].Counties == null) this.GWWService.loadCounties(val[0]);
+            //reset selected counties
+            this.SelectedCounties.length = 0;
+        }
+        public get SelectedState(): Array<Models.IState> {
+            return this._selectedState;
+        }
+    
+       
+        public SelectedAquifers: Array<Models.IAquifer>;
+        public get Aquifers(): Array<Models.IAquifer> {
+            return this.GWWService.AquiferList;
+        }
+        public SelectedNetworks: Array<Models.INetwork>;
+        public get Networks(): Array<Models.INetwork> {
+            return this.GWWService.NetworkList;
+        }
+
+        public SelectedCounties: Array<Models.ICounty>;
+        public get Counties(): Array<Models.ICounty> {
+            if (this.SelectedState.length<1 || this.SelectedState[0].Counties.length<0) return undefined;
+            return this.SelectedState[0].Counties;
+        }
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
         static $inject = ['$scope', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService'];
@@ -59,35 +86,38 @@ module GroundWaterWatch.Controllers {
             this.modalInstance = modal;
             this.GWWService = gwwService;
             this.init();  
+
+            $scope.$watchCollection(() => this.SelectedState, (newval, oldval) => {
+                if (newval == oldval) return;
+            if (!newval[0].hasOwnProperty("Counties") || newval[0].Counties == null) this.GWWService.loadCounties(newval[0]);
+            //reset selected counties
+            this.SelectedCounties.length = 0;
+            });
         }  
-        
         //Methods  
         //-+-+-+-+-+-+-+-+-+-+-+-
 
-        public Close(): void {
-            if(this.SelectedStates.length >0) this.GWWService.AddFilterTypes(this.SelectedStates);
-            if (this.SelectedCounties.length > 0) this.GWWService.AddFilterTypes(this.SelectedCounties);
-            if (this.SelectedAquifers.length > 0) this.GWWService.AddFilterTypes(this.SelectedAquifers);
+        public Apply(): void {
+            if (this.SelectedState.length>0 && this.SelectedCounties.length < 1) this.GWWService.AddFilterTypes([new Models.GroundWaterFilterSite(this.SelectedState[0], Models.FilterType.STATE)]);
+            if (this.SelectedCounties.length > 0) this.GWWService.AddFilterTypes(this.SelectedCounties.map((c) => {return new Models.GroundWaterFilterSite(c,Models.FilterType.COUNTY) }));
+            //if (this.SelectedAquifers.length > 0) this.GWWService.AddFilterTypes(this.SelectedAquifers);
             this.modalInstance.dismiss('cancel')
         }
-
-        public AddStateFilter(item: string) {
-            this.SelectedStates.push(new Models.GroundWaterFilterSite('08', Models.FilterType.STATE));
+        public Close(): void {
+            this.modalInstance.dismiss('cancel')
         }
-        public AddCountyFilter(item: string) {
-            this.SelectedCounties.push(new Models.GroundWaterFilterSite('003', Models.FilterType.COUNTY));
+        public Reset(): void {
+            this.SelectedState=[];
+            this.SelectedCounties=[];
+            this.SelectedAquifers = [];
+            this.SelectedNetworks = [];
         }
-        public AddAquiferFilter(item: string) {
-            this.SelectedAquifers.push(new Models.GroundWaterFilterSite(item, Models.FilterType.AQUIFER));
-        }
-        
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
-            //place anything that needs to be initialized here
-            this.SelectedAquifers = [];
+            this.selectedProcedure = 1;           
             this.SelectedCounties = [];
-            this.SelectedStates = [];            
+            this.SelectedState = [];          
         }
       
     }//end  class
