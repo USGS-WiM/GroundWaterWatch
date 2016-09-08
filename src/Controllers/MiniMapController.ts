@@ -84,7 +84,7 @@ module GroundWaterWatch.Controllers {
             }
             this.layers = {
                 baselayers: configuration.basemaps,
-                overlays: configuration.overlayedLayers
+                overlays: { gww: configuration.overlayedLayers.gww }
             }
         }
 

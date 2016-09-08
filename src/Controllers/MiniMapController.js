@@ -48,7 +48,7 @@ var GroundWaterWatch;
                 };
                 this.layers = {
                     baselayers: configuration.basemaps,
-                    overlays: configuration.overlayedLayers
+                    overlays: { gww: configuration.overlayedLayers.gww }
                 };
             };
             MiniMapController.prototype.setMapLayer = function (networkCode, mapDiv) {
@@ -63,7 +63,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             MiniMapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MiniMapController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MiniMapController', MiniMapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

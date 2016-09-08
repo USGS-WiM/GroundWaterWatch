@@ -35,7 +35,11 @@ var GroundWaterWatch;
                 return this.searchService.getLocations(term);
             };
             SidebarController.prototype.setProcedureType = function (pType) {
-                if (this.selectedProcedure == pType || !this.canUpdateProcedure(pType)) {
+                if (this.selectedProcedure == pType) {
+                    this.selectedProcedure = 0;
+                    return;
+                }
+                if (!this.canUpdateProcedure(pType)) {
                     return;
                 }
                 this.selectedProcedure = pType;
@@ -121,7 +125,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
             return SidebarController;
-        }()); //end class
+        })(); //end class
         var ProcedureType;
         (function (ProcedureType) {
             ProcedureType[ProcedureType["Search"] = 1] = "Search";

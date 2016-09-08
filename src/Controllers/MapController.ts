@@ -319,7 +319,7 @@ module GroundWaterWatch.Controllers {
             };
             this.events = {
                 map: {
-                    enable: ['mousemove']
+                    enable: ['mousemove', 'click']
                 }
             }
             this.mapPoint = new MapPoint();

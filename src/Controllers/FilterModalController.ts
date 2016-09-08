@@ -107,9 +107,10 @@ module GroundWaterWatch.Controllers {
             this.modalInstance.dismiss('cancel')
         }
         public Reset(): void {
-            this.SelectedState.length =0;
-            this.SelectedCounties.length = 0;
-            this.SelectedAquifers = null;
+            this.SelectedState=[];
+            this.SelectedCounties=[];
+            this.SelectedAquifers = [];
+            this.SelectedNetworks = [];
         }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-

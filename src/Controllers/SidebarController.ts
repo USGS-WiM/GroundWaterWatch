@@ -76,7 +76,8 @@ module GroundWaterWatch.Controllers {
             return this.searchService.getLocations(term);
         }
         public setProcedureType(pType: ProcedureType) {
-            if (this.selectedProcedure == pType || !this.canUpdateProcedure(pType)) {
+            if (this.selectedProcedure == pType) { this.selectedProcedure = 0; return;}
+            if (!this.canUpdateProcedure(pType)) {
                return;
             }
             this.selectedProcedure = pType;

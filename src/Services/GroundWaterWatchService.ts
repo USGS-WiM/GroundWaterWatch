@@ -227,7 +227,7 @@ module GroundWaterWatch.Services {
             var filter = this.getFilterRequest();
             
             var url = configuration.baseurls['siteservices'] +"/sites.ashx";
-            if (filter != "") url += "?CQL_FILTER=" + filter;
+            if (filter != "") url += "?FILTER=" + filter;
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
 
             this.Execute(request).then(

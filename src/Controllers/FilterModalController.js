@@ -95,9 +95,10 @@ var GroundWaterWatch;
                 this.modalInstance.dismiss('cancel');
             };
             FilterModalController.prototype.Reset = function () {
-                this.SelectedState.length = 0;
-                this.SelectedCounties.length = 0;
-                this.SelectedAquifers = null;
+                this.SelectedState = [];
+                this.SelectedCounties = [];
+                this.SelectedAquifers = [];
+                this.SelectedNetworks = [];
             };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -110,7 +111,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             FilterModalController.$inject = ['$scope', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return FilterModalController;
-        }()); //end  class
+        })(); //end  class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.FilterModalController', FilterModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

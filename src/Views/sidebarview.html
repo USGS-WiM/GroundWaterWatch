@@ -43,7 +43,7 @@
             </div>
             <div class="sidebar-item">
                 <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Network Types<div></div><h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
-                <div class="list-group-body" ng-hide="vm.selectedProcedure != 2">
+                <div class="list-group-body" ng-if="vm.selectedProcedure == 2">
                     <div class="wim-alert">Click or Tap a minimap to switch network display</div>
                     <div ng-controller="GroundWaterWatch.Controllers.MiniMapController">
 
@@ -53,17 +53,12 @@
                                 <leaflet ng-attr-id="{{networkType.networkCode}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
                             </div>
                           </div>
-
-                        <!--<div class="well well-sm" ng-repeat="networkType in vm.networkTypes" ng-init="vm.setMiniMapLayer(networkType.networkCode)" ng-click="vm.setMainMapLayer(networkType.networkCode)">
-                            <h3 ng-class="vm.selectedNetwork == networkType.networkCode  ? 'list-group-item-active': 'list-group-item'" >{{networkType.networkDescription}}</h3>
-                            <leaflet ng-attr-id="{{networkType.networkCode}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
-                        </div>-->
                     </div>
             </div>
             <div class="sidebar-item">
                 <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Filters<div></div><i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-hide="vm.selectedProcedure != 3">
-                    <div class="wim-alert">something about filters</div>
+                    <div class="wim-alert">Use filters to limit groundwater sites by state and counties, principle aquifers, and State and local networks.</div>
                     <div ng-repeat="filter in vm.SelectedFilters track by $index">
                         <button class="btn-wim-sm btn-wim-default btn-group-justified" ng-click="vm.removeFilter($index,filter)"><i class="fa fa-times pull-right"></i>&nbsp;&nbsp;<span>{{filter.item.name}} </span></button>
                     </div>
