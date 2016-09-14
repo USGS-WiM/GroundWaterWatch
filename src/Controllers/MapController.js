@@ -435,22 +435,16 @@ var GroundWaterWatch;
             MapController.prototype.onGWSiteSelectionChanged = function (sender, e) {
                 //checkforname, and remove, add additional ones
                 this.removeGeoJson("gwwsite", true);
-<<<<<<< HEAD
-                for (var i = 0; i < e.featurelist.length; i++) {
-                    this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
-                } //next f
+                this.addGeoJSON("gwwsite", e.featurelist[0]);
+                //for (var i = 0; i < e.featurelist.length;i++){
+                //    this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
+                //}//next f
                 //zoomto
                 if (e.bbox != null) {
                     this.center.lat = (e.bbox[0] + e.bbox[2]) / 2;
                     this.center.lng = (e.bbox[1] + e.bbox[3]) / 2;
                     this.center.zoom = 12;
                 }
-=======
-                this.addGeoJSON("gwwsite", e.featurelist[0]);
-                //for (var i = 0; i < e.featurelist.length;i++){
-                //    this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
-                //}//next f
->>>>>>> 8892b077aff5b97d36b32d7506065120aee0dfff
             };
             MapController.prototype.removeGeoJson = function (layerName, isPartial) {
                 var _this = this;
