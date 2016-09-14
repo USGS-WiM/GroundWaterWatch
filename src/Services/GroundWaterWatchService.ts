@@ -190,6 +190,7 @@ module GroundWaterWatch.Services {
             if (mapZoom <= 3) addsize = 0.5;
             if (mapZoom > 3 && mapZoom <= 6) addsize = 0.1;
             if (mapZoom > 6 && mapZoom <= 10) addsize = 0.01;
+            if (mapZoom > 10 && mapZoom <= 12) addsize = 0.005;
             console.log('click buffer: ', addsize)
             var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
             console.log('buffered bbox: ', bbox);
@@ -204,7 +205,7 @@ module GroundWaterWatch.Services {
                     this.queriedGWsite = true;
 
                     if (response.data.features && response.data.features.length > 0) {
-                        console.log(response.data.features.length, ' gww sites found');
+                        console.log('gww sites found');
                         this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features));
                        
                     }//endif
