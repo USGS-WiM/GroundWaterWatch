@@ -38,7 +38,7 @@ module GroundWaterWatch.Services {
         AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void;
         getFilterRequest(): string;
         loadCounties(state: Models.IState);
-        queryGWsite(latlong: any);
+        queryGWsite(latlong: any, mapZoom: number);
         mapCenter: ICenter;
         SelectedPrimaryNetwork: Models.INetwork;
     }
@@ -183,12 +183,15 @@ module GroundWaterWatch.Services {
 
             return filter.join(" AND ");
         }
-        public queryGWsite(point: any) {
+        public queryGWsite(point: any, mapZoom:number) {
             this.queriedGWsite = false;
             var addsize = 0.0005;
-            console.log(point)
+            if (mapZoom <= 3) addsize = 0.5;
+            if (mapZoom > 3 && mapZoom <= 6) addsize = 0.1;
+            if (mapZoom > 6 && mapZoom <= 10) addsize = 0.01;
+            console.log('click buffer: ', addsize)
             var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
-            console.log(bbox);
+            console.log('buffered bbox: ', bbox);
             var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
             url += "&CQL_FILTER=BBOX(GEOM,{0})".format(bbox);
             if (this.SelectedPrimaryNetwork != null) url += "AND NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
@@ -200,7 +203,8 @@ module GroundWaterWatch.Services {
                     this.queriedGWsite = true;
 
                     if (response.data.features && response.data.features.length > 0) {
-                            this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features));
+                        console.log(response.data.features.length, ' gww sites found');
+                        this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features));
                        
                     }//endif
                     else {

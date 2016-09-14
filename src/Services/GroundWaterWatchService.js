@@ -38,7 +38,7 @@ var GroundWaterWatch;
                 this.featurelist = featurelist;
             }
             return GWSiteSelectionEventArgs;
-        })(WiM.Event.EventArgs);
+        }(WiM.Event.EventArgs));
         Services.GWSiteSelectionEventArgs = GWSiteSelectionEventArgs;
         var Center = (function () {
             //Constructor
@@ -49,21 +49,18 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        })();
+        }());
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            function GroundWaterWatchService($http, evntmngr, $stateParams) {
+            function GroundWaterWatchService($http, evntmngr) {
                 _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
                 this.SelectedGWFilters = [];
                 this.mapCenter = null;
                 this._eventManager = evntmngr;
                 this.queriedGWsite = false;
                 this.init();
-                if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S)
-                    return;
-                this.loadLookups();
             }
             Object.defineProperty(GroundWaterWatchService.prototype, "GWSiteList", {
                 get: function () {
@@ -133,7 +130,7 @@ var GroundWaterWatch;
             GroundWaterWatchService.prototype.AddFilterTypes = function (FiltersToAdd) {
                 var _this = this;
                 FiltersToAdd.forEach(function (x) { return _this.SelectedGWFilters.push(x); });
-                //this.updateGWWSiteList();                     
+                this.updateGWWSiteList();
             };
             GroundWaterWatchService.prototype.getFilterRequest = function () {
                 //NETWORK_CD         = ncd
@@ -166,13 +163,19 @@ var GroundWaterWatch;
                     filter.push("SITE_NO in ('" + site.join("','") + "')");
                 return filter.join(" AND ");
             };
-            GroundWaterWatchService.prototype.queryGWsite = function (point) {
+            GroundWaterWatchService.prototype.queryGWsite = function (point, mapZoom) {
                 var _this = this;
                 this.queriedGWsite = false;
                 var addsize = 0.0005;
-                console.log(point);
+                if (mapZoom <= 3)
+                    addsize = 0.5;
+                if (mapZoom > 3 && mapZoom <= 6)
+                    addsize = 0.1;
+                if (mapZoom > 6 && mapZoom <= 10)
+                    addsize = 0.01;
+                console.log('click buffer: ', addsize);
                 var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
-                console.log(bbox);
+                console.log('buffered bbox: ', bbox);
                 var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
                 url += "&CQL_FILTER=BBOX(GEOM,{0})".format(bbox);
                 if (this.SelectedPrimaryNetwork != null)
@@ -181,6 +184,7 @@ var GroundWaterWatch;
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
+                        console.log(response.data.features.length, ' gww sites found');
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features));
                     } //endif
                     else {
@@ -217,8 +221,6 @@ var GroundWaterWatch;
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this.mapCenter = new Center(39, -100, 3);
-            };
-            GroundWaterWatchService.prototype.loadLookups = function () {
                 this.loadStates();
                 this.loadAquifers();
                 this.loadLocalNetworks();
@@ -296,10 +298,10 @@ var GroundWaterWatch;
                 });
             };
             return GroundWaterWatchService;
-        })(WiM.Services.HTTPServiceBase); //end class
-        factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams'];
-        function factory($http, evntmngr, $stateParams) {
-            return new GroundWaterWatchService($http, evntmngr, $stateParams);
+        }(WiM.Services.HTTPServiceBase)); //end class
+        factory.$inject = ['$http', 'WiM.Event.EventManager'];
+        function factory($http, evntmngr) {
+            return new GroundWaterWatchService($http, evntmngr);
         }
         angular.module('GroundWaterWatch.Services')
             .factory('GroundWaterWatch.Services.GroundWaterWatchService', factory);
