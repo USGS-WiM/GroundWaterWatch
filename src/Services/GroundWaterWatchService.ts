@@ -136,22 +136,21 @@ module GroundWaterWatch.Services {
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        constructor($http: ng.IHttpService, evntmngr:WiM.Event.IEventManager) {
+        constructor($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams) {
             super($http, configuration.baseurls['GroundWaterWatch'])
             this._eventManager = evntmngr;
             this.queriedGWsite = false;
             this.init();
-
-            
-         
+            if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S) return;
+            this.loadLookups();
         }
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+- 
        
         public AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void {
-            FiltersToAdd.forEach(x=> this.SelectedGWFilters.push(x)) 
-            this.updateGWWSiteList();                     
+            FiltersToAdd.forEach(x=> this.SelectedGWFilters.push(x)); 
+            //this.updateGWWSiteList();                     
         }
         public getFilterRequest(): string {
                //NETWORK_CD         = ncd
@@ -243,6 +242,8 @@ module GroundWaterWatch.Services {
             this._eventManager.AddEvent<GWSiteSelectionEventArgs>(onSelectedGWSiteChanged);
 
             this.mapCenter = new Center(39, -100, 3);
+        }
+        private loadLookups(): void {
             this.loadStates();
             this.loadAquifers();
             this.loadLocalNetworks();
@@ -337,9 +338,9 @@ module GroundWaterWatch.Services {
 
     }//end class
 
-    factory.$inject = ['$http', 'WiM.Event.EventManager'];
-    function factory($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager ) {
-        return new GroundWaterWatchService($http, evntmngr)
+    factory.$inject = ['$http', 'WiM.Event.EventManager','$stateParams'];
+    function factory($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams ) {
+        return new GroundWaterWatchService($http, evntmngr, $stateParams)
     }
     angular.module('GroundWaterWatch.Services')
         .factory('GroundWaterWatch.Services.GroundWaterWatchService', factory)

@@ -168,10 +168,15 @@ var GroundWaterWatch;
                     var filterList = [];
                     if ($stateParams.ncd)
                         $stateParams.ncd.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.NETWORK)); });
-                    if ($stateParams.sc)
+                    if ($stateParams.sc && !$stateParams.cc)
                         $stateParams.sc.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.STATE)); });
-                    if ($stateParams.cc)
-                        $stateParams.cc.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.COUNTY)); });
+                    else if ($stateParams.sc && $stateParams.cc) {
+                        $stateParams.sc.split(",").forEach(function (sc) {
+                            $stateParams.cc.split(",").forEach(function (cc) {
+                                filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: cc, statecode: sc }, GroundWaterWatch.Models.FilterType.COUNTY));
+                            }); //next cc
+                        }); //next state               
+                    } //end if
                     if ($stateParams.S)
                         $stateParams.S.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.SITE)); });
                     this.gwwServices.AddFilterTypes(filterList);
@@ -569,6 +574,9 @@ var GroundWaterWatch;
                                 } //end if                                                    
                             }); //next feature
                         });
+                    } //end if
+                    if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.SITE.toString())) {
+                        _this.gwwServices.queryGWsite("'" + filters[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (f) { f.item.code; }).join("','") + "'");
                     } //end if
                 }); //end get layers
             };
