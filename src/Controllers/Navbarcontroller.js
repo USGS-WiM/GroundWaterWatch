@@ -21,13 +21,17 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use strict';
         var NavbarController = (function () {
-            function NavbarController($scope, $stateParams, modal) {
+            function NavbarController($scope, $stateParams, modal, gww) {
                 $scope.vm = this;
                 this.modalService = modal;
+                this.gwwService = gww;
             }
             Object.defineProperty(NavbarController.prototype, "ProjectName", {
                 get: function () {
-                    return configuration.projectName;
+                    if (this.gwwService.SelectedPrimaryNetwork)
+                        return configuration.projectName + " - " + this.gwwService.SelectedPrimaryNetwork.name;
+                    else
+                        return configuration.projectName;
                 },
                 enumerable: true,
                 configurable: true
@@ -39,9 +43,9 @@ var GroundWaterWatch;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            NavbarController.$inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService'];
+            NavbarController.$inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return NavbarController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.NavbarController', NavbarController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

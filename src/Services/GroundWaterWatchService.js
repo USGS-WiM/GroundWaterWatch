@@ -29,6 +29,17 @@ var GroundWaterWatch;
     (function (Services) {
         'use strict';
         Services.onSelectedGWSiteChanged = "onSelectedGWSiteChanged";
+        Services.onGWSiteSelectionChanged = "onGWSiteSelectionChanged";
+        var GWSiteSelectionEventArgs = (function (_super) {
+            __extends(GWSiteSelectionEventArgs, _super);
+            function GWSiteSelectionEventArgs(featurelist) {
+                if (featurelist === void 0) { featurelist = []; }
+                _super.call(this);
+                this.featurelist = featurelist;
+            }
+            return GWSiteSelectionEventArgs;
+        })(WiM.Event.EventArgs);
+        Services.GWSiteSelectionEventArgs = GWSiteSelectionEventArgs;
         var Center = (function () {
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -38,7 +49,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        }());
+        })();
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -92,6 +103,28 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(GroundWaterWatchService.prototype, "SelectedPrimaryNetwork", {
+                get: function () {
+                    return this._selectedPrimaryNetwork;
+                },
+                set: function (val) {
+                    if (this._selectedPrimaryNetwork === val)
+                        return;
+                    this._selectedPrimaryNetwork = val;
+                    //clear filters
+                    this.SelectedGWFilters.length = 0;
+                    this.SelectedGWFilters.push(new GroundWaterWatch.Models.GroundWaterFilterSite(val, GroundWaterWatch.Models.FilterType.NETWORK));
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(GroundWaterWatchService.prototype, "PrimaryNetworkList", {
+                get: function () {
+                    return this._primaryNetworks;
+                },
+                enumerable: true,
+                configurable: true
+            });
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+- 
             GroundWaterWatchService.prototype.AddFilterTypes = function (FiltersToAdd) {
@@ -130,22 +163,22 @@ var GroundWaterWatch;
                     filter.push("SITE_NO in ('" + site.join("','") + "')");
                 return filter.join(" AND ");
             };
-            GroundWaterWatchService.prototype.queryGWsite = function (latlong, boundsString, x, y, width, height) {
+            GroundWaterWatchService.prototype.queryGWsite = function (point) {
                 var _this = this;
                 this.queriedGWsite = false;
-                //create false bounding box
-                //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
-                //groundwaterwatch:Latest_WL_Percentile
-                var url = configuration.baseurls['siteservices'] + "/site.ashx";
-                url += "?WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
+                var addsize = 0.0005;
+                console.log(point);
+                var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
+                console.log(bbox);
+                var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
+                url += "&CQL_FILTER=BBOX(GEOM,{0})".format(bbox);
+                if (this.SelectedPrimaryNetwork != null)
+                    url += "AND NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
                 var request = new WiM.Services.Helpers.RequestInfo(url, true, WiM.Services.Helpers.methodType.GET, "", null, { 'Accept-Encoding': 'gzip' });
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
-                        response.data.features.forEach(function (item) {
-                            _this.SelectedGWSite = item;
-                            //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
-                        }); //next
+                        _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features));
                     } //endif
                     else {
                         console.log('No gww sites found');
@@ -179,10 +212,12 @@ var GroundWaterWatch;
             GroundWaterWatchService.prototype.init = function () {
                 this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
+                this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this.mapCenter = new Center(39, -100, 3);
                 this.loadStates();
                 this.loadAquifers();
-                this.loadNetworks();
+                this.loadLocalNetworks();
+                this.loadPrimaryNetworks();
             };
             //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
             //ABBREV = 'CO'
@@ -190,10 +225,9 @@ var GroundWaterWatch;
             //outfeilds COUNTY,STATE,ABBREV,NAME
             GroundWaterWatchService.prototype.updateGWWSiteList = function () {
                 var _this = this;
-                var filter = this.getFilterRequest();
-                var url = configuration.baseurls['siteservices'] + "/sites.ashx";
-                if (filter != "")
-                    url += "?FILTER=" + filter;
+                var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
+                if (this.SelectedPrimaryNetwork != null)
+                    url += "&CQL_FILTER=NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
                 var request = new WiM.Services.Helpers.RequestInfo(url, true);
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
@@ -214,7 +248,7 @@ var GroundWaterWatch;
             };
             GroundWaterWatchService.prototype.loadStates = function () {
                 var _this = this;
-                var request = new WiM.Services.Helpers.RequestInfo("statecodes.js", true);
+                var request = new WiM.Services.Helpers.RequestInfo("sc.js", true);
                 this.Execute(request).then(function (response) {
                     _this._states = response.data;
                 }, function (error) {
@@ -225,7 +259,7 @@ var GroundWaterWatch;
             GroundWaterWatchService.prototype.loadAquifers = function () {
                 var _this = this;
                 console.log("Loading Aquifers");
-                var request = new WiM.Services.Helpers.RequestInfo("principalAquifers.js", true);
+                var request = new WiM.Services.Helpers.RequestInfo("acd.js", true);
                 this.Execute(request).then(function (response) {
                     _this._aquifers = response.data;
                 }, function (error) {
@@ -233,10 +267,10 @@ var GroundWaterWatch;
                 }).finally(function () {
                 });
             };
-            GroundWaterWatchService.prototype.loadNetworks = function () {
+            GroundWaterWatchService.prototype.loadLocalNetworks = function () {
                 var _this = this;
                 console.log("Loading networks");
-                var request = new WiM.Services.Helpers.RequestInfo("stateLocalNetworks.js", true);
+                var request = new WiM.Services.Helpers.RequestInfo("lcd.js", true);
                 this.Execute(request).then(function (response) {
                     _this._networks = response.data;
                 }, function (error) {
@@ -244,8 +278,20 @@ var GroundWaterWatch;
                 }).finally(function () {
                 });
             };
+            GroundWaterWatchService.prototype.loadPrimaryNetworks = function () {
+                var _this = this;
+                console.log("Loading networks");
+                var request = new WiM.Services.Helpers.RequestInfo("ncd.js", true);
+                this.Execute(request).then(function (response) {
+                    _this._primaryNetworks = response.data;
+                    _this.SelectedPrimaryNetwork = _this._primaryNetworks[0];
+                }, function (error) {
+                    console.log('No gww sites found');
+                }).finally(function () {
+                });
+            };
             return GroundWaterWatchService;
-        }(WiM.Services.HTTPServiceBase)); //end class
+        })(WiM.Services.HTTPServiceBase); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager'];
         function factory($http, evntmngr) {
             return new GroundWaterWatchService($http, evntmngr);

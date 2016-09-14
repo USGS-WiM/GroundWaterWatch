@@ -21,7 +21,8 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use strinct';
         var SidebarController = (function () {
-            function SidebarController($scope, toaster, $analytics, $stateParams, service, modalService, gwwService, eventmanager) {
+            function SidebarController($scope, toaster, $analytics, $stateParams, service, modalService, gwwService, eventmanager, $window) {
+                this.$window = $window;
                 $scope.vm = this;
                 this.toaster = toaster;
                 this.angulartics = $analytics;
@@ -31,6 +32,34 @@ var GroundWaterWatch;
                 this.eventManager = eventmanager;
                 this.init();
             }
+            Object.defineProperty(SidebarController.prototype, "States", {
+                get: function () {
+                    return this.groundwaterwatchService.StateList;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(SidebarController.prototype, "Aquifers", {
+                get: function () {
+                    return this.groundwaterwatchService.AquiferList;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(SidebarController.prototype, "LocalNetworks", {
+                get: function () {
+                    return this.groundwaterwatchService.NetworkList;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(SidebarController.prototype, "PrimaryNetworks", {
+                get: function () {
+                    return this.groundwaterwatchService.PrimaryNetworkList;
+                },
+                enumerable: true,
+                configurable: true
+            });
             SidebarController.prototype.getLocations = function (term) {
                 return this.searchService.getLocations(term);
             };
@@ -86,13 +115,26 @@ var GroundWaterWatch;
                 ;
                 return -1;
             };
+            SidebarController.prototype.OpenNetworkPage = function (networkType, SelectedNetworkType) {
+                var url = 'http://groundwaterwatch.usgs.gov';
+                switch (networkType) {
+                    case NetworkType.STATE:
+                        url += "/netmapT1L2.asp?ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code, SelectedNetworkType.code);
+                        break;
+                    case NetworkType.AQUIFER:
+                    case NetworkType.LOCAL:
+                        url += "/netmapT4L1.asp?ncd=" + SelectedNetworkType.code;
+                        break;
+                } //endswitch
+                this.$window.open(url, "_self");
+            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.prototype.init = function () {
                 //init event handler
                 this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
                 this.sideBarCollapsed = false;
-                this.selectedProcedure = ProcedureType.Search;
+                this.selectedProcedure = ProcedureType.NetworkType;
             };
             SidebarController.prototype.canUpdateProcedure = function (pType) {
                 //console.log('in canUpdateProcedure');
@@ -123,15 +165,21 @@ var GroundWaterWatch;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
+            SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager', '$window'];
             return SidebarController;
-        }()); //end class
+        })(); //end class
         var ProcedureType;
         (function (ProcedureType) {
             ProcedureType[ProcedureType["Search"] = 1] = "Search";
             ProcedureType[ProcedureType["NetworkType"] = 2] = "NetworkType";
             ProcedureType[ProcedureType["Filter"] = 3] = "Filter";
         })(ProcedureType || (ProcedureType = {}));
+        var NetworkType;
+        (function (NetworkType) {
+            NetworkType[NetworkType["STATE"] = 1] = "STATE";
+            NetworkType[NetworkType["AQUIFER"] = 2] = "AQUIFER";
+            NetworkType[NetworkType["LOCAL"] = 3] = "LOCAL";
+        })(NetworkType || (NetworkType = {}));
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.SidebarController', SidebarController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

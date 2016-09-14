@@ -75,8 +75,9 @@
     <Content Include="src\images\usgs_logo.png" />
     <Content Include="src\index.html" />
     <Content Include="bower.json" />
-    <Content Include="src\principalAquifers.js" />
-    <Content Include="src\stateLocalNetworks.js" />
+    <Content Include="src\acd.js" />
+    <Content Include="src\ncd.js" />
+    <Content Include="src\lcd.js" />
     <Content Include="src\Views\siteinfomodal.html" />
     <Content Include="src\Views\filtermodal.html" />
     <Content Include="src\Views\aboutmodal.html" />
@@ -88,7 +89,7 @@
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <None Include="custom.pubxml" />
-    <Content Include="src\statecodes.js" />
+    <Content Include="src\sc.js" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

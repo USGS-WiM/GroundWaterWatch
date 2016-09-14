@@ -211,7 +211,10 @@ module GroundWaterWatch.Controllers {
             }));
             this.eventManager.SubscribeToEvent(WiM.Services.onSelectedAreaOfInterestChanged, new WiM.Event.EventHandler<WiM.Event.EventArgs>((sender: any, e: WiM.Services.SearchAPIEventArgs) => {
                 this.onSelectedAreaOfInterestChanged(sender, e);
-            }));           
+            }));  
+            this.eventManager.SubscribeToEvent(Services.onGWSiteSelectionChanged, new WiM.Event.EventHandler<Services.GWSiteSelectionEventArgs>((sender: any, e: Services.GWSiteSelectionEventArgs) => {
+                this.onGWSiteSelectionChanged(sender, e);
+            }));         
             
             $scope.$on('leafletDirectiveMap.mainMap.mousemove',(event, args) => {
                 var latlng = args.leafletEvent.latlng;
@@ -227,19 +230,8 @@ module GroundWaterWatch.Controllers {
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
             $scope.$on('leafletDirectiveMap.mainMap.click', (event, args) => {
 
+                this.gwwServices.queryGWsite(args.leafletEvent.latlng)
 
-                this.gwwServices.SelectedGWSite = null;
-                this.modalService.openModal(Services.ModalType.e_siteinfo);
-
-                this.leafletData.getMap("mainMap").then((map: any) => {
-                    var boundsString = map.getBounds().toBBoxString();
-                    var x = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).x);
-                    var y = Math.round(map.layerPointToContainerPoint(args.leafletEvent.layerPoint).y);
-                    var width = map.getSize().x;
-                    var height = map.getSize().y;
-
-                    this.gwwServices.queryGWsite(args.leafletEvent.latlng, boundsString,x,y,width,height)
-                });
             }); 
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
             $scope.$watch(() => this.explorationService.elevationProfileGeoJSON,(newval, oldval) => {
@@ -560,6 +552,13 @@ module GroundWaterWatch.Controllers {
                 map.setView([AOI.Latitude, AOI.Longitude], zoomlevel)
             });
         }
+        private onGWSiteSelectionChanged(sender: any, e: Services.GWSiteSelectionEventArgs) {
+            //checkforname, and remove, add additional ones
+            this.removeGeoJson("gwwsite", true);
+            for (var i = 0; i < e.featurelist.length;i++){
+                this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
+            }//next f
+        }
         private removeGeoJson(layerName: string = "", isPartial: boolean = false) {
             var layeridList: Array<string>;
 
@@ -572,16 +571,51 @@ module GroundWaterWatch.Controllers {
             });
         }
         private addGeoJSON(LayerName: string, feature: any) {
-            this.geojson[LayerName] =
-                {
+            if (LayerName.indexOf("gwwsite_") > -1) {
+                var geojsonMarkerOptions = {
+                    radius: 8,
+                    color: '#FFFA20',
+                    weight: 3,
+                    opacity: 1,
+                    fillOpacity: 0,
+                    visible:true
+                    
+                };
+                this.geojson[LayerName] = {
                     data: feature,
-                    style: {
-                        "fillOpacity":0
-                    }
-                    //onEachFeature: (feature, layer) => {
-                    //    layer.bindLabel(LayerName, { noHide: true })
-                    //}
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    },
+                    onEachFeature: (feature, layer) => {
+                        var strVar = "     <div>";
+                        strVar += "          <h3>USGS Well Information <\/h3>";
+                        strVar += "          <strong>Station: <\/strong>" + feature.properties["SITE_NO"];
+                        strVar += "          <br \/>";
+                        strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
+                        strVar += "          <br \/>";
+                        strVar += "          <strong>Most Recent Measurement: <\/strong>" + feature.properties["LATEST_VALUE"];
+                        strVar += "          <br \/>";
+                        strVar += "          <strong>Measurement Date: <\/strong>" + feature.properties["LATEST_DATE"];
+                        strVar += "        <\/div>";         
+                        layer.bindPopup(strVar);
+                    }                   
                 }
+
+
+
+            }
+            else {
+                this.geojson[LayerName] =
+                    {
+                        data: feature,
+                        style: {
+                            "fillOpacity": 0
+                        }
+                        //onEachFeature: (feature, layer) => {
+                        //    layer.bindLabel(LayerName, { noHide: true })
+                        //}
+                    }
+            }
         }
         private onLayerChanged(e: WiM.Directives.LegendLayerChangedEventArgs) {
             if (e.PropertyName === "visible") {
