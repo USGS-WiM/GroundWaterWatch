@@ -81,9 +81,9 @@ module GroundWaterWatch.Controllers {
     class MapPoint implements IMapPoint {
         lat: number;
         lng: number;
-        constructor() {
-            this.lat = 0;
-            this.lng = 0;
+        constructor(lat:number=0,lng:number=0) {
+            this.lat = lat;
+            this.lng = lng;
         }
     }
     class Center implements ICenter {
@@ -260,8 +260,16 @@ module GroundWaterWatch.Controllers {
             if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S) {
                 var filterList: Array<Models.IGroundWaterFilterSite> = [];
                 if ($stateParams.ncd) (<string>$stateParams.ncd).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code:fl }, Models.FilterType.NETWORK)); });
-                if ($stateParams.sc) (<string>$stateParams.sc).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.STATE)); });
-                if ($stateParams.cc) (<string>$stateParams.cc).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.COUNTY)); });
+                if ($stateParams.sc && !$stateParams.cc)
+                    (<string>$stateParams.sc).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.STATE)); });
+                else if ($stateParams.sc && $stateParams.cc) {
+                    (<string>$stateParams.sc).split(",").forEach((sc) => {
+                        (<string>$stateParams.cc).split(",").forEach((cc) => {
+                            filterList.push(new Models.GroundWaterFilterSite(<Models.ICounty>{ code: cc, statecode: sc }, Models.FilterType.COUNTY));
+                        });//next cc
+                    });//next state               
+                }//end if
+
                 if ($stateParams.S) (<string>$stateParams.S).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.SITE)); });
                 this.gwwServices.AddFilterTypes(filterList);
                 $rootscope["isShown"] = false;
@@ -556,10 +564,15 @@ module GroundWaterWatch.Controllers {
             //checkforname, and remove, add additional ones
             this.removeGeoJson("gwwsite", true);
             this.addGeoJSON("gwwsite", e.featurelist[0]);
-
             //for (var i = 0; i < e.featurelist.length;i++){
             //    this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
             //}//next f
+            //zoomto
+            if (e.bbox != null) {            
+                this.center.lat = (e.bbox[0] + e.bbox[2]) / 2
+                this.center.lng = (e.bbox[1] + e.bbox[3]) / 2
+                this.center.zoom = 12;
+        }
         }
         private removeGeoJson(layerName: string = "", isPartial: boolean = false) {
             var layeridList: Array<string>;
@@ -672,10 +685,11 @@ module GroundWaterWatch.Controllers {
         }
         private updateMapFilters() {
             if (!this.initialized) return;
+            this.leafletData.getMap("mainMap").then((map: any) => {
             this.leafletData.getLayers("mainMap").then((maplayers: any) => {
                 //gww sites
                 var frequest = this.gwwServices.getFilterRequest();
-                if(frequest !=''){
+                    if (frequest != '') {
                     maplayers.overlays["gww"].wmsParams.CQL_FILTER = frequest;                    
                 }
                 else {
@@ -686,31 +700,46 @@ module GroundWaterWatch.Controllers {
                 //states and counties
                 var filters = this.gwwServices.SelectedGWFilters.group("Type");
                 if (filters.hasOwnProperty(Models.FilterType.STATE.toString())) {
-                    maplayers.overlays["states"].query().layer(7).where(filters[Models.FilterType.STATE.toString()].map((f: Models.GroundWaterFilterSite) => { return "STATE = '"+f.item.code+"'"}).join(" OR ")).returnGeometry(true).fields('STATE,ABBREV,NAME').run((error: any, results: any) => {
+                        maplayers.overlays["states"].query().layer(7).where(filters[Models.FilterType.STATE.toString()].map((f: Models.GroundWaterFilterSite) => { return "STATE = '" + f.item.code + "'" }).join(" OR ")).returnGeometry(true).fields('STATE,ABBREV,NAME').run((error: any, results: any) => {
                         //console.log('gage query response', results);
                         if (!results.features || results.features.length == 0) { return; }                        
                         results.features.forEach((queryResult) => {
-                            if (queryResult.geometry.type === 'Polygon' || queryResult.geometry.type =='MultiPolygon') {                                
-                                this.removeGeoJson("STATE"+ queryResult.properties["STATE"]);
+                                if (queryResult.geometry.type === 'Polygon' || queryResult.geometry.type == 'MultiPolygon') {
+                                    this.removeGeoJson("STATE" + queryResult.properties["STATE"]);
                                 this.addGeoJSON("STATE" + queryResult.properties["STATE"], queryResult.geometry);
                             }//end if                                                    
                         });//next feature
+                            maplayers.overlays["states"].query().layer(7).where(filters[Models.FilterType.STATE.toString()].map((f: Models.GroundWaterFilterSite) => { return "STATE = '" + f.item.code + "'" }).join(" OR ")).bounds((error: any, results: any) => {
+                                map.fitBounds(results);
+
+                            });
                     })
                 }//end if
                 if (filters.hasOwnProperty(Models.FilterType.COUNTY.toString())) {
-                    maplayers.overlays["counties"].query().layer(15).where(filters[Models.FilterType.COUNTY.toString()].map((f: Models.GroundWaterFilterSite) => { return "COUNTY = '" + (<Models.ICounty>f.item).code + "' AND STATE ='" + (<Models.ICounty>f.item).statecode+"'"}).join(" OR ")).returnGeometry(true).fields('COUNTY,STATE,NAME').run((error: any, results: any) => {
+                        maplayers.overlays["counties"].query().layer(15).where(filters[Models.FilterType.COUNTY.toString()].map((f: Models.GroundWaterFilterSite) => { return "COUNTY = '" + (<Models.ICounty>f.item).code + "' AND STATE ='" + (<Models.ICounty>f.item).statecode + "'" }).join(" OR ")).returnGeometry(true).fields('COUNTY,STATE,NAME').run((error: any, results: any) => {
                         //console.log('gage query response', results);
-                        if (!results.features || results.features.length == 0) {  return; }
+                            if (!results.features || results.features.length == 0) { return; }
                         results.features.forEach((queryResult) => {
                             if (queryResult.geometry.type === 'Polygon') {
                                 this.removeGeoJson("COUNTY" + queryResult.properties["COUNTY"])
                                 this.addGeoJSON("COUNTY" + queryResult.properties["COUNTY"], queryResult.geometry);
+
                             }//end if                                                    
                         });//next feature
-                    })
-                }//end if
+                        });
+                        maplayers.overlays["counties"].query().layer(15).where(filters[Models.FilterType.COUNTY.toString()].map((f: Models.GroundWaterFilterSite) => { return "COUNTY = '" + (<Models.ICounty>f.item).code + "' AND STATE ='" + (<Models.ICounty>f.item).statecode + "'" }).join(" OR ")).bounds((error: any, results: any) => {
+                            map.fitBounds(results);
 
-            });//end get layers
+                        });
+                    }//end if
+                    if (filters.hasOwnProperty(Models.FilterType.SITE.toString())) {
+                        var result = filters[Models.FilterType.SITE.toString()].map((f: Models.GroundWaterFilterSite) => { return f.item.code });
+                        this.gwwServices.queryGWsiteByNOs(result.join("','"));
+                }//end if
+                });//end get layers
+            });//end get map
+            
+
         }
 
     }//end class

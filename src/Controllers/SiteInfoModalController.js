@@ -99,7 +99,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             SiteInfoModalController.$inject = ['$scope', '$http', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
             return SiteInfoModalController;
-        }(WiM.Services.HTTPServiceBase)); //end  class
+        })(WiM.Services.HTTPServiceBase); //end  class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.SiteInfoModalController', SiteInfoModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));
