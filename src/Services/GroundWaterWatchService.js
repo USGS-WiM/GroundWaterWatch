@@ -178,6 +178,8 @@ var GroundWaterWatch;
                     addsize = 0.1;
                 if (mapZoom > 6 && mapZoom <= 10)
                     addsize = 0.01;
+                if (mapZoom > 10 && mapZoom <= 12)
+                    addsize = 0.005;
                 console.log('click buffer: ', addsize);
                 var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
                 console.log('buffered bbox: ', bbox);
@@ -194,6 +196,7 @@ var GroundWaterWatch;
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
+<<<<<<< HEAD
                         console.log(response.data.features.length, ' gww sites found');
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                     } //endif
@@ -222,6 +225,10 @@ var GroundWaterWatch;
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
+=======
+                        console.log('gww sites found');
+                        _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features));
+>>>>>>> 8892b077aff5b97d36b32d7506065120aee0dfff
                     } //endif
                     else {
                         console.log('No gww sites found');

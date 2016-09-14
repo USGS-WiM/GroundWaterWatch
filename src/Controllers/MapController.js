@@ -435,6 +435,7 @@ var GroundWaterWatch;
             MapController.prototype.onGWSiteSelectionChanged = function (sender, e) {
                 //checkforname, and remove, add additional ones
                 this.removeGeoJson("gwwsite", true);
+<<<<<<< HEAD
                 for (var i = 0; i < e.featurelist.length; i++) {
                     this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
                 } //next f
@@ -444,6 +445,12 @@ var GroundWaterWatch;
                     this.center.lng = (e.bbox[1] + e.bbox[3]) / 2;
                     this.center.zoom = 12;
                 }
+=======
+                this.addGeoJSON("gwwsite", e.featurelist[0]);
+                //for (var i = 0; i < e.featurelist.length;i++){
+                //    this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
+                //}//next f
+>>>>>>> 8892b077aff5b97d36b32d7506065120aee0dfff
             };
             MapController.prototype.removeGeoJson = function (layerName, isPartial) {
                 var _this = this;
@@ -459,7 +466,7 @@ var GroundWaterWatch;
             };
             MapController.prototype.addGeoJSON = function (LayerName, feature) {
                 var _this = this;
-                if (LayerName.indexOf("gwwsite_") > -1) {
+                if (LayerName.indexOf("gwwsite") > -1) {
                     var geojsonMarkerOptions = {
                         radius: 8,
                         color: '#FFFA20',
@@ -476,7 +483,7 @@ var GroundWaterWatch;
                         onEachFeature: function (feature, layer) {
                             var strVar = "     <div>";
                             strVar += "          <h3>USGS Well Information <\/h3>";
-                            strVar += "          <strong>Station: <\/strong>" + feature.properties["SITE_NO"];
+                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=" + feature.properties["SITE_NO"] + "&ncd=awl' target='_blank' >" + feature.properties["SITE_NO"] + "</a>";
                             strVar += "          <br \/>";
                             strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                             strVar += "          <br \/>";
@@ -484,6 +491,8 @@ var GroundWaterWatch;
                             strVar += "          <br \/>";
                             strVar += "          <strong>Measurement Date: <\/strong>" + feature.properties["LATEST_DATE"];
                             strVar += "        <\/div>";
+                            // http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=422622073410901&ncd=awl
+                            // http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=431841074573201&ncd=awl
                             layer.bindPopup(strVar);
                             _this.leafletData.getMap("mainMap").then(function (map) { layer.openPopup(); });
                         }
