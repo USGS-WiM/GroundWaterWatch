@@ -229,9 +229,9 @@ module GroundWaterWatch.Controllers {
             });
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
             $scope.$on('leafletDirectiveMap.mainMap.click', (event, args) => {
-
-                this.gwwServices.queryGWsite(args.leafletEvent.latlng)
-
+                this.leafletData.getMap("mainMap").then((map: any) => {
+                    this.gwwServices.queryGWsite(args.leafletEvent.latlng, map.getZoom())
+                });
             }); 
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
             $scope.$watch(() => this.explorationService.elevationProfileGeoJSON,(newval, oldval) => {
@@ -578,7 +578,7 @@ module GroundWaterWatch.Controllers {
                     weight: 3,
                     opacity: 1,
                     fillOpacity: 0,
-                    visible:true
+                    visible: true
                     
                 };
                 this.geojson[LayerName] = {
@@ -598,11 +598,9 @@ module GroundWaterWatch.Controllers {
                         strVar += "          <strong>Measurement Date: <\/strong>" + feature.properties["LATEST_DATE"];
                         strVar += "        <\/div>";         
                         layer.bindPopup(strVar);
-                    }                   
+                        this.leafletData.getMap("mainMap").then((map: any) => { layer.openPopup(); });
+                    }      
                 }
-
-
-
             }
             else {
                 this.geojson[LayerName] =
