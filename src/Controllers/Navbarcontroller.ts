@@ -36,18 +36,24 @@ module GroundWaterWatch.Controllers {
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
         private modalService: Services.IModalService;
+        private gwwService: Services.IGroundWaterWatchService;
         private cookies: any;
         private newArticleCount: number;
         public get ProjectName(): string {
-            return configuration.projectName;
+            if (this.gwwService.SelectedPrimaryNetwork)
+                return configuration.projectName + " - " + this.gwwService.SelectedPrimaryNetwork.name;
+            else return configuration.projectName
         }
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService'];
-        constructor($scope: INavbarControllerScope, $stateParams, modal: Services.IModalService) {            
+        static $inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
+        constructor($scope: INavbarControllerScope, $stateParams, modal: Services.IModalService, gww: Services.IGroundWaterWatchService) {            
             $scope.vm = this;
             this.modalService = modal;
+            this.gwwService = gww;
+
+
         }
 
         //Methods

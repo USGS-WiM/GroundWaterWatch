@@ -42,12 +42,15 @@ module GroundWaterWatch.Controllers {
         //-+-+-+-+-+-+-+-+-+-+-+-
 
         private leafletData: ILeafletData;
-        public networkTypes: any;
         public center: any;
         public defaults: any;
         public layers: any;
         private gwwService: Services.IGroundWaterWatchService;
-        public selectedNetwork: string;
+        private selectedNetwork: Models.INetwork;
+        public get isSelected(): boolean{
+            if (this.selectedNetwork.code === this.gwwService.SelectedPrimaryNetwork.code) return true;
+            else return false;
+        }
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -58,19 +61,20 @@ module GroundWaterWatch.Controllers {
 
             this.leafletData = leafletData;
             this.gwwService = gwwservice;
-            this.selectedNetwork = 'AWL';
+            this.selectedNetwork = null;
             this.init();
 
         }
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
-
+        public initialize(network: Models.INetwork) {
+            this.selectedNetwork = network;
+            this.loadGWWMapLayer()
+        }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
-        private init(): void { 
-
-            this.networkTypes = configuration.networkTypes;
+        private init(): void {
 
             this.center = this.gwwService.mapCenter;
             this.defaults = {
@@ -86,12 +90,16 @@ module GroundWaterWatch.Controllers {
                 baselayers: configuration.basemaps,
                 overlays: { gww: configuration.overlayedLayers.gww }
             }
+            this.loadGWWMapLayer();
         }
-
-        public setMapLayer(networkCode: any, mapDiv: any) {
-            if (networkCode != mapDiv) this.selectedNetwork = networkCode;
-            this.leafletData.getLayers(mapDiv).then((maplayers: any) => {
-                maplayers.overlays["gww"].wmsParams.CQL_FILTER = "NETWORK_CD='" + networkCode + "'";
+        public setMainNetwork() {
+            if (!this.selectedNetwork) return;
+            this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+        }
+        private loadGWWMapLayer() {
+            if (!this.selectedNetwork) return;
+            this.leafletData.getLayers(this.selectedNetwork.code).then((maplayers: any) => {
+                maplayers.overlays["gww"].wmsParams.CQL_FILTER = "NETWORK_CD='" + this.selectedNetwork.code + "'";
                 maplayers.overlays["gww"].redraw();
             });
         }

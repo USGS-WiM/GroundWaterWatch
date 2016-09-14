@@ -51,14 +51,27 @@ module GroundWaterWatch.Controllers {
 
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
-         public sideBarCollapsed: boolean;
+        public sideBarCollapsed: boolean;
         public selectedProcedure: ProcedureType;
         public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
 
+        public get States(): Array<Models.IState> {
+            return this.groundwaterwatchService.StateList;
+        }
+        public get Aquifers(): Array<Models.IAquifer> {
+            return this.groundwaterwatchService.AquiferList;
+        }
+        public get LocalNetworks(): Array<Models.INetwork> {
+            return this.groundwaterwatchService.NetworkList;
+        }
+        public get PrimaryNetworks(): Array<Models.INetwork> {
+            return this.groundwaterwatchService.PrimaryNetworkList;
+        }
+
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService','WiM.Event.EventManager'];
-        constructor($scope: ISidebarControllerScope, toaster, $analytics,$stateParams, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService, eventmanager:WiM.Event.IEventManager) {
+        static $inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService','WiM.Event.EventManager','$window'];
+        constructor($scope: ISidebarControllerScope, toaster, $analytics,$stateParams, service: WiM.Services.ISearchAPIService, modalService:Services.IModalService, gwwService: Services.IGroundWaterWatchService, eventmanager:WiM.Event.IEventManager, private $window:ng.IWindowService) {
             $scope.vm = this;
            
             this.toaster = toaster;
@@ -67,8 +80,6 @@ module GroundWaterWatch.Controllers {
             this.groundwaterwatchService = gwwService;
             this.modalService = modalService;
             this.eventManager = eventmanager;
-
-
             this.init();
         }
 
@@ -100,6 +111,7 @@ module GroundWaterWatch.Controllers {
                 this.eventManager.RaiseEvent(WiM.Directives.onLayerChanged, this, new WiM.Directives.LegendLayerChangedEventArgs(fname + filter.item.code, "visible", false));
             }
         }
+
         public ClearFilters() {
             this.SelectedFilters.forEach((f) => {
                 var fname = f.Type == Models.FilterType.COUNTY ? "COUNTY" : "STATE";
@@ -120,14 +132,28 @@ module GroundWaterWatch.Controllers {
             return -1;
         }
 
+        public OpenNetworkPage(networkType: NetworkType, SelectedNetworkType: Models.IFilterSite) {
+            var url = 'http://groundwaterwatch.usgs.gov';
+            switch (networkType) {
+                case NetworkType.STATE:
+                    url += "/netmapT1L2.asp?ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code,SelectedNetworkType.code);
+                    break;
+                case NetworkType.AQUIFER: case NetworkType.LOCAL:
+                    url += "/netmapT4L1.asp?ncd="+SelectedNetworkType.code;
+                    break;
+            }//endswitch
+
+
+            this.$window.open(url, "_self");
+
+        }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void { 
             //init event handler
-
             this.SelectedFilters = this.groundwaterwatchService.SelectedGWFilters;
             this.sideBarCollapsed = false;
-            this.selectedProcedure = ProcedureType.Search;
+            this.selectedProcedure = ProcedureType.NetworkType;
 
         }
         private canUpdateProcedure(pType: ProcedureType): boolean {
@@ -176,6 +202,11 @@ module GroundWaterWatch.Controllers {
         Search = 1,
         NetworkType = 2,
         Filter = 3
+    }
+    enum NetworkType {
+        STATE = 1,
+        AQUIFER = 2,
+        LOCAL = 3
     }
 
     angular.module('GroundWaterWatch.Controllers')

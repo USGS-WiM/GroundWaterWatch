@@ -41,7 +41,7 @@ var GroundWaterWatch;
                 return gww;
             };
             return GroundWaterSite;
-        }());
+        })();
         Models.GroundWaterSite = GroundWaterSite; //end class
     })(Models = GroundWaterWatch.Models || (GroundWaterWatch.Models = {}));
 })(GroundWaterWatch || (GroundWaterWatch = {})); //end module 

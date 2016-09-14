@@ -30,17 +30,28 @@ module GroundWaterWatch.Services {
         SelectedGWSite: Models.ISimpleGroundWaterSite;
         SelectedGWFilters: Array<Models.IGroundWaterFilterSite>;
         StateList: Array<Models.IState>;
-        AquiferList: Array<Models.IAquifer>
-        NetworkList: Array<Models.INetwork>
+        AquiferList: Array<Models.IAquifer>;
+        NetworkList: Array<Models.INetwork>;
+        PrimaryNetworkList: Array<Models.INetwork>;
 
         //GetFilterType(fType: Models.FilterType): ng.IPromise<Array<Models.IGroundWaterFilterSite>>
         AddFilterTypes(FiltersToAdd: Array<Models.IGroundWaterFilterSite>): void;
         getFilterRequest(): string;
         loadCounties(state: Models.IState);
-        queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any);
+        queryGWsite(latlong: any);
         mapCenter: ICenter;
+        SelectedPrimaryNetwork: Models.INetwork;
     }
     export var onSelectedGWSiteChanged: string = "onSelectedGWSiteChanged";
+    export var onGWSiteSelectionChanged: string = "onGWSiteSelectionChanged";
+    export class GWSiteSelectionEventArgs extends WiM.Event.EventArgs {
+        //properties
+        public featurelist:Array<any>;
+        constructor(featurelist:Array<any>=[]) {
+            super();
+            this.featurelist = featurelist;
+        }
+    }
 
     interface ICenter {
         lat: number;
@@ -96,13 +107,30 @@ module GroundWaterWatch.Services {
         public get StateList(): Array<Models.IState> {
             return this._states;
         }
-        private _aquifers: Array<Models.IState>
+        private _aquifers: Array<Models.IAquifer>
         public get AquiferList(): Array<Models.IAquifer> {
             return this._aquifers;
         }
-        private _networks: Array<Models.IState>
+        private _networks: Array<Models.INetwork>
         public get NetworkList(): Array<Models.INetwork> {
             return this._networks;
+        }
+
+        private _selectedPrimaryNetwork: Models.INetwork
+        public get SelectedPrimaryNetwork(): Models.INetwork {
+            return this._selectedPrimaryNetwork;
+        }
+        public set SelectedPrimaryNetwork(val: Models.INetwork) {
+            if (this._selectedPrimaryNetwork === val) return;
+            this._selectedPrimaryNetwork = val;
+            //clear filters
+            this.SelectedGWFilters.length = 0;
+            this.SelectedGWFilters.push(new Models.GroundWaterFilterSite(val, Models.FilterType.NETWORK));
+        }
+
+        private _primaryNetworks: Array<Models.INetwork>
+        public get PrimaryNetworkList(): Array<Models.INetwork> {
+            return this._primaryNetworks;
         }
 
 
@@ -112,8 +140,9 @@ module GroundWaterWatch.Services {
             super($http, configuration.baseurls['GroundWaterWatch'])
             this._eventManager = evntmngr;
             this.queriedGWsite = false;
-            
             this.init();
+
+            
          
         }
 
@@ -155,15 +184,15 @@ module GroundWaterWatch.Services {
 
             return filter.join(" AND ");
         }
-        public queryGWsite(latlong: any, boundsString: any, x: any, y: any, width: any, height: any) {
-
+        public queryGWsite(point: any) {
             this.queriedGWsite = false;
-            //create false bounding box
-            //http://gis.stackexchange.com/questions/102169/query-wms-getfeatureinfo-with-known-latitude-and-longitude
-
-            //groundwaterwatch:Latest_WL_Percentile
-            var url = configuration.baseurls['siteservices']+"/site.ashx";
-            url += "?WIDTH=" + width + "&HEIGHT=" + height + "&X=" + x + "&Y=" + y + "&BBOX=" + boundsString;
+            var addsize = 0.0005;
+            console.log(point)
+            var bbox = (point.lat + addsize) + "," + (point.lng - addsize) + "," + (point.lat - addsize) + "," + (point.lng + addsize);
+            console.log(bbox);
+            var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
+            url += "&CQL_FILTER=BBOX(GEOM,{0})".format(bbox);
+            if (this.SelectedPrimaryNetwork != null) url += "AND NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
 
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true, WiM.Services.Helpers.methodType.GET, "", null, { 'Accept-Encoding': 'gzip' });
 
@@ -172,10 +201,8 @@ module GroundWaterWatch.Services {
                     this.queriedGWsite = true;
 
                     if (response.data.features && response.data.features.length > 0) {
-                        response.data.features.forEach((item) => {
-                            this.SelectedGWSite = item;
-                            //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
-                        });//next
+                            this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features));
+                       
                     }//endif
                     else {
                         console.log('No gww sites found');
@@ -213,21 +240,23 @@ module GroundWaterWatch.Services {
         private init(): void {
             this._GWSiteList = [];
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
+            this._eventManager.AddEvent<GWSiteSelectionEventArgs>(onSelectedGWSiteChanged);
 
             this.mapCenter = new Center(39, -100, 3);
             this.loadStates();
             this.loadAquifers();
-            this.loadNetworks();
+            this.loadLocalNetworks();
+            this.loadPrimaryNetworks();
         }
         //https:// github.com / USGS - WiM / streamest / blob / 180a4c7db6386fdaa0ab846395517d3ac3b36967/ src / Services / StudyAreaService.ts#L527
         //ABBREV = 'CO'
         //STATE = '08'
         //outfeilds COUNTY,STATE,ABBREV,NAME
         private updateGWWSiteList() {
-            var filter = this.getFilterRequest();
-            
-            var url = configuration.baseurls['siteservices'] +"/sites.ashx";
-            if (filter != "") url += "?FILTER=" + filter;
+
+            var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery']
+            if (this.SelectedPrimaryNetwork != null) url += "&CQL_FILTER=NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
+
             var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo(url, true);
 
             this.Execute(request).then(
@@ -252,7 +281,7 @@ module GroundWaterWatch.Services {
         }
         private loadStates(): void {
 
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("statecodes.js",true);
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("sc.js",true);
 
             this.Execute(request).then(
                 (response: any) => {
@@ -265,7 +294,7 @@ module GroundWaterWatch.Services {
         }
         private loadAquifers(): void {
             console.log("Loading Aquifers");
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("principalAquifers.js", true);
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("acd.js", true);
 
             this.Execute(request).then(
                 (response: any) => {
@@ -276,13 +305,27 @@ module GroundWaterWatch.Services {
                 });
 
         }
-        private loadNetworks(): void {
+        private loadLocalNetworks(): void {
             console.log("Loading networks");
-            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("stateLocalNetworks.js", true);
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("lcd.js", true);
 
             this.Execute(request).then(
                 (response: any) => {
                     this._networks = response.data;
+                }, (error) => {
+                    console.log('No gww sites found');
+                }).finally(() => {
+                });
+
+        }
+        private loadPrimaryNetworks(): void {
+            console.log("Loading networks");
+            var request: WiM.Services.Helpers.RequestInfo = new WiM.Services.Helpers.RequestInfo("ncd.js", true);
+
+            this.Execute(request).then(
+                (response: any) => {
+                    this._primaryNetworks = response.data;
+                    this.SelectedPrimaryNetwork = this._primaryNetworks[0];
                 }, (error) => {
                     console.log('No gww sites found');
                 }).finally(() => {

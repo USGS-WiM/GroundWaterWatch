@@ -5,41 +5,17 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver',
-    'siteservices': 'http://services.wim.usgs.gov/groundwaterwatch'
+    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver'
 }
 
 configuration.queryparams =
 {
     "NWISsite": '/site/?format=mapper,1.0&stateCd={0}&siteType=GL,OC,OC-CO,ES,LK,ST,ST-CA,ST-DCH,ST-TS&hasDataTypeCd=iv',
-    'NLCDQueryService': '/LandCover/USGS_EROS_LandCover_NLCD/MapServer/4'
+    'NLCDQueryService': '/LandCover/USGS_EROS_LandCover_NLCD/MapServer/4',
+    'WMSquery': '/groundwaterwatch/wms?INFO_FORMAT=application/json&EXCEPTIONS=application/json&REQUEST=GetFeatureInfo&SERVICE=wms&VERSION=1.1.0&WIDTH={0}&HEIGHT={1}&X={2}&Y={3}&BBOX={4}&LAYERS=groundwaterwatch:Latest_WL_Percentile&QUERY_LAYERS=groundwaterwatch:Latest_WL_Percentile&buffer=10',
+    'WFSquery': '/groundwaterwatch/wfs?SERVICE=wfs&VERSION=1.1.0&outputFormat=application/json&REQUEST=getfeature&typename=groundwaterwatch:Latest_WL_Percentile'
+
 }
-configuration.networkTypes = [
-    {
-        networkCode:"AWL",
-        networkDescription: "Active Groundwater Level Network"
-    },
-    {
-        networkCode:"LWL",
-        networkDescription: "Below Normal Groundwater Levels"
-    },
-    {
-        networkCode:"CRN",
-        networkDescription: "Climate Response Network"
-    },
-    {
-        networkCode:"RTN",
-        networkDescription: "Real-Time Groundwater Level Network"
-    },
-    {
-        networkCode:"LTN",
-        networkDescription: "Long-Term Groundwater Data Network"
-    },
-    {
-        networkCode:"SPR",
-        networkDescription: "Active Spring Monitoring Sites"
-    },
-]
 
 configuration.basemaps =
 {
