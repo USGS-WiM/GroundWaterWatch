@@ -26,12 +26,14 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use strict';
         var MapPoint = (function () {
-            function MapPoint() {
-                this.lat = 0;
-                this.lng = 0;
+            function MapPoint(lat, lng) {
+                if (lat === void 0) { lat = 0; }
+                if (lng === void 0) { lng = 0; }
+                this.lat = lat;
+                this.lng = lng;
             }
             return MapPoint;
-        }());
+        })();
         var Center = (function () {
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -41,7 +43,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        }());
+        })();
         var Layer = (function () {
             function Layer(nm, ul, ty, vis, op) {
                 if (op === void 0) { op = undefined; }
@@ -52,7 +54,7 @@ var GroundWaterWatch;
                 this.layerOptions = op;
             }
             return Layer;
-        }());
+        })();
         var MapDefault = (function () {
             function MapDefault(mxZm, mnZm, zmCtrl) {
                 if (mxZm === void 0) { mxZm = null; }
@@ -63,7 +65,7 @@ var GroundWaterWatch;
                 this.zoomControl = zmCtrl;
             }
             return MapDefault;
-        }());
+        })();
         Controllers.onBoundingBoxChanged = "onBoundingBoxChanged";
         var BoundingBoxChangedEventArgs = (function (_super) {
             __extends(BoundingBoxChangedEventArgs, _super);
@@ -76,7 +78,7 @@ var GroundWaterWatch;
                 this.western = bbox.southWest.lat;
             }
             return BoundingBoxChangedEventArgs;
-        }(WiM.Event.EventArgs));
+        })(WiM.Event.EventArgs);
         Controllers.BoundingBoxChangedEventArgs = BoundingBoxChangedEventArgs;
         var MapController = (function () {
             function MapController($scope, $rootscope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice, modal, $timeout) {
@@ -436,6 +438,12 @@ var GroundWaterWatch;
                 for (var i = 0; i < e.featurelist.length; i++) {
                     this.addGeoJSON("gwwsite_" + i, e.featurelist[i]);
                 } //next f
+                //zoomto
+                if (e.bbox != null) {
+                    this.center.lat = (e.bbox[0] + e.bbox[2]) / 2;
+                    this.center.lng = (e.bbox[1] + e.bbox[3]) / 2;
+                    this.center.zoom = 12;
+                }
             };
             MapController.prototype.removeGeoJson = function (layerName, isPartial) {
                 var _this = this;
@@ -539,56 +547,65 @@ var GroundWaterWatch;
                 var _this = this;
                 if (!this.initialized)
                     return;
-                this.leafletData.getLayers("mainMap").then(function (maplayers) {
-                    //gww sites
-                    var frequest = _this.gwwServices.getFilterRequest();
-                    if (frequest != '') {
-                        maplayers.overlays["gww"].wmsParams.CQL_FILTER = frequest;
-                    }
-                    else {
-                        delete maplayers.overlays["gww"].wmsParams.CQL_FILTER;
-                    }
-                    maplayers.overlays["gww"].redraw();
-                    //states and counties
-                    var filters = _this.gwwServices.SelectedGWFilters.group("Type");
-                    if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.STATE.toString())) {
-                        maplayers.overlays["states"].query().layer(7).where(filters[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (f) { return "STATE = '" + f.item.code + "'"; }).join(" OR ")).returnGeometry(true).fields('STATE,ABBREV,NAME').run(function (error, results) {
-                            //console.log('gage query response', results);
-                            if (!results.features || results.features.length == 0) {
-                                return;
-                            }
-                            results.features.forEach(function (queryResult) {
-                                if (queryResult.geometry.type === 'Polygon' || queryResult.geometry.type == 'MultiPolygon') {
-                                    _this.removeGeoJson("STATE" + queryResult.properties["STATE"]);
-                                    _this.addGeoJSON("STATE" + queryResult.properties["STATE"], queryResult.geometry);
-                                } //end if                                                    
-                            }); //next feature
-                        });
-                    } //end if
-                    if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString())) {
-                        maplayers.overlays["counties"].query().layer(15).where(filters[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (f) { return "COUNTY = '" + f.item.code + "' AND STATE ='" + f.item.statecode + "'"; }).join(" OR ")).returnGeometry(true).fields('COUNTY,STATE,NAME').run(function (error, results) {
-                            //console.log('gage query response', results);
-                            if (!results.features || results.features.length == 0) {
-                                return;
-                            }
-                            results.features.forEach(function (queryResult) {
-                                if (queryResult.geometry.type === 'Polygon') {
-                                    _this.removeGeoJson("COUNTY" + queryResult.properties["COUNTY"]);
-                                    _this.addGeoJSON("COUNTY" + queryResult.properties["COUNTY"], queryResult.geometry);
-                                } //end if                                                    
-                            }); //next feature
-                        });
-                    } //end if
-                    if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.SITE.toString())) {
-                        _this.gwwServices.queryGWsite("'" + filters[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (f) { f.item.code; }).join("','") + "'");
-                    } //end if
-                }); //end get layers
+                this.leafletData.getMap("mainMap").then(function (map) {
+                    _this.leafletData.getLayers("mainMap").then(function (maplayers) {
+                        //gww sites
+                        var frequest = _this.gwwServices.getFilterRequest();
+                        if (frequest != '') {
+                            maplayers.overlays["gww"].wmsParams.CQL_FILTER = frequest;
+                        }
+                        else {
+                            delete maplayers.overlays["gww"].wmsParams.CQL_FILTER;
+                        }
+                        maplayers.overlays["gww"].redraw();
+                        //states and counties
+                        var filters = _this.gwwServices.SelectedGWFilters.group("Type");
+                        if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.STATE.toString())) {
+                            maplayers.overlays["states"].query().layer(7).where(filters[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (f) { return "STATE = '" + f.item.code + "'"; }).join(" OR ")).returnGeometry(true).fields('STATE,ABBREV,NAME').run(function (error, results) {
+                                //console.log('gage query response', results);
+                                if (!results.features || results.features.length == 0) {
+                                    return;
+                                }
+                                results.features.forEach(function (queryResult) {
+                                    if (queryResult.geometry.type === 'Polygon' || queryResult.geometry.type == 'MultiPolygon') {
+                                        _this.removeGeoJson("STATE" + queryResult.properties["STATE"]);
+                                        _this.addGeoJSON("STATE" + queryResult.properties["STATE"], queryResult.geometry);
+                                    } //end if                                                    
+                                }); //next feature
+                                maplayers.overlays["states"].query().layer(7).where(filters[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (f) { return "STATE = '" + f.item.code + "'"; }).join(" OR ")).bounds(function (error, results) {
+                                    map.fitBounds(results);
+                                });
+                            });
+                        } //end if
+                        if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString())) {
+                            maplayers.overlays["counties"].query().layer(15).where(filters[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (f) { return "COUNTY = '" + f.item.code + "' AND STATE ='" + f.item.statecode + "'"; }).join(" OR ")).returnGeometry(true).fields('COUNTY,STATE,NAME').run(function (error, results) {
+                                //console.log('gage query response', results);
+                                if (!results.features || results.features.length == 0) {
+                                    return;
+                                }
+                                results.features.forEach(function (queryResult) {
+                                    if (queryResult.geometry.type === 'Polygon') {
+                                        _this.removeGeoJson("COUNTY" + queryResult.properties["COUNTY"]);
+                                        _this.addGeoJSON("COUNTY" + queryResult.properties["COUNTY"], queryResult.geometry);
+                                    } //end if                                                    
+                                }); //next feature
+                            });
+                            maplayers.overlays["counties"].query().layer(15).where(filters[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (f) { return "COUNTY = '" + f.item.code + "' AND STATE ='" + f.item.statecode + "'"; }).join(" OR ")).bounds(function (error, results) {
+                                map.fitBounds(results);
+                            });
+                        } //end if
+                        if (filters.hasOwnProperty(GroundWaterWatch.Models.FilterType.SITE.toString())) {
+                            var result = filters[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (f) { return f.item.code; });
+                            _this.gwwServices.queryGWsiteByNOs(result.join("','"));
+                        } //end if
+                    }); //end get layers
+                }); //end get map
             };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MapController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MapController', MapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));
