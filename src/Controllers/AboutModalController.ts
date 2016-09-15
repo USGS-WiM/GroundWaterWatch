@@ -52,11 +52,26 @@ module GroundWaterWatch.Controllers {
         public Close(): void {
             this.modalInstance.dismiss('cancel')
         }
+
+        public Dismiss(): void {
+            this.createCookie('GWWshowAbout', true, 30);
+            this.modalInstance.dismiss('cancel')
+        }
         
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
             //place anything that needs to be initialized here
+        }
+
+        public createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toUTCString();
+            }
+            else var expires = "";
+            document.cookie = name + "=" + value + expires + "; path=/";
         }
       
     }//end  class

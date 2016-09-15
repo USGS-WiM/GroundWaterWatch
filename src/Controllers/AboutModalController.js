@@ -30,16 +30,30 @@ var GroundWaterWatch;
             AboutModalController.prototype.Close = function () {
                 this.modalInstance.dismiss('cancel');
             };
+            AboutModalController.prototype.Dismiss = function () {
+                this.createCookie('GWWshowAbout', true, 30);
+                this.modalInstance.dismiss('cancel');
+            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             AboutModalController.prototype.init = function () {
                 //place anything that needs to be initialized here
             };
+            AboutModalController.prototype.createCookie = function (name, value, days) {
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    var expires = "; expires=" + date.toUTCString();
+                }
+                else
+                    var expires = "";
+                document.cookie = name + "=" + value + expires + "; path=/";
+            };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             AboutModalController.$inject = ['$scope', '$modalInstance'];
             return AboutModalController;
-        })(); //end  class
+        }()); //end  class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.AboutModalController', AboutModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

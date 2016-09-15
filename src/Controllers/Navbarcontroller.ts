@@ -52,12 +52,17 @@ module GroundWaterWatch.Controllers {
             $scope.vm = this;
             this.modalService = modal;
             this.gwwService = gww;
-
+            this.checkAboutModal();
 
         }
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
+        public checkAboutModal() {
+            if (this.readCookie('GWWshowAbout') == null) {
+                this.modalService.openModal(Services.ModalType.e_about);
+            }
+        }
 
         public openAboutModal(): void {
             this.modalService.openModal(Services.ModalType.e_about);
@@ -65,6 +70,16 @@ module GroundWaterWatch.Controllers {
 
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
+        public readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
 
     }//end class
     angular.module('GroundWaterWatch.Controllers')

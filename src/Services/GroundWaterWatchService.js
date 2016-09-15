@@ -40,7 +40,7 @@ var GroundWaterWatch;
                 this.bbox = bbox;
             }
             return GWSiteSelectionEventArgs;
-        })(WiM.Event.EventArgs);
+        }(WiM.Event.EventArgs));
         Services.GWSiteSelectionEventArgs = GWSiteSelectionEventArgs;
         var Center = (function () {
             //Constructor
@@ -51,7 +51,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        })();
+        }());
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -338,7 +338,7 @@ var GroundWaterWatch;
                 });
             };
             return GroundWaterWatchService;
-        })(WiM.Services.HTTPServiceBase); //end class
+        }(WiM.Services.HTTPServiceBase)); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams'];
         function factory($http, evntmngr, $stateParams) {
             return new GroundWaterWatchService($http, evntmngr, $stateParams);
