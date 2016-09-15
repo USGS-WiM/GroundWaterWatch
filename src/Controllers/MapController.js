@@ -477,7 +477,7 @@ var GroundWaterWatch;
                         onEachFeature: function (feature, layer) {
                             var strVar = "     <div>";
                             strVar += "          <h3>USGS Well Information <\/h3>";
-                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=" + feature.properties["SITE_NO"] + "&ncd=awl' target='_blank' >" + feature.properties["SITE_NO"] + "</a>";
+                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"], "AWL") + feature.properties["SITE_NO"] + "</a>";
                             strVar += "          <br \/>";
                             strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                             strVar += "          <br \/>";
@@ -603,6 +603,13 @@ var GroundWaterWatch;
                         } //end if
                     }); //end get layers
                 }); //end get map
+            };
+            MapController.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
+                if (title === void 0) { title = ""; }
+                if (showclosebtn === void 0) { showclosebtn = false; }
+                if (id === void 0) { id = null; }
+                if (tmout === void 0) { tmout = 5000; }
+                this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
             };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-

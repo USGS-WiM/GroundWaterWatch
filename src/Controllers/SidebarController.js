@@ -116,6 +116,7 @@ var GroundWaterWatch;
                 return -1;
             };
             SidebarController.prototype.OpenNetworkPage = function (networkType, SelectedNetworkType) {
+                this.OpenedNetwork = -1;
                 var url = 'http://groundwaterwatch.usgs.gov';
                 switch (networkType) {
                     case NetworkType.STATE:
@@ -126,6 +127,7 @@ var GroundWaterWatch;
                         url += "/netmapT4L1.asp?ncd=" + SelectedNetworkType.code;
                         break;
                 } //endswitch
+                this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", GroundWaterWatch.Models.NotificationType.e_wait, "Page Notification");
                 this.$window.open(url, "_self");
             };
             //Helper Methods
@@ -153,15 +155,16 @@ var GroundWaterWatch;
                     } //end switch          
                 }
                 catch (e) {
-                    //this.sm(new MSG.NotificationArgs(e.message, MSG.NotificationType.INFORMATION, 1.5));
+                    this.sm(e.message, GroundWaterWatch.Models.NotificationType.e_error, "Proceedure");
                     return false;
                 }
             };
-            SidebarController.prototype.sm = function (msg) {
-                try {
-                }
-                catch (e) {
-                }
+            SidebarController.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
+                if (title === void 0) { title = ""; }
+                if (showclosebtn === void 0) { showclosebtn = false; }
+                if (id === void 0) { id = null; }
+                if (tmout === void 0) { tmout = 5000; }
+                this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-

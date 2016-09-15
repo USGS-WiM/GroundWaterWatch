@@ -56,6 +56,31 @@ body {
 .full-width{
   width:100%;
 }
+select {
+    -moz-appearance: none;
+    background-color: #ffffff;
+    border: 2px solid rgba(45, 49, 70, 0.23);
+    border-radius: 2px;
+    box-sizing: border-box;
+    color: rgba(45, 49, 70, 0.8) !important;
+    display: inline-block;
+    font-family: "Source Sans Pro",sans-serif;
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 0.75px;
+    margin: 5px 0;
+    padding: 8px 17px;
+    transition: all 0.15s ease 0s;
+    width: 100%;
+    text-align:center;
+}
+select:hover {
+    cursor: pointer;
+}
+/*select:focus {
+    border: 2px solid rgba(45, 49, 70, 0.6);
+    filter: brightness(115%);
+}*/
 /*
     ===========================
     ===========================

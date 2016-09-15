@@ -115,6 +115,7 @@
     <TypeScriptCompile Include="src\Controllers\SidebarController.ts" />
     <TypeScriptCompile Include="src\Controllers\SiteListController.ts" />
     <TypeScriptCompile Include="src\Models\IFilterSite.ts" />
+    <TypeScriptCompile Include="src\Models\Notification.ts" />
     <TypeScriptCompile Include="src\Models\SitesFilter.ts" />
     <TypeScriptCompile Include="src\Models\GroundWaterWatchSite.ts" />
     <TypeScriptCompile Include="src\Models\Models.module.ts" />

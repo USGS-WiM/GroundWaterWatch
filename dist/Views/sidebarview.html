@@ -66,32 +66,18 @@
                         <button class="btn-wim-sm btn-wim-default btn-group-justified" ng-click="vm.removeFilter($index,filter)"><i class="fa fa-times pull-right"></i>&nbsp;&nbsp;<span>{{filter.item.name}} </span></button>
                     </div>-->
 
-                    <div class="btn-group wim-btn-group btn-block" dropdown is-open="stateisopen">
-                        <button type="button" class="btn-wim-default dropdown-toggle full-width" dropdown-toggle>
-                            Select a State network <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="item in vm.States" title="{{item.name}}"><a ng-click="vm.OpenNetworkPage(1,item)">{{item.name}}</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="btn-group wim-btn-group btn-block" dropdown is-open="aquiferisopen">
-                        <button type="button" class="btn-wim-default dropdown-toggle full-width" dropdown-toggle>
-                            Select an aquifer network <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="item in vm.Aquifers" title="{{item.name}}"><a ng-click="vm.OpenNetworkPage(2,item)">{{item.name}}</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="btn-group wim-btn-group btn-block" dropdown is-open="localisopen">
-                        <button type="button" class="btn-wim-default dropdown-toggle full-width" dropdown-toggle>
-                            Select a local network <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="item in vm.Aquifers" title="{{item.name}}"><a ng-click="vm.OpenNetworkPage(3,item)">{{item.name}}</a></li>
-                        </ul>
-                    </div>
+                    <select ng-model="selectedsItem">
+                        <option value="">Select a state network</option> <!-- not selected / blank option -->
+                        <option ng-repeat="item in vm.States" title="{{item.name}}" ng-click="vm.OpenNetworkPage(1,item)" value="">{{item.name}}</option>
+                    </select>
+                    <select ng-model="selectedaItem">
+                        <option value="">Select an aquifer network</option> <!-- not selected / blank option -->
+                        <option ng-repeat="item in vm.Aquifers" title="{{item.name}}" ng-click="vm.OpenNetworkPage(2,item)" value="">{{item.name}}</option>
+                    </select>
+                    <select ng-model="selectedlItem">
+                        <option value="">Select a local network</option> <!-- not selected / blank option -->
+                        <option ng-repeat="item in vm.LocalNetworks" title="{{item.name}}" ng-click="vm.OpenNetworkPage(3,item)" value="">{{item.name}}</option>
+                    </select>
 
                     <!--<div class="row">
                         <div class="col-md-6"><button ng-click=" vm.ClearFilters()" type="button" class="btn-wim-sm btn-wim btn-wim-group-1"><i class="fa fa-ban"></i>&nbsp;&nbsp;Clear Filters</button></div>

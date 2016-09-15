@@ -56,8 +56,9 @@ var GroundWaterWatch;
             __extends(GroundWaterWatchService, _super);
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            function GroundWaterWatchService($http, evntmngr, $stateParams) {
+            function GroundWaterWatchService($http, evntmngr, $stateParams, toaster) {
                 _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
+                this.toaster = toaster;
                 this.SelectedGWFilters = [];
                 this.mapCenter = null;
                 this._eventManager = evntmngr;
@@ -119,6 +120,7 @@ var GroundWaterWatch;
                     //clear filters
                     this.SelectedGWFilters.length = 0;
                     this.SelectedGWFilters.push(new GroundWaterWatch.Models.GroundWaterFilterSite(val, GroundWaterWatch.Models.FilterType.NETWORK));
+                    this.sm("Primary network changed to " + val.name, GroundWaterWatch.Models.NotificationType.e_success, "Groundwater watch");
                 },
                 enumerable: true,
                 configurable: true
@@ -147,13 +149,9 @@ var GroundWaterWatch;
                 var filter = [];
                 var groupedFeature = this.SelectedGWFilters.group("Type");
                 var county = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.item.code; }) : null;
+                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return "STATE_CD='{0}' ;COUNTY_CD='{1}'".format(item.item.statecode, item.item.code); }) : null;
                 if (county !== null)
-                    filter.push("COUNTY_CD in ('" + county.join("','") + "')");
-                var StateCounty = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return item.item.statecode; }) : null;
-                if (StateCounty !== null)
-                    filter.push("STATE_CD in ('" + StateCounty.join("','") + "')");
+                    filter.push(county.join(";"));
                 var states = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.STATE.toString()) ?
                     groupedFeature[GroundWaterWatch.Models.FilterType.STATE.toString()].map(function (item) { return item.item.code; }) : null;
                 if (states !== null)
@@ -166,10 +164,11 @@ var GroundWaterWatch;
                     groupedFeature[GroundWaterWatch.Models.FilterType.SITE.toString()].map(function (item) { return item.item.code; }) : null;
                 if (site !== null)
                     filter.push("SITE_NO in ('" + site.join("','") + "')");
-                return filter.join(" AND ");
+                return filter.join(";");
             };
             GroundWaterWatchService.prototype.queryGWsite = function (point, mapZoom) {
                 var _this = this;
+                this.sm("Selecting site, please wait....", GroundWaterWatch.Models.NotificationType.e_wait, "Groundwater watch");
                 this.queriedGWsite = false;
                 var addsize = 0.0005;
                 if (mapZoom <= 3)
@@ -197,20 +196,22 @@ var GroundWaterWatch;
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        _this.sm("Found site", GroundWaterWatch.Models.NotificationType.e_success, "Groundwater watch");
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                     } //endif
                     else {
-                        console.log('No gww sites found');
+                        _this.sm("Site not found, please try again", GroundWaterWatch.Models.NotificationType.e_warning, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
-                    console.log('No gww sites found');
+                    _this.sm("Error finding site, please try again", GroundWaterWatch.Models.NotificationType.e_error, "Groundwater watch");
                 }).finally(function () {
                 });
             };
             GroundWaterWatchService.prototype.queryGWsiteByNOs = function (siteNo) {
                 var _this = this;
                 this.queriedGWsite = false;
+                this.sm("Finding Site by Site number.", GroundWaterWatch.Models.NotificationType.e_info, "Groundwater watch.");
                 var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
                 url += "&CQL_FILTER=SITE_NO in ({0})".format(siteNo);
                 var groupedFeature = this.SelectedGWFilters.group("Type");
@@ -223,14 +224,15 @@ var GroundWaterWatch;
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        _this.sm("Found site", GroundWaterWatch.Models.NotificationType.e_success, "Groundwater watch");
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                     } //endif
                     else {
-                        console.log('No gww sites found');
+                        _this.sm("Site not found, please try againg", GroundWaterWatch.Models.NotificationType.e_warning, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
-                    console.log('No gww sites found');
+                    _this.sm("Error finding site, please try again", GroundWaterWatch.Models.NotificationType.e_error, "Groundwater watch");
                 }).finally(function () {
                 });
             };
@@ -272,6 +274,7 @@ var GroundWaterWatch;
             //outfeilds COUNTY,STATE,ABBREV,NAME
             GroundWaterWatchService.prototype.updateGWWSiteList = function () {
                 var _this = this;
+                this.sm("Updating site list.", GroundWaterWatch.Models.NotificationType.e_info, "Services");
                 var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
                 if (this.SelectedPrimaryNetwork != null)
                     url += "&CQL_FILTER=NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
@@ -279,17 +282,18 @@ var GroundWaterWatch;
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
+                        _this.sm("Found " + response.data.features.length + " sites", GroundWaterWatch.Models.NotificationType.e_success, "Services");
                         response.data.features.forEach(function (item) {
                             //console.log(item);
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         }); //next
                     } //endif
                     else {
-                        console.log('No gww sites found');
+                        _this.sm("No sites found.", GroundWaterWatch.Models.NotificationType.e_info, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
-                    console.log('No gww sites found');
+                    _this.sm("Error finding sites.", GroundWaterWatch.Models.NotificationType.e_error, "Services");
                 }).finally(function () {
                 });
             };
@@ -337,11 +341,18 @@ var GroundWaterWatch;
                 }).finally(function () {
                 });
             };
+            GroundWaterWatchService.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
+                if (title === void 0) { title = ""; }
+                if (showclosebtn === void 0) { showclosebtn = false; }
+                if (id === void 0) { id = null; }
+                if (tmout === void 0) { tmout = 5000; }
+                this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
+            };
             return GroundWaterWatchService;
         })(WiM.Services.HTTPServiceBase); //end class
-        factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams'];
-        function factory($http, evntmngr, $stateParams) {
-            return new GroundWaterWatchService($http, evntmngr, $stateParams);
+        factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams', 'toaster'];
+        function factory($http, evntmngr, $stateParams, toaster) {
+            return new GroundWaterWatchService($http, evntmngr, $stateParams, toaster);
         }
         angular.module('GroundWaterWatch.Services')
             .factory('GroundWaterWatch.Services.GroundWaterWatchService', factory);
