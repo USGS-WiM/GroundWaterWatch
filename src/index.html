@@ -81,6 +81,7 @@
     <!-- Models ref-->
     <script src="Models/GroundWaterWatchSite.js"></script>
     <script src="Models/SitesFilter.js"></script>
+    <script src="Models/Notification.js"></script>
     <!-- Services ref-->
     <script src="Services/service.module.js"></script>
     <script src="Services/ExplorationService.js"></script>
@@ -112,6 +113,6 @@
     <div ng-if="isShown" ui-view="navbar" class="navbar-app navbar-absolute-top"></div>
     <div ng-if="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>     
     <div ui-view="map" class="app app-body"></div>
-    <toaster-container toaster-options="{'toaster-id': 1, 'position-class': 'toast-bottom-right'}"></toaster-container>
+    <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
 </body>
 </html>

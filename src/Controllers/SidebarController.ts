@@ -53,7 +53,8 @@ module GroundWaterWatch.Controllers {
         //-+-+-+-+-+-+-+-+-+-+-+-
         public sideBarCollapsed: boolean;
         public selectedProcedure: ProcedureType;
-        public SelectedFilters: Array<Models.IGroundWaterFilterSite>;    
+        public SelectedFilters: Array<Models.IGroundWaterFilterSite>;   
+        public OpenedNetwork: NetworkType; 
 
         public get States(): Array<Models.IState> {
             return this.groundwaterwatchService.StateList;
@@ -133,6 +134,7 @@ module GroundWaterWatch.Controllers {
         }
 
         public OpenNetworkPage(networkType: NetworkType, SelectedNetworkType: Models.IFilterSite) {
+            this.OpenedNetwork = -1;
             var url = 'http://groundwaterwatch.usgs.gov';
             switch (networkType) {
                 case NetworkType.STATE:
@@ -143,7 +145,7 @@ module GroundWaterWatch.Controllers {
                     break;
             }//endswitch
 
-
+            this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", Models.NotificationType.e_wait, "Page Notification");
             this.$window.open(url, "_self");
 
         }
@@ -174,26 +176,12 @@ module GroundWaterWatch.Controllers {
                 }//end switch          
             }
             catch (e) {
-                //this.sm(new MSG.NotificationArgs(e.message, MSG.NotificationType.INFORMATION, 1.5));
+                this.sm(e.message, Models.NotificationType.e_error, "Proceedure");
                 return false;
             }
         }
-        private sm(msg: string) {
-            try {
-                //toastr.options = {
-                //    positionClass: "toast-bottom-right"
-                //};
-
-                //this.NotificationList.unshift(new LogEntry(msg.msg, msg.type));
-
-                //setTimeout(() => {
-                //    toastr[msg.type](msg.msg);
-                //    if (msg.ShowWaitCursor != undefined)
-                //        this.IsLoading(msg.ShowWaitCursor)
-                //}, 0)
-            }
-            catch (e) {
-            }
+        private sm(m: string, t: Models.NotificationType, title: string = "", showclosebtn: boolean = false, id: number = null, tmout: number = 5000) {
+            this.toaster.pop(new Models.Notification(m, t, title, showclosebtn, tmout, id));
         }
 
   

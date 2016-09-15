@@ -129,6 +129,7 @@ module GroundWaterWatch.Services {
             //clear filters
             this.SelectedGWFilters.length = 0;
             this.SelectedGWFilters.push(new Models.GroundWaterFilterSite(val, Models.FilterType.NETWORK));
+            this.sm("Primary network changed to " + val.name, Models.NotificationType.e_success, "Groundwater watch");
         }
 
         private _primaryNetworks: Array<Models.INetwork>
@@ -140,7 +141,7 @@ module GroundWaterWatch.Services {
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        constructor($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams) {
+        constructor($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams, private toaster) {
             super($http, configuration.baseurls['GroundWaterWatch'])
             this._eventManager = evntmngr;
             this.queriedGWsite = false;
@@ -166,12 +167,8 @@ module GroundWaterWatch.Services {
             
             var groupedFeature = this.SelectedGWFilters.group("Type");
             var county = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
-                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
-            if (county !== null) filter.push("COUNTY_CD in ('" + county.join("','") + "')");
-
-            var StateCounty = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
-                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return (<Models.ICounty>item.item).statecode }) : null;
-            if (StateCounty !== null) filter.push("STATE_CD in ('" + StateCounty.join("','") + "')"); 
+                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return "STATE_CD='{0}' ;COUNTY_CD='{1}'".format((<Models.ICounty>item.item).statecode, item.item.code) }) : null;
+            if (county !== null) filter.push(county.join(";"));
 
             var states = groupedFeature.hasOwnProperty(Models.FilterType.STATE.toString()) ?
                 groupedFeature[Models.FilterType.STATE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
@@ -185,9 +182,10 @@ module GroundWaterWatch.Services {
                 groupedFeature[Models.FilterType.SITE.toString()].map((item: Models.GroundWaterFilterSite) => { return item.item.code }) : null;
             if (site !== null) filter.push("SITE_NO in ('" + site.join("','") + "')");
 
-            return filter.join(" AND ");
+            return filter.join(";");
         }
-        public queryGWsite(point: any, mapZoom:number) {
+        public queryGWsite(point: any, mapZoom: number) {
+            this.sm("Selecting site, please wait....", Models.NotificationType.e_wait, "Groundwater watch");
             this.queriedGWsite = false;
             var addsize = 0.0005;
             if (mapZoom <= 3) addsize = 0.5;
@@ -214,21 +212,22 @@ module GroundWaterWatch.Services {
 
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        this.sm("Found site", Models.NotificationType.e_success, "Groundwater watch");
                         this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                        
                     }//endif
                     else {
-                        console.log('No gww sites found');
+                        this.sm("Site not found, please try again", Models.NotificationType.e_warning, "Groundwater watch");
                         this.SelectedGWSite = null;
                     }
                 }, (error) => {
-                    console.log('No gww sites found');                    
+                    this.sm("Error finding site, please try again", Models.NotificationType.e_error, "Groundwater watch");                  
                 }).finally(() => {
                 });
         }
         public queryGWsiteByNOs(siteNo:string) {
             this.queriedGWsite = false;
-     
+            this.sm("Finding Site by Site number.", Models.NotificationType.e_info, "Groundwater watch.");
             var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
             url += "&CQL_FILTER=SITE_NO in ({0})".format(siteNo);
 
@@ -245,15 +244,16 @@ module GroundWaterWatch.Services {
 
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        this.sm("Found site", Models.NotificationType.e_success, "Groundwater watch");
                         this._eventManager.RaiseEvent(onGWSiteSelectionChanged, this, new GWSiteSelectionEventArgs(response.data.features,response.data.bbox));
                        
                     }//endif
                     else {
-                        console.log('No gww sites found');
+                        this.sm("Site not found, please try againg", Models.NotificationType.e_warning, "Groundwater watch");
                         this.SelectedGWSite = null;
                     }
                 }, (error) => {
-                    console.log('No gww sites found');                    
+                    this.sm("Error finding site, please try again", Models.NotificationType.e_error, "Groundwater watch");                  
                 }).finally(() => {
                 });
         }
@@ -299,7 +299,7 @@ module GroundWaterWatch.Services {
         //STATE = '08'
         //outfeilds COUNTY,STATE,ABBREV,NAME
         private updateGWWSiteList() {
-
+            this.sm("Updating site list.", Models.NotificationType.e_info, "Services");
             var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery']
             if (this.SelectedPrimaryNetwork != null) url += "&CQL_FILTER=NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
 
@@ -310,17 +310,18 @@ module GroundWaterWatch.Services {
                     this.queriedGWsite = true;
 
                     if (response.data.features && response.data.features.length > 0) {
+                        this.sm("Found "+ response.data.features.length+ " sites", Models.NotificationType.e_success, "Services");
                         response.data.features.forEach((item) => {
                             //console.log(item);
                             //this._eventManager.RaiseEvent(onSelectedGWSiteChanged, this, WiM.Event.EventArgs.Empty);
                         });//next
                     }//endif
                     else {
-                        console.log('No gww sites found');
+                        this.sm("No sites found.", Models.NotificationType.e_info, "Groundwater watch");
                         this.SelectedGWSite = null;
                     }
                 }, (error) => {
-                    console.log('No gww sites found');
+                    this.sm("Error finding sites.", Models.NotificationType.e_error, "Services");
                 }).finally(() => {
                 });
 
@@ -379,14 +380,17 @@ module GroundWaterWatch.Services {
                 });
 
         }
+        private sm(m: string, t: Models.NotificationType, title: string = "", showclosebtn: boolean = false, id: number = null, tmout: number = 5000) {
+            this.toaster.pop(new Models.Notification(m, t, title, showclosebtn, tmout, id));
+        }
         //Event Handlers
         //-+-+-+-+-+-+-+-+-+-+-+-
 
     }//end class
 
-    factory.$inject = ['$http', 'WiM.Event.EventManager','$stateParams'];
-    function factory($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams ) {
-        return new GroundWaterWatchService($http, evntmngr, $stateParams)
+    factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams','toaster'];
+    function factory($http: ng.IHttpService, evntmngr: WiM.Event.IEventManager, $stateParams, toaster ) {
+        return new GroundWaterWatchService($http, evntmngr, $stateParams, toaster)
     }
     angular.module('GroundWaterWatch.Services')
         .factory('GroundWaterWatch.Services.GroundWaterWatchService', factory)

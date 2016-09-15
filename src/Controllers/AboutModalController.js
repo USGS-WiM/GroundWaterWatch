@@ -89,7 +89,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             AboutModalController.$inject = ['$scope', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
             return AboutModalController;
-        }()); //end  class
+        })(); //end  class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.AboutModalController', AboutModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));
