@@ -33,7 +33,7 @@ var GroundWaterWatch;
                 this.lng = lng;
             }
             return MapPoint;
-        }());
+        })();
         var Center = (function () {
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -43,7 +43,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        }());
+        })();
         var Layer = (function () {
             function Layer(nm, ul, ty, vis, op) {
                 if (op === void 0) { op = undefined; }
@@ -54,7 +54,7 @@ var GroundWaterWatch;
                 this.layerOptions = op;
             }
             return Layer;
-        }());
+        })();
         var MapDefault = (function () {
             function MapDefault(mxZm, mnZm, zmCtrl) {
                 if (mxZm === void 0) { mxZm = null; }
@@ -65,7 +65,7 @@ var GroundWaterWatch;
                 this.zoomControl = zmCtrl;
             }
             return MapDefault;
-        }());
+        })();
         Controllers.onBoundingBoxChanged = "onBoundingBoxChanged";
         var BoundingBoxChangedEventArgs = (function (_super) {
             __extends(BoundingBoxChangedEventArgs, _super);
@@ -78,7 +78,7 @@ var GroundWaterWatch;
                 this.western = bbox.southWest.lat;
             }
             return BoundingBoxChangedEventArgs;
-        }(WiM.Event.EventArgs));
+        })(WiM.Event.EventArgs);
         Controllers.BoundingBoxChangedEventArgs = BoundingBoxChangedEventArgs;
         var MapController = (function () {
             function MapController($scope, $rootscope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice, modal, $timeout) {
@@ -615,7 +615,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MapController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MapController', MapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

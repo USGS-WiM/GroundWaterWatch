@@ -80,11 +80,11 @@
 
                     <select ng-model="selectedsItem">
                         <option value="">Select a state network</option> <!-- not selected / blank option -->
-                        <option ng-repeat="item in vm.States" title="{{item.name}}" ng-click="vm.OpenNetworkPage(1,item)" value="">{{item.name}}</option>
+                        <option ng-repeat="item in vm.States" title="{{item.name}}" ng-click="vm.OpenNetworkPage(1,item)" value="">{{item.name}} state network</option>
                     </select>
                     <select ng-model="selectedaItem">
                         <option value="">Select an aquifer network</option> <!-- not selected / blank option -->
-                        <option ng-repeat="item in vm.Aquifers" title="{{item.name}}" ng-click="vm.OpenNetworkPage(2,item)" value="">{{item.name}}</option>
+                        <option ng-repeat="item in vm.Aquifers" title="{{item.name}}" ng-click="vm.OpenNetworkPage(2,item)" value="">{{item.name}} state network</option>
                     </select>
                     <select ng-model="selectedlItem">
                         <option value="">Select a local network</option> <!-- not selected / blank option -->
