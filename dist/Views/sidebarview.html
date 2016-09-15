@@ -49,7 +49,19 @@
                     <div ng-repeat="pn in vm.PrimaryNetworks" ng-controller="GroundWaterWatch.Controllers.MiniMapController" ng-init="vm.initialize(pn)">
                         <div class="miniMapPanel" ng-class="vm.isSelected  ? 'panel panel-success': 'panel panel-default'"
                              ng-click="vm.setMainNetwork()">
-                            <div class=panel-heading> <h3 class=panel-title>{{vm.selectedNetwork.name}}</h3> </div>
+                            <div class=panel-heading>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h3 class=panel-title>{{vm.selectedNetwork.name}}</h3> 
+                                    </div>
+                                    <div class="col-md-2"><button class="btn-wim-sm btn-wim-info" ng-click="vm.showNetworkInfo = !vm.showNetworkInfo"><i class="fa fa-question-circle"></i></button></div>
+                                </div>
+                                <div ng-init="vm.showNetworkInfo = false" ng-show="vm.showNetworkInfo">
+                                    <div class="wim-alert">
+                                        <span>{{vm.selectedNetwork.shortDescription}}</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="panel-body nopadding">
                                 <leaflet ng-attr-id="{{pn.code}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
                             </div>

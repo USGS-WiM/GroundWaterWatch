@@ -25,6 +25,7 @@ var GroundWaterWatch;
                 $scope.vm = this;
                 this.modalService = modal;
                 this.gwwService = gww;
+                this.checkAboutModal();
             }
             Object.defineProperty(NavbarController.prototype, "ProjectName", {
                 get: function () {
@@ -36,16 +37,46 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(NavbarController.prototype, "NetworkCode", {
+                get: function () {
+                    if (this.gwwService.SelectedPrimaryNetwork)
+                        return this.gwwService.SelectedPrimaryNetwork.code;
+                },
+                enumerable: true,
+                configurable: true
+            });
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
-            NavbarController.prototype.openAboutModal = function () {
+            NavbarController.prototype.checkAboutModal = function () {
+                if (this.readCookie('GWWshowAbout') == null)
+                    this.openAboutModal();
+            };
+            NavbarController.prototype.openAboutModal = function (tab) {
+                if (tab) {
+                    this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about, { "tabName": tab });
+                    return;
+                }
                 this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about);
+            };
+            //Helper Methods
+            //-+-+-+-+-+-+-+-+-+-+-+-
+            NavbarController.prototype.readCookie = function (name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ')
+                        c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0)
+                        return c.substring(nameEQ.length, c.length);
+                }
+                return null;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             NavbarController.$inject = ['$scope', '$stateParams', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return NavbarController;
-        })(); //end class
+        }()); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.NavbarController', NavbarController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

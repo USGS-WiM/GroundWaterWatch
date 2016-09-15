@@ -8,14 +8,25 @@
     <h4 class="modal-title">About</h4>
 </div>
 <div class="modal-body">
+    <ul id="aboutTabs" class="nav nav-tabs">
+        <li ng-class="{'active':vm.selectedAboutTabName==='about'}"><a ng-click="vm.selectAboutTab('about')"><i class="fa fa-question-circle"></i>&nbsp;About the project</a></li>
+        <li ng-repeat="network in vm.gwwService.primaryNetworkInfos" ng-class="{'active':vm.selectedAboutTabName==='{{network.code}}'}"><a ng-click="vm.selectAboutTab(network.code)"><i class="fa fa-info-circle"></i>&nbsp;{{network.name}}</a></li>
+    </ul>
 
     <div style="padding-top: 10px;">
-        <div>
-        <span>About Info Here</span>
-
-    </div>
+        <div id="about" ng-if="vm.selectedAboutTabName==='about'">
+            <h2>USGS Groundwater Watch</h2>
+            <p>The USGS has a distributed water database that is locally managed. Surface water, groundwater, and water quality data are compiled from these local, distributed databases into a national information system. The groundwater database contains records from about 850,000 wells that have been compiled during the course of groundwater hydrology studies over the past 100 years. Information from these wells is served via the Internet through NWISWeb, the National Water Information System Web Interface. NWISWeb provides all USGS groundwater data that are approved for public release. This large number of sites is excellent for some uses, but complicates retrievals when the user is interested in specific networks, or wells in an active water-level measurement program.</p>
+            <p>These "groundwater watch" web pages group related wells and data from these active well networks, and provide basic statistics about the water-level data collected by USGS water science centers for Cooperative Programs, for Federal Programs, and from data supplied to us by our customers through cooperative agreements.</p>
+            <p>Groundwater Watch is maintained by the Office of Groundwater.</p>
+            <p>Details about the Groundwater Watch system are available on the <a href="http://groundwaterwatch.usgs.gov/help/helpframe.asp">Help Page</a>.</p>  
+        </div>
+        <div ng-repeat="network in vm.gwwService.primaryNetworkInfos" ng-if="vm.selectedAboutTabName===network.code">
+            <div ng-bind-html="vm.convertUnsafe(network.description)"></div>
+        </div>
     </div>
 </div>
 <div class="modal-footer">
     <button ng-click="vm.Close()" class="btn-wim-default"><i class="fa fa-close"></i><span >&nbsp;&nbsp;Close</span></button>
+    <button ng-click="vm.Dismiss()" class="btn-wim-default"><i class="fa fa-close"></i><span>&nbsp;&nbsp;Dismiss</span></button>
 </div>

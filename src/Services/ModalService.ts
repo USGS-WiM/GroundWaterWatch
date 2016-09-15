@@ -32,7 +32,6 @@ module GroundWaterWatch.Services {
 
     export interface IModalOptions {
         tabName: string;
-        regionID: string;
     }
 
     class ModalService implements IModalService{       

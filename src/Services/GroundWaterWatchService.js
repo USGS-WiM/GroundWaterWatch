@@ -40,7 +40,7 @@ var GroundWaterWatch;
                 this.bbox = bbox;
             }
             return GWSiteSelectionEventArgs;
-        })(WiM.Event.EventArgs);
+        }(WiM.Event.EventArgs));
         Services.GWSiteSelectionEventArgs = GWSiteSelectionEventArgs;
         var Center = (function () {
             //Constructor
@@ -51,7 +51,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        })();
+        }());
         var GroundWaterWatchService = (function (_super) {
             __extends(GroundWaterWatchService, _super);
             //Constructor
@@ -335,6 +335,7 @@ var GroundWaterWatch;
                 var request = new WiM.Services.Helpers.RequestInfo("ncd.js", true);
                 this.Execute(request).then(function (response) {
                     _this._primaryNetworks = response.data;
+                    _this.primaryNetworkInfos = _this._primaryNetworks;
                     _this.SelectedPrimaryNetwork = _this._primaryNetworks[0];
                 }, function (error) {
                     console.log('No gww sites found');
@@ -349,10 +350,17 @@ var GroundWaterWatch;
                 this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
             };
             return GroundWaterWatchService;
+<<<<<<< HEAD
         })(WiM.Services.HTTPServiceBase); //end class
         factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams', 'toaster'];
         function factory($http, evntmngr, $stateParams, toaster) {
             return new GroundWaterWatchService($http, evntmngr, $stateParams, toaster);
+=======
+        }(WiM.Services.HTTPServiceBase)); //end class
+        factory.$inject = ['$http', 'WiM.Event.EventManager', '$stateParams'];
+        function factory($http, evntmngr, $stateParams) {
+            return new GroundWaterWatchService($http, evntmngr, $stateParams);
+>>>>>>> 3e53866c11bc3d6404a274c135fc098a57b2d00b
         }
         angular.module('GroundWaterWatch.Services')
             .factory('GroundWaterWatch.Services.GroundWaterWatchService', factory);
