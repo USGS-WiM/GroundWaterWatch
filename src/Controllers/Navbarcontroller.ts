@@ -44,6 +44,10 @@ module GroundWaterWatch.Controllers {
                 return configuration.projectName + " - " + this.gwwService.SelectedPrimaryNetwork.name;
             else return configuration.projectName
         }
+        public get NetworkCode(): string {
+            if (this.gwwService.SelectedPrimaryNetwork) return this.gwwService.SelectedPrimaryNetwork.code;
+        }
+        public
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -52,19 +56,36 @@ module GroundWaterWatch.Controllers {
             $scope.vm = this;
             this.modalService = modal;
             this.gwwService = gww;
-
+            this.checkAboutModal();
 
         }
 
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
+        public checkAboutModal() {
+            if (this.readCookie('GWWshowAbout') == null) this.openAboutModal();
+        }
 
-        public openAboutModal(): void {
+        public openAboutModal(tab?: any): void {
+            if (tab) {
+                this.modalService.openModal(Services.ModalType.e_about, { "tabName": tab });
+                return;
+            }
             this.modalService.openModal(Services.ModalType.e_about);
         }
 
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
+        public readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
 
     }//end class
     angular.module('GroundWaterWatch.Controllers')

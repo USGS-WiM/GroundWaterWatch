@@ -1,4 +1,4 @@
 ﻿<div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle pull-left visible-sm visible-xs"><i class="fa fa-bars fa-2x"></i></div>
 <a class="navbar-brand" href="http://www.usgs.gov"><img src="images/usgs-logo.png"></a>
-<span class="app-name">{{vm.ProjectName}}</span>
+<span class="app-name">{{vm.ProjectName}}&nbsp;&nbsp;<i id="networkInfoIcon" class="fa fa-info-circle" ng-click="vm.openAboutModal(vm.NetworkCode)"></i></span>
 <button id="reportButton" class="btn-default navbar-btn pull-right navBarButton" ng-click="vm.openAboutModal()"><i class="fa fa-info"></i><span class="hidden-xs">&nbsp;&nbsp;ABOUT</span></button>

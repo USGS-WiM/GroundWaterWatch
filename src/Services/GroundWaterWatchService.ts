@@ -135,6 +135,7 @@ module GroundWaterWatch.Services {
         public get PrimaryNetworkList(): Array<Models.INetwork> {
             return this._primaryNetworks;
         }
+        public primaryNetworkInfos: any;
 
 
         //Constructor
@@ -370,6 +371,7 @@ module GroundWaterWatch.Services {
             this.Execute(request).then(
                 (response: any) => {
                     this._primaryNetworks = response.data;
+                    this.primaryNetworkInfos = this._primaryNetworks;
                     this.SelectedPrimaryNetwork = this._primaryNetworks[0];
                 }, (error) => {
                     console.log('No gww sites found');
