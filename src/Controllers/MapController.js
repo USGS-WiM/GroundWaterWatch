@@ -33,7 +33,7 @@ var GroundWaterWatch;
                 this.lng = lng;
             }
             return MapPoint;
-        }());
+        })();
         var Center = (function () {
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -43,7 +43,7 @@ var GroundWaterWatch;
                 this.zoom = zm;
             }
             return Center;
-        }());
+        })();
         var Layer = (function () {
             function Layer(nm, ul, ty, vis, op) {
                 if (op === void 0) { op = undefined; }
@@ -54,7 +54,7 @@ var GroundWaterWatch;
                 this.layerOptions = op;
             }
             return Layer;
-        }());
+        })();
         var MapDefault = (function () {
             function MapDefault(mxZm, mnZm, zmCtrl) {
                 if (mxZm === void 0) { mxZm = null; }
@@ -65,7 +65,7 @@ var GroundWaterWatch;
                 this.zoomControl = zmCtrl;
             }
             return MapDefault;
-        }());
+        })();
         Controllers.onBoundingBoxChanged = "onBoundingBoxChanged";
         var BoundingBoxChangedEventArgs = (function (_super) {
             __extends(BoundingBoxChangedEventArgs, _super);
@@ -78,7 +78,7 @@ var GroundWaterWatch;
                 this.western = bbox.southWest.lat;
             }
             return BoundingBoxChangedEventArgs;
-        }(WiM.Event.EventArgs));
+        })(WiM.Event.EventArgs);
         Controllers.BoundingBoxChangedEventArgs = BoundingBoxChangedEventArgs;
         var MapController = (function () {
             function MapController($scope, $rootscope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, search, exploration, eventManager, gwwservice, modal, $timeout) {
@@ -477,7 +477,7 @@ var GroundWaterWatch;
                         onEachFeature: function (feature, layer) {
                             var strVar = "     <div>";
                             strVar += "          <h3>USGS Well Information <\/h3>";
-                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=" + feature.properties["SITE_NO"] + "&ncd=awl' target='_blank' >" + feature.properties["SITE_NO"] + "</a>";
+                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"], "AWL") + feature.properties["SITE_NO"] + "</a>";
                             strVar += "          <br \/>";
                             strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                             strVar += "          <br \/>";
@@ -604,11 +604,18 @@ var GroundWaterWatch;
                     }); //end get layers
                 }); //end get map
             };
+            MapController.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
+                if (title === void 0) { title = ""; }
+                if (showclosebtn === void 0) { showclosebtn = false; }
+                if (id === void 0) { id = null; }
+                if (tmout === void 0) { tmout = 5000; }
+                this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
+            };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MapController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MapController', MapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

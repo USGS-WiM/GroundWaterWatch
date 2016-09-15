@@ -36,7 +36,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             SiteListController.$inject = ['$scope', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return SiteListController;
-        }()); //end class
+        })(); //end class
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.SiteListController', SiteListController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

@@ -572,7 +572,7 @@ module GroundWaterWatch.Controllers {
                 this.center.lat = (e.bbox[0] + e.bbox[2]) / 2
                 this.center.lng = (e.bbox[1] + e.bbox[3]) / 2
                 this.center.zoom = 12;
-        }
+            }            
         }
         private removeGeoJson(layerName: string = "", isPartial: boolean = false) {
             var layeridList: Array<string>;
@@ -604,7 +604,7 @@ module GroundWaterWatch.Controllers {
                     onEachFeature: (feature, layer) => {
                         var strVar = "     <div>";
                         strVar += "          <h3>USGS Well Information <\/h3>";
-                        strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S=" + feature.properties["SITE_NO"] + "&ncd=awl' target='_blank' >" + feature.properties["SITE_NO"] + "</a>";
+                        strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"],"AWL") + feature.properties["SITE_NO"] + "</a>";
                         strVar += "          <br \/>";
                         strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                         strVar += "          <br \/>";
@@ -740,6 +740,9 @@ module GroundWaterWatch.Controllers {
             });//end get map
             
 
+        }
+        private sm(m: string, t: Models.NotificationType, title: string = "", showclosebtn: boolean = false, id: number = null, tmout: number = 5000) {
+            this.toaster.pop(new Models.Notification(m, t, title, showclosebtn, tmout, id));
         }
 
     }//end class
