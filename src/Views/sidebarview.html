@@ -58,7 +58,7 @@
                                 </div>
                                 <div ng-init="vm.showNetworkInfo = false" ng-show="vm.showNetworkInfo">
                                     <div class="wim-alert">
-                                        <span>{{vm.selectedNetwork.shortDescription}}</span>
+                                        <span>{{vm.selectedNetwork.shortDescription}} <i id="networkInfoIcon" class="fa fa-info-circle" ng-click="vm.openAboutModal(vm.selectedNetwork.code)"></i></span>
                                     </div>
                                 </div>
                             </div>

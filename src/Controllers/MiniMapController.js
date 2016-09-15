@@ -21,10 +21,11 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use strict';
         var MiniMapController = (function () {
-            function MiniMapController($scope, $rootscope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, eventManager, gwwservice, modal, $timeout) {
+            function MiniMapController($scope, $rootscope, toaster, $analytics, $location, $stateParams, leafletBoundsHelper, leafletData, eventManager, gwwservice, modalService, $timeout) {
                 this.$scope = $scope;
                 $scope.vm = this;
                 $rootscope["isShown"] = true;
+                this.modalService = modalService;
                 this.leafletData = leafletData;
                 this.gwwService = gwwservice;
                 this.selectedNetwork = null;
@@ -45,6 +46,9 @@ var GroundWaterWatch;
             MiniMapController.prototype.initialize = function (network) {
                 this.selectedNetwork = network;
                 this.loadGWWMapLayer();
+            };
+            MiniMapController.prototype.openAboutModal = function (tab) {
+                this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about, { "tabName": tab });
             };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-

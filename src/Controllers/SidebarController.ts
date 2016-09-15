@@ -147,6 +147,7 @@ module GroundWaterWatch.Controllers {
             this.$window.open(url, "_self");
 
         }
+
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void { 

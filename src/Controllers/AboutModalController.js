@@ -27,7 +27,8 @@ var GroundWaterWatch;
                 this.modalInstance = modal;
                 this.modalService = modalService;
                 this.gwwService = gwwservice;
-                this.selectedAboutTabName = "about";
+                this.selectedAboutTabName = modalService.modalOptions.tabName;
+                this.showModal = true;
                 this.init();
                 $scope.$watch(function () { return _this.modalService.modalOptions.tabName; }, function (newval, oldval) { return _this.selectAboutTab(newval); });
             }
@@ -37,8 +38,11 @@ var GroundWaterWatch;
                 this.modalInstance.dismiss('cancel');
             };
             AboutModalController.prototype.Dismiss = function () {
-                this.createCookie('GWWshowAbout', true, 30);
-                this.modalInstance.dismiss('cancel');
+                if (!this.showModal) {
+                    this.createCookie('GWWhideAbout', true, 30);
+                }
+                else
+                    this.eraseCookie('GWWhideAbout');
             };
             AboutModalController.prototype.selectAboutTab = function (tabname) {
                 if (this.selectedAboutTabName == tabname)
@@ -49,6 +53,8 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             AboutModalController.prototype.init = function () {
                 //place anything that needs to be initialized here
+                if (this.readCookie('GWWhideAbout') != null)
+                    this.showModal = !this.showModal;
             };
             AboutModalController.prototype.convertUnsafe = function (x) {
                 return this.sce.trustAsHtml(x);
@@ -63,6 +69,21 @@ var GroundWaterWatch;
                 else
                     var expires = "";
                 document.cookie = name + "=" + value + expires + "; path=/";
+            };
+            AboutModalController.prototype.readCookie = function (name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ')
+                        c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0)
+                        return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            };
+            AboutModalController.prototype.eraseCookie = function (name) {
+                this.createCookie(name, "", -1);
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-

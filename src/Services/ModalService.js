@@ -28,6 +28,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             function ModalService($modal) {
                 this.modal = $modal;
+                this.modalOptions = { tabName: 'about' };
             }
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-

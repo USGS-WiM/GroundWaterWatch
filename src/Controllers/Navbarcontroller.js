@@ -48,7 +48,7 @@ var GroundWaterWatch;
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             NavbarController.prototype.checkAboutModal = function () {
-                if (this.readCookie('GWWshowAbout') == null)
+                if (this.readCookie('GWWhideAbout') == null)
                     this.openAboutModal();
             };
             NavbarController.prototype.openAboutModal = function (tab) {
