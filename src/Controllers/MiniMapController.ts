@@ -47,6 +47,7 @@ module GroundWaterWatch.Controllers {
         public layers: any;
         private gwwService: Services.IGroundWaterWatchService;
         private selectedNetwork: Models.INetwork;
+        private modalService: Services.IModalService;
         public get isSelected(): boolean{
             if (this.selectedNetwork.code === this.gwwService.SelectedPrimaryNetwork.code) return true;
             else return false;
@@ -55,10 +56,10 @@ module GroundWaterWatch.Controllers {
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
         static $inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService','GroundWaterWatch.Services.ModalService','$timeout'];
-        constructor(public $scope: IMiniMapControllerScope,$rootscope:ng.IRootScopeService ,toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService, modal: Services.IModalService,$timeout: ng.ITimeoutService ) {
+        constructor(public $scope: IMiniMapControllerScope, $rootscope: ng.IRootScopeService, toaster, $analytics, $location: ng.ILocationService, $stateParams, leafletBoundsHelper: any, leafletData: ILeafletData, eventManager: WiM.Event.IEventManager, gwwservice: Services.IGroundWaterWatchService, modalService: Services.IModalService,$timeout: ng.ITimeoutService ) {
             $scope.vm = this;
             $rootscope["isShown"] = true;
-
+            this.modalService = modalService;
             this.leafletData = leafletData;
             this.gwwService = gwwservice;
             this.selectedNetwork = null;
@@ -71,6 +72,10 @@ module GroundWaterWatch.Controllers {
         public initialize(network: Models.INetwork) {
             this.selectedNetwork = network;
             this.loadGWWMapLayer()
+        }
+
+        public openAboutModal(tab: any) {
+            this.modalService.openModal(Services.ModalType.e_about, { "tabName": tab });
         }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-

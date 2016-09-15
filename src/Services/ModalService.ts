@@ -48,6 +48,7 @@ module GroundWaterWatch.Services {
         //-+-+-+-+-+-+-+-+-+-+-+-
         constructor($modal: ng.ui.bootstrap.IModalService) {
             this.modal = $modal;
+            this.modalOptions = { tabName: 'about' };
         }
 
         //Methods
