@@ -44,6 +44,10 @@ module GroundWaterWatch.Controllers {
                 return configuration.projectName + " - " + this.gwwService.SelectedPrimaryNetwork.name;
             else return configuration.projectName
         }
+        public get NetworkCode(): string {
+            if (this.gwwService.SelectedPrimaryNetwork) return this.gwwService.SelectedPrimaryNetwork.code;
+        }
+        public
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -59,12 +63,14 @@ module GroundWaterWatch.Controllers {
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         public checkAboutModal() {
-            if (this.readCookie('GWWshowAbout') == null) {
-                this.modalService.openModal(Services.ModalType.e_about);
-            }
+            if (this.readCookie('GWWshowAbout') == null) this.openAboutModal();
         }
 
-        public openAboutModal(): void {
+        public openAboutModal(tab?: any): void {
+            if (tab) {
+                this.modalService.openModal(Services.ModalType.e_about, { "tabName": tab });
+                return;
+            }
             this.modalService.openModal(Services.ModalType.e_about);
         }
 

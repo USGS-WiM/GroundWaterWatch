@@ -35,15 +35,24 @@ module GroundWaterWatch.Controllers {
         //Properties
         //-+-+-+-+-+-+-+-+-+-+-+-
         private modalInstance: ng.ui.bootstrap.IModalServiceInstance;
-
+        private modalService: Services.IModalService;
+        private gwwService: Services.IGroundWaterWatchService;
+        public selectedAboutTabName: string;
+        public sce: any;
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
-        static $inject = ['$scope','$modalInstance'];
-        constructor($scope: IAboutModalControllerScope, modal:ng.ui.bootstrap.IModalServiceInstance) {
+        static $inject = ['$scope', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
+        constructor($scope: IAboutModalControllerScope, $sce: any, modal: ng.ui.bootstrap.IModalServiceInstance, gwwservice: Services.IGroundWaterWatchService, modalService: Services.IModalService) {
             $scope.vm = this;
+            this.sce = $sce;
             this.modalInstance = modal;
+            this.modalService = modalService;
+            this.gwwService = gwwservice;
+            this.selectedAboutTabName = "about";
             this.init();  
+
+            $scope.$watch(() => this.modalService.modalOptions.tabName, (newval, oldval) => this.selectAboutTab(newval));
         }  
         
         //Methods  
@@ -57,12 +66,21 @@ module GroundWaterWatch.Controllers {
             this.createCookie('GWWshowAbout', true, 30);
             this.modalInstance.dismiss('cancel')
         }
+
+        public selectAboutTab(tabname: string): void {
+            if (this.selectedAboutTabName == tabname) return;
+            this.selectedAboutTabName = tabname;
+        }
         
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
             //place anything that needs to be initialized here
         }
+
+        public convertUnsafe(x: string) {
+            return this.sce.trustAsHtml(x);
+        };
 
         public createCookie(name, value, days) {
             if (days) {

@@ -331,6 +331,7 @@ var GroundWaterWatch;
                 var request = new WiM.Services.Helpers.RequestInfo("ncd.js", true);
                 this.Execute(request).then(function (response) {
                     _this._primaryNetworks = response.data;
+                    _this.primaryNetworkInfos = _this._primaryNetworks;
                     _this.SelectedPrimaryNetwork = _this._primaryNetworks[0];
                 }, function (error) {
                     console.log('No gww sites found');

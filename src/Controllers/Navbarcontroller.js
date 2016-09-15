@@ -37,14 +37,25 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(NavbarController.prototype, "NetworkCode", {
+                get: function () {
+                    if (this.gwwService.SelectedPrimaryNetwork)
+                        return this.gwwService.SelectedPrimaryNetwork.code;
+                },
+                enumerable: true,
+                configurable: true
+            });
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             NavbarController.prototype.checkAboutModal = function () {
-                if (this.readCookie('GWWshowAbout') == null) {
-                    this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about);
-                }
+                if (this.readCookie('GWWshowAbout') == null)
+                    this.openAboutModal();
             };
-            NavbarController.prototype.openAboutModal = function () {
+            NavbarController.prototype.openAboutModal = function (tab) {
+                if (tab) {
+                    this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about, { "tabName": tab });
+                    return;
+                }
                 this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about);
             };
             //Helper Methods

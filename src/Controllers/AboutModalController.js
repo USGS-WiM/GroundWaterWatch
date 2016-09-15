@@ -20,10 +20,16 @@ var GroundWaterWatch;
     (function (Controllers) {
         'use string';
         var AboutModalController = (function () {
-            function AboutModalController($scope, modal) {
+            function AboutModalController($scope, $sce, modal, gwwservice, modalService) {
+                var _this = this;
                 $scope.vm = this;
+                this.sce = $sce;
                 this.modalInstance = modal;
+                this.modalService = modalService;
+                this.gwwService = gwwservice;
+                this.selectedAboutTabName = "about";
                 this.init();
+                $scope.$watch(function () { return _this.modalService.modalOptions.tabName; }, function (newval, oldval) { return _this.selectAboutTab(newval); });
             }
             //Methods  
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -34,11 +40,20 @@ var GroundWaterWatch;
                 this.createCookie('GWWshowAbout', true, 30);
                 this.modalInstance.dismiss('cancel');
             };
+            AboutModalController.prototype.selectAboutTab = function (tabname) {
+                if (this.selectedAboutTabName == tabname)
+                    return;
+                this.selectedAboutTabName = tabname;
+            };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             AboutModalController.prototype.init = function () {
                 //place anything that needs to be initialized here
             };
+            AboutModalController.prototype.convertUnsafe = function (x) {
+                return this.sce.trustAsHtml(x);
+            };
+            ;
             AboutModalController.prototype.createCookie = function (name, value, days) {
                 if (days) {
                     var date = new Date();
@@ -51,7 +66,7 @@ var GroundWaterWatch;
             };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
-            AboutModalController.$inject = ['$scope', '$modalInstance'];
+            AboutModalController.$inject = ['$scope', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
             return AboutModalController;
         }()); //end  class
         angular.module('GroundWaterWatch.Controllers')
