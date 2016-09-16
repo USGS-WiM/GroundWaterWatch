@@ -124,7 +124,8 @@ configuration.overlayedLayers = {
             layers: 'groundwaterwatch:Latest_WL_Percentile',
             format: 'image/png',
             transparent: true,
-            version: '1.1.0'
+            version: '1.1.0',
+            zIndex:100
             }
     }
     //http://docs.geoserver.org/stable/en/user/services/wms/reference.html#wms-getmap
