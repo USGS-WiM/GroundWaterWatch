@@ -182,6 +182,9 @@ module GroundWaterWatch.Controllers {
         private sm(m: string, t: Models.NotificationType, title: string = "", showclosebtn: boolean = false, id: number = null, tmout: number = 5000) {
             this.toaster.pop(new Models.Notification(m, t, title, showclosebtn, tmout, id));
         }
+        private clrm(id: number = null) {
+            this.toaster.clear();
+        }
 
   
     }//end class

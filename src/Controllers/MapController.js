@@ -611,6 +611,10 @@ var GroundWaterWatch;
                 if (tmout === void 0) { tmout = 5000; }
                 this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
             };
+            MapController.prototype.clrm = function (id) {
+                if (id === void 0) { id = null; }
+                this.toaster.clear();
+            };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
             MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];

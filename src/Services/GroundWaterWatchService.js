@@ -196,14 +196,17 @@ var GroundWaterWatch;
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        _this.clrm();
                         _this.sm("Found site", GroundWaterWatch.Models.NotificationType.e_success, "Groundwater watch");
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                     } //endif
                     else {
+                        _this.clrm();
                         _this.sm("Site not found, please try again", GroundWaterWatch.Models.NotificationType.e_warning, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
+                    _this.clrm();
                     _this.sm("Error finding site, please try again", GroundWaterWatch.Models.NotificationType.e_error, "Groundwater watch");
                 }).finally(function () {
                 });
@@ -224,14 +227,17 @@ var GroundWaterWatch;
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
                         console.log(response.data.features.length, ' gww sites found');
+                        _this.clrm();
                         _this.sm("Found site", GroundWaterWatch.Models.NotificationType.e_success, "Groundwater watch");
                         _this._eventManager.RaiseEvent(Services.onGWSiteSelectionChanged, _this, new GWSiteSelectionEventArgs(response.data.features, response.data.bbox));
                     } //endif
                     else {
+                        _this.clrm();
                         _this.sm("Site not found, please try againg", GroundWaterWatch.Models.NotificationType.e_warning, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
+                    _this.clrm();
                     _this.sm("Error finding site, please try again", GroundWaterWatch.Models.NotificationType.e_error, "Groundwater watch");
                 }).finally(function () {
                 });
@@ -274,7 +280,7 @@ var GroundWaterWatch;
             //outfeilds COUNTY,STATE,ABBREV,NAME
             GroundWaterWatchService.prototype.updateGWWSiteList = function () {
                 var _this = this;
-                this.sm("Updating site list.", GroundWaterWatch.Models.NotificationType.e_info, "Services");
+                this.sm("Updating site list.", GroundWaterWatch.Models.NotificationType.e_wait, "Services");
                 var url = configuration.baseurls['GroundWaterWatch'] + configuration.queryparams['WFSquery'];
                 if (this.SelectedPrimaryNetwork != null)
                     url += "&CQL_FILTER=NETWORK_CD in ('" + this.SelectedPrimaryNetwork.code + "')";
@@ -282,6 +288,7 @@ var GroundWaterWatch;
                 this.Execute(request).then(function (response) {
                     _this.queriedGWsite = true;
                     if (response.data.features && response.data.features.length > 0) {
+                        _this.clrm();
                         _this.sm("Found " + response.data.features.length + " sites", GroundWaterWatch.Models.NotificationType.e_success, "Services");
                         response.data.features.forEach(function (item) {
                             //console.log(item);
@@ -289,10 +296,12 @@ var GroundWaterWatch;
                         }); //next
                     } //endif
                     else {
+                        _this.clrm();
                         _this.sm("No sites found.", GroundWaterWatch.Models.NotificationType.e_info, "Groundwater watch");
                         _this.SelectedGWSite = null;
                     }
                 }, function (error) {
+                    _this.clrm();
                     _this.sm("Error finding sites.", GroundWaterWatch.Models.NotificationType.e_error, "Services");
                 }).finally(function () {
                 });
@@ -348,6 +357,10 @@ var GroundWaterWatch;
                 if (id === void 0) { id = null; }
                 if (tmout === void 0) { tmout = 5000; }
                 this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
+            };
+            GroundWaterWatchService.prototype.clrm = function (id) {
+                if (id === void 0) { id = null; }
+                this.toaster.clear();
             };
             return GroundWaterWatchService;
         })(WiM.Services.HTTPServiceBase); //end class
