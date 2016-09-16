@@ -77,6 +77,10 @@ select {
 select:hover {
     cursor: pointer;
 }
+[type="radio"]:not(:checked), [type="radio"]:checked {
+    position: unset;
+    left: -9999px;
+}
 /*select:focus {
     border: 2px solid rgba(45, 49, 70, 0.6);
     filter: brightness(115%);

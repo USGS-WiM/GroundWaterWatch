@@ -46,6 +46,8 @@ var GroundWaterWatch;
             MiniMapController.prototype.initialize = function (network) {
                 this.selectedNetwork = network;
                 this.loadGWWMapLayer();
+                if (this.selectedNetwork.code == "LTN")
+                    this.NetworkDescriptor = { frequency: 'Annual', timeperiod: 20 };
             };
             MiniMapController.prototype.openAboutModal = function (tab) {
                 this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about, { "tabName": tab });
