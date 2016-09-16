@@ -59,35 +59,26 @@
                                 <div ng-if="pn.code=='LTN'" class="row">
                                     <p>Use the options below to select the data frequency and record length.</p>
                                     <div class="col-md-4">
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Annual">
-                                            Annual
-                                        </label>
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="20">
-                                            > 20 Yrs.
-                                        </label>
+                                        <input type="radio" id="AnnualfrequencyRadio" ng-checked="vm.NetworkDescriptor.frequency === 'Annual'" ng-value="Annual" />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.frequency === 'Annual'" }" for="AnnualfrequencyRadio" ng-click="vm.NetworkDescriptor.frequency = 'Annual'">Annually</label> 
+                                          
+                                        <input type="radio" id="20timeperiodRadio" ng-checked="vm.NetworkDescriptor.timeperiod === 20" ng-value=20 />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.timeperiod === 20 }" for="20timeperiodyRadio" ng-click="vm.NetworkDescriptor.timeperiod = 20"> > 20 Yrs.</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Month">
-                                            Monthly
-                                        </label><br />
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="30">
-                                            > 30 Yrs.
-                                        </label>
+                                        <input type="radio" id="MonthfrequencyRadio" ng-checked="vm.NetworkDescriptor.frequency === 'Month'" ng-value="Month" />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.frequency === 'Month'" }" for="MonthfrequencyRadio" ng-click="vm.NetworkDescriptor.frequency = 'Month'">Monthly</label>
+
+                                        <input type="radio" id="30timeperiodRadio" ng-checked="vm.NetworkDescriptor.timeperiod === 30" ng-value=30 />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.timeperiod === 30 }" for="30timeperiodyRadio" ng-click="vm.NetworkDescriptor.timeperiod = 30"> > 30 Yrs.</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Day">
-                                            Daily
-                                        </label><br />
-                                        <label>
-                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="50">
-                                            > 50 Yrs.
-                                        </label>
-                                    </div>
+                                        <input type="radio" id="DayfrequencyRadio" ng-checked="vm.NetworkDescriptor.frequency === 'Day'" ng-value="Day" />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.frequency === 'Day'" }" for="DayfrequencyRadio" ng-click="vm.NetworkDescriptor.frequency = 'Day'">Daily</label>
+
+                                        <input type="radio" id="50timeperiodRadio" ng-checked="vm.NetworkDescriptor.timeperiod === 50" ng-value=50 />
+                                        <label class="hasRadio" ng-class="{ \'radioSelected\': vm.NetworkDescriptor.timeperiod === 50 }" for="50timeperiodyRadio" ng-click="vm.NetworkDescriptor.timeperiod = 50"> > 50 Yrs.</label>
+                                    </div>                                   
                                 </div>
                                 <div ng-init="vm.showNetworkInfo = false" ng-show="vm.showNetworkInfo">
                                     <div class="wim-alert">
