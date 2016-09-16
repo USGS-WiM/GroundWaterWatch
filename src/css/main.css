@@ -77,10 +77,7 @@ select {
 select:hover {
     cursor: pointer;
 }
-[type="radio"]:not(:checked), [type="radio"]:checked {
-    position: unset;
-    left: -9999px;
-}
+
 [type="checkbox"]:not(:checked)+label:after, [type="checkbox"]:checked+label:after {
     display:none;
 }
