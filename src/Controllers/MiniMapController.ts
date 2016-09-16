@@ -106,7 +106,8 @@ module GroundWaterWatch.Controllers {
             this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
         }
         private loadGWWMapLayer() {
-            if (!this.selectedNetwork) return;
+            if (!this.selectedNetwork) return
+                ;
             this.leafletData.getLayers(this.selectedNetwork.code).then((maplayers: any) => {
                 maplayers.overlays["gww"].wmsParams.CQL_FILTER = "NETWORK_CD='" + this.selectedNetwork.code + "'";
                 maplayers.overlays["gww"].redraw();
