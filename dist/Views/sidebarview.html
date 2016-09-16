@@ -56,6 +56,39 @@
                                     </div>
                                     <div class="col-md-2"><button class="btn-wim-sm btn-wim-info" ng-click="vm.showNetworkInfo = !vm.showNetworkInfo"><i class="fa fa-question-circle"></i></button></div>
                                 </div>
+                                <div ng-if="pn.code=='LTN'" class="row">
+                                    <p>Use the options below to select the data frequency and record length.</p>
+                                    <div class="col-md-4">
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Annual">
+                                            Annual
+                                        </label>
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="20">
+                                            > 20 Yrs.
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Month">
+                                            Monthly
+                                        </label><br />
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="30">
+                                            > 30 Yrs.
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.frequency" value="Day">
+                                            Daily
+                                        </label><br />
+                                        <label>
+                                            <input type="radio" ng-model="vm.NetworkDescriptor.timeperiod" value="50">
+                                            > 50 Yrs.
+                                        </label>
+                                    </div>
+                                </div>
                                 <div ng-init="vm.showNetworkInfo = false" ng-show="vm.showNetworkInfo">
                                     <div class="wim-alert">
                                         <span>{{vm.selectedNetwork.shortDescription}} <i id="networkInfoIcon" class="fa fa-info-circle" ng-click="vm.openAboutModal(vm.selectedNetwork.code)"></i></span>
