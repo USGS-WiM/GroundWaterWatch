@@ -45,6 +45,7 @@ module GroundWaterWatch.Controllers {
         public center: any;
         public defaults: any;
         public layers: any;
+        public NetworkDescriptor: { frequency: string, timeperiod: number };
         private gwwService: Services.IGroundWaterWatchService;
         private selectedNetwork: Models.INetwork;
         private modalService: Services.IModalService;
@@ -63,6 +64,7 @@ module GroundWaterWatch.Controllers {
             this.leafletData = leafletData;
             this.gwwService = gwwservice;
             this.selectedNetwork = null;
+
             this.init();
 
         }
@@ -72,6 +74,8 @@ module GroundWaterWatch.Controllers {
         public initialize(network: Models.INetwork) {
             this.selectedNetwork = network;
             this.loadGWWMapLayer()
+            if (this.selectedNetwork.code == "LTN")
+                this.NetworkDescriptor = { frequency: 'Annual', timeperiod: 20 };
         }
 
         public openAboutModal(tab: any) {
