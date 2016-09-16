@@ -1,0 +1,70 @@
+<!-- Modal -->
+
+<div class="modal-header">
+    <button class="close"
+            ng-click="vm.Close()">
+        &times;
+    </button>
+    <h4 class="modal-title">Groundwater Watch Filters</h4>
+</div>
+<div class="modal-body">
+
+    <div style="padding-top: 10px;">
+        <div class="list-group">
+            <div class="sidebar-item">
+                <a style="text-align:left" ng-class="vm.selectedProcedure == 1  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.selectedProcedure = 1">Filter by State and County<div></div><i ng-class="vm.selectedProcedure == 1 ? 'fa fa-chevron-up pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <div class="list-group-body" ng-hide="vm.selectedProcedure != 1">
+                    <div class="wim-alert">Use the drop downs below to select the desired State/Counties to filter the groundwater sites, then select apply</div>   
+                    <div class="btn-wim-sm btn-wim-default" angular-multi-select
+                         input-model="vm.States"
+                         output-model="vm.SelectedState"
+                         dropdown-label="<[ '<(name)>' | outputModelIterator : this : '; ' : 'Select a State to filter groundwater sites by' ]>"
+                         leaf-label="<[ name ]>"
+                         hide-helpers="check_all, check_none"
+                         max-checked-leafs="1">
+                    </div>  
+
+                    <div ng-hide="vm.Counties == undefined" class="btn-wim-sm btn-wim-default" angular-multi-select
+                         input-model="vm.Counties"
+                         output-model="vm.SelectedCounties"
+                         dropdown-label="<[ '<(name)>' | outputModelIterator : this : '; ' : 'Select Counties to filter groundwater sites by' ]>"
+                         leaf-label="<[ name ]>"
+                         hide-helpers="check_all, check_none">
+                    </div>      
+                </div>
+
+            </div>
+            <div class="sidebar-item">
+                <a style="text-align:left" ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.selectedProcedure = 2">Filter by Principal Aquifer<div></div><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-up pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <div class="list-group-body" ng-hide="vm.selectedProcedure != 2">
+                    <div class="wim-alert">Use the drop downs below to select the desired Aquifer to filter the groundwater sites, then select apply</div>
+                    <div class="btn-wim-sm btn-wim-default" angular-multi-select
+                         input-model="vm.Aquifers"
+                         output-model="vm.SelectedAquifers"
+                         dropdown-label="<[ '<(name)>' | outputModelIterator : this : '; ' : 'Select aquifers to filter groundwater sites by' ]>"
+                         leaf-label="<[ name ]>"
+                         hide-helpers="check_all, check_none">
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <a style="text-align:left" ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.selectedProcedure = 3">Filter by State and Local Network<div></div><i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-up pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <div class="list-group-body" ng-hide="vm.selectedProcedure != 3">
+                    <div class="wim-alert">Use the drop downs below to select the desired State and Local Network to filter the groundwater sites, then select apply</div>
+                    <div class="btn-wim-sm btn-wim-default" angular-multi-select
+                         input-model="vm.Networks"
+                         output-model="vm.SelectedNetworks"
+                         dropdown-label="<[ '<(name)>' | outputModelIterator : this : '; ' : 'Select networks to filter groundwater sites by' ]>"
+                         leaf-label="<[ name ]>"
+                         hide-helpers="check_all, check_none">
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+<div class="modal-footer">
+    <button ng-click="vm.Apply()" class="btn-wim-default"><i class="fa fa-close"></i><span>&nbsp;&nbsp;Apply</span></button>
+    <button ng-click="vm.Reset()" class="btn-wim-default"><i class="fa fa-close"></i><span >&nbsp;&nbsp;Reset</span></button>
+    <button ng-click="vm.Close()" class="btn-wim-default"><i class="fa fa-close"></i><span >&nbsp;&nbsp;Cancel</span></button>
+</div>
