@@ -90,7 +90,7 @@ var GroundWaterWatch;
                 }
             };
             return ModalService;
-        })(); //end class
+        }()); //end class
         (function (ModalType) {
             ModalType[ModalType["e_filter"] = 1] = "e_filter";
             ModalType[ModalType["e_about"] = 2] = "e_about";

@@ -26,7 +26,7 @@ var GroundWaterWatch;
                 this.Type = t;
             }
             return GroundWaterFilterSite;
-        })();
+        }());
         Models.GroundWaterFilterSite = GroundWaterFilterSite; //end class
         (function (FilterType) {
             FilterType[FilterType["STATE"] = 1] = "STATE";

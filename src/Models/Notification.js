@@ -45,7 +45,7 @@ var GroundWaterWatch;
                 } //end switch
             };
             return Notification;
-        })();
+        }());
         Models.Notification = Notification; //end class
         (function (NotificationType) {
             NotificationType[NotificationType["e_error"] = -1] = "e_error";
