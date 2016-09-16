@@ -63,7 +63,7 @@ module GroundWaterWatch.Controllers {
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         public checkAboutModal() {
-            if (this.readCookie('GWWshowAbout') == null) this.openAboutModal();
+             if (this.readCookie('GWWhideAbout') == null) this.openAboutModal();
         }
 
         public openAboutModal(tab?: any): void {
