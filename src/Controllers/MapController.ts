@@ -230,7 +230,7 @@ module GroundWaterWatch.Controllers {
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
             $scope.$on('leafletDirectiveMap.mainMap.click', (event, args) => {
                 this.leafletData.getMap("mainMap").then((map: any) => {
-                    this.gwwServices.queryGWsite(args.leafletEvent.latlng, map.getZoom())
+                    if (!this.explorationService.drawMeasurement && !this.explorationService.drawElevationProfile) this.gwwServices.queryGWsite(args.leafletEvent.latlng, map.getZoom())
                 });
             }); 
             $scope.$watch(() => this.bounds, (newval, oldval) => this.mapBoundsChange(oldval, newval));
@@ -474,6 +474,15 @@ module GroundWaterWatch.Controllers {
             this.explorationService.measurementData = '';
             this.explorationService.drawElevationProfile = false;
             this.explorationService.showElevationChart = false;
+
+            this.leafletData.getMap("mainMap").then((map: any) => {
+                this.leafletData.getLayers("mainMap").then((maplayers: any) => {
+
+                    //create draw control
+                    var drawnItems = maplayers.overlays.draw;
+                    drawnItems.clearLayers();
+                });
+            });
         }
         private measurement() {
 

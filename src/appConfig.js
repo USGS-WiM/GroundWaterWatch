@@ -93,6 +93,14 @@ configuration.basemaps =
 }// end baselayer
 
 configuration.overlayedLayers = {
+    draw: {
+        "name": 'draw',
+        "type": 'group',
+        "visible": true,
+        "layerParams": {
+            "showOnSelector": false,
+        }
+    },
     states: {
         name: 'States',
         type: 'agsDynamic',

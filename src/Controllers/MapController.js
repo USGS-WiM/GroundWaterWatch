@@ -136,7 +136,8 @@ var GroundWaterWatch;
                 $scope.$watch(function () { return _this.bounds; }, function (newval, oldval) { return _this.mapBoundsChange(oldval, newval); });
                 $scope.$on('leafletDirectiveMap.mainMap.click', function (event, args) {
                     _this.leafletData.getMap("mainMap").then(function (map) {
-                        _this.gwwServices.queryGWsite(args.leafletEvent.latlng, map.getZoom());
+                        if (!_this.explorationService.drawMeasurement && !_this.explorationService.drawElevationProfile)
+                            _this.gwwServices.queryGWsite(args.leafletEvent.latlng, map.getZoom());
                     });
                 });
                 $scope.$watch(function () { return _this.bounds; }, function (newval, oldval) { return _this.mapBoundsChange(oldval, newval); });
@@ -352,6 +353,7 @@ var GroundWaterWatch;
                 this.center = new Center(39, -100, 3);
             };
             MapController.prototype.resetExplorationTools = function () {
+                var _this = this;
                 document.getElementById('elevation-div').innerHTML = '';
                 document.getElementById('measurement-div').innerHTML = '';
                 if (this.drawControl)
@@ -361,6 +363,13 @@ var GroundWaterWatch;
                 this.explorationService.measurementData = '';
                 this.explorationService.drawElevationProfile = false;
                 this.explorationService.showElevationChart = false;
+                this.leafletData.getMap("mainMap").then(function (map) {
+                    _this.leafletData.getLayers("mainMap").then(function (maplayers) {
+                        //create draw control
+                        var drawnItems = maplayers.overlays.draw;
+                        drawnItems.clearLayers();
+                    });
+                });
             };
             MapController.prototype.measurement = function () {
                 //console.log('in measurement tool');
