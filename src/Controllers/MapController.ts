@@ -689,7 +689,7 @@ module GroundWaterWatch.Controllers {
             this.leafletData.getLayers("mainMap").then((maplayers: any) => {
                 //gww sites
                 var frequest = this.gwwServices.getFilterRequest();
-                    if (frequest != '') {
+                if (frequest != '') { 
                     maplayers.overlays["gww"].wmsParams.CQL_FILTER = frequest;                    
                 }
                 else {
@@ -711,7 +711,6 @@ module GroundWaterWatch.Controllers {
                         });//next feature
                             maplayers.overlays["states"].query().layer(7).where(filters[Models.FilterType.STATE.toString()].map((f: Models.GroundWaterFilterSite) => { return "STATE = '" + f.item.code + "'" }).join(" OR ")).bounds((error: any, results: any) => {
                                 map.fitBounds(results);
-
                             });
                     })
                 }//end if
@@ -729,7 +728,6 @@ module GroundWaterWatch.Controllers {
                         });
                         maplayers.overlays["counties"].query().layer(15).where(filters[Models.FilterType.COUNTY.toString()].map((f: Models.GroundWaterFilterSite) => { return "COUNTY = '" + (<Models.ICounty>f.item).code + "' AND STATE ='" + (<Models.ICounty>f.item).statecode + "'" }).join(" OR ")).bounds((error: any, results: any) => {
                             map.fitBounds(results);
-
                         });
                     }//end if
                     if (filters.hasOwnProperty(Models.FilterType.SITE.toString())) {

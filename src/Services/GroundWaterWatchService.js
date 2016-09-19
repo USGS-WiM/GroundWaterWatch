@@ -149,7 +149,7 @@ var GroundWaterWatch;
                 var filter = [];
                 var groupedFeature = this.SelectedGWFilters.group("Type");
                 var county = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.COUNTY.toString()) ?
-                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return "STATE_CD='{0}' ;COUNTY_CD='{1}'".format(item.item.statecode, item.item.code); }) : null;
+                    groupedFeature[GroundWaterWatch.Models.FilterType.COUNTY.toString()].map(function (item) { return "STATE_CD= '{0}' AND COUNTY_CD= '{1}'".format(item.item.statecode, item.item.code); }) : null;
                 if (county !== null)
                     filter.push(county.join(";"));
                 var states = groupedFeature.hasOwnProperty(GroundWaterWatch.Models.FilterType.STATE.toString()) ?
