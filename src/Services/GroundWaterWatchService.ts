@@ -167,7 +167,7 @@ module GroundWaterWatch.Services {
             
             var groupedFeature = this.SelectedGWFilters.group("Type");
             var county = groupedFeature.hasOwnProperty(Models.FilterType.COUNTY.toString()) ?
-                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return "STATE_CD='{0}' ;COUNTY_CD='{1}'".format((<Models.ICounty>item.item).statecode, item.item.code) }) : null;
+                groupedFeature[Models.FilterType.COUNTY.toString()].map((item: Models.GroundWaterFilterSite) => { return "STATE_CD= '{0}' AND COUNTY_CD= '{1}'".format((<Models.ICounty>item.item).statecode, item.item.code) }) : null;
             if (county !== null) filter.push(county.join(";"));
 
             var states = groupedFeature.hasOwnProperty(Models.FilterType.STATE.toString()) ?
