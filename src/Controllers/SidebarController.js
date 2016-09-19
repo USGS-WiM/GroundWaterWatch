@@ -166,11 +166,15 @@ var GroundWaterWatch;
                 if (tmout === void 0) { tmout = 5000; }
                 this.toaster.pop(new GroundWaterWatch.Models.Notification(m, t, title, showclosebtn, tmout, id));
             };
+            SidebarController.prototype.clrm = function (id) {
+                if (id === void 0) { id = null; }
+                this.toaster.clear();
+            };
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager', '$window'];
             return SidebarController;
-        }()); //end class
+        })(); //end class
         var ProcedureType;
         (function (ProcedureType) {
             ProcedureType[ProcedureType["Search"] = 1] = "Search";

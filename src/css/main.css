@@ -77,6 +77,11 @@ select {
 select:hover {
     cursor: pointer;
 }
+
+[type="checkbox"]:not(:checked)+label:after, [type="checkbox"]:checked+label:after {
+    display:none;
+}
+
 /*select:focus {
     border: 2px solid rgba(45, 49, 70, 0.6);
     filter: brightness(115%);
