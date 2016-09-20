@@ -28,7 +28,9 @@ var GroundWaterWatch;
                 this.modalService = modalService;
                 this.leafletData = leafletData;
                 this.gwwService = gwwservice;
+                this.network = null;
                 this.selectedNetwork = null;
+                this.showOptions = false;
                 this.init();
             }
             Object.defineProperty(MiniMapController.prototype, "isSelected", {
@@ -44,13 +46,40 @@ var GroundWaterWatch;
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             MiniMapController.prototype.initialize = function (network) {
-                this.selectedNetwork = network;
+                this.network = network;
+                if (this.network.code == "LTN") {
+                    this.showOptions = true;
+                    this.NetworkDescriptor = { frequency: 'List', timeperiod: 20 };
+                    this.selectedNetwork = this.network.subNetworks[0];
+                }
+                else {
+                    this.selectedNetwork = network;
+                }
                 this.loadGWWMapLayer();
-                if (this.selectedNetwork.code == "LTN")
-                    this.NetworkDescriptor = { frequency: 'Annual', timeperiod: 20 };
             };
             MiniMapController.prototype.openAboutModal = function (tab) {
                 this.modalService.openModal(GroundWaterWatch.Services.ModalType.e_about, { "tabName": tab });
+            };
+            MiniMapController.prototype.setMainNetwork = function () {
+                if (!this.selectedNetwork)
+                    return;
+                this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+            };
+            MiniMapController.prototype.updateNetworkDescriptor = function (propertyName, value) {
+                var _this = this;
+                if (this.NetworkDescriptor.hasOwnProperty(propertyName))
+                    this.NetworkDescriptor[propertyName] = value;
+                if (this.network.code === 'LTN') {
+                    var cd = this.NetworkDescriptor.timeperiod.toString() + this.NetworkDescriptor.frequency;
+                    this.network.subNetworks.forEach(function (n) {
+                        if (n.code === cd) {
+                            _this.selectedNetwork = n;
+                            _this.loadGWWMapLayer();
+                            _this.setMainNetwork();
+                            return;
+                        } //end if
+                    }); //next n
+                } //end if
             };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -71,16 +100,11 @@ var GroundWaterWatch;
                 };
                 this.loadGWWMapLayer();
             };
-            MiniMapController.prototype.setMainNetwork = function () {
-                if (!this.selectedNetwork)
-                    return;
-                this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
-            };
             MiniMapController.prototype.loadGWWMapLayer = function () {
                 var _this = this;
                 if (!this.selectedNetwork)
                     return;
-                this.leafletData.getLayers(this.selectedNetwork.code).then(function (maplayers) {
+                this.leafletData.getLayers(this.network.code).then(function (maplayers) {
                     maplayers.overlays["gww"].wmsParams.CQL_FILTER = "NETWORK_CD='" + _this.selectedNetwork.code + "'";
                     maplayers.overlays["gww"].redraw();
                 });

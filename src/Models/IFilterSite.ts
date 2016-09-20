@@ -12,5 +12,6 @@
     export interface IAquifer extends IFilterSite {
     }
     export interface INetwork extends IFilterSite {
+        subNetworks: Array<INetwork>
     }
 }

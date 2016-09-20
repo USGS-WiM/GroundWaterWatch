@@ -46,13 +46,15 @@ module GroundWaterWatch.Controllers {
         public defaults: any;
         public layers: any;
         public NetworkDescriptor: { frequency: string, timeperiod: number };
+        private network: Models.INetwork;
         private gwwService: Services.IGroundWaterWatchService;
-        private selectedNetwork: Models.INetwork;
+        public selectedNetwork: Models.INetwork;
         private modalService: Services.IModalService;
         public get isSelected(): boolean{
             if (this.selectedNetwork.code === this.gwwService.SelectedPrimaryNetwork.code) return true;
             else return false;
         }
+        public showOptions: boolean;
 
         //Constructro
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -63,8 +65,9 @@ module GroundWaterWatch.Controllers {
             this.modalService = modalService;
             this.leafletData = leafletData;
             this.gwwService = gwwservice;
+            this.network = null;
             this.selectedNetwork = null;
-
+            this.showOptions = false;
             this.init();
 
         }
@@ -72,14 +75,38 @@ module GroundWaterWatch.Controllers {
         //Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
         public initialize(network: Models.INetwork) {
-            this.selectedNetwork = network;
+            this.network = network;         
+            if (this.network.code == "LTN") {
+                this.showOptions = true;
+                this.NetworkDescriptor = { frequency: 'List', timeperiod: 20 };
+                this.selectedNetwork = this.network.subNetworks[0];
+            }
+            else {
+                this.selectedNetwork = network;   
+            }
             this.loadGWWMapLayer()
-            if (this.selectedNetwork.code == "LTN")
-                this.NetworkDescriptor = { frequency: 'Annual', timeperiod: 20 };
         }
 
         public openAboutModal(tab: any) {
             this.modalService.openModal(Services.ModalType.e_about, { "tabName": tab });
+        }
+        public setMainNetwork() {
+            if (!this.selectedNetwork) return;
+            this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+        }
+        public updateNetworkDescriptor(propertyName: string, value: any) {
+            if (this.NetworkDescriptor.hasOwnProperty(propertyName)) this.NetworkDescriptor[propertyName] = value;
+            if (this.network.code === 'LTN') {
+                var cd = this.NetworkDescriptor.timeperiod.toString() + this.NetworkDescriptor.frequency;
+                this.network.subNetworks.forEach((n: Models.INetwork) => {
+                    if (n.code === cd) {
+                        this.selectedNetwork = n;
+                        this.loadGWWMapLayer();
+                        this.setMainNetwork();
+                        return;
+                    }//end if
+                })//next n
+            }//end if
         }
         //Helper Methods
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -101,14 +128,10 @@ module GroundWaterWatch.Controllers {
             }
             this.loadGWWMapLayer();
         }
-        public setMainNetwork() {
-            if (!this.selectedNetwork) return;
-            this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
-        }
+        
         private loadGWWMapLayer() {
-            if (!this.selectedNetwork) return
-                ;
-            this.leafletData.getLayers(this.selectedNetwork.code).then((maplayers: any) => {
+            if (!this.selectedNetwork) return;
+            this.leafletData.getLayers(this.network.code).then((maplayers: any) => {
                 maplayers.overlays["gww"].wmsParams.CQL_FILTER = "NETWORK_CD='" + this.selectedNetwork.code + "'";
                 maplayers.overlays["gww"].redraw();
             });
