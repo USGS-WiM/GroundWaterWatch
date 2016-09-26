@@ -9,8 +9,9 @@
     <script>document.write('<base href="' + document.location + '" />');</script>
     <link rel="stylesheet" href="styles/vendor.min.css">
     <link rel="stylesheet" href="styles/custom.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <script src="scripts/vendor.min.js"></script>
-    
+
     <script src="scripts/custom.min.js"></script>
     <script src="appConfig.js"></script>
     <script>
@@ -23,7 +24,7 @@
 </head>
 <body>
     <div ng-if="isShown" ui-view="navbar" class="navbar-app navbar-absolute-top"></div>
-    <div ng-if="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>     
+    <div ng-if="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>
     <div ui-view="map" class="app app-body"></div>
     <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
 </body>

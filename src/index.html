@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-base.css" />
     <link rel="stylesheet" href="../bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.css" />
     <link rel="stylesheet" href="../bower_components/leaflet/dist/leaflet.css">
-    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css"> 
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="../bower_components/leaflet.locatecontrol/dist/L.Control.Locate.css" />
     <link rel="stylesheet" href="../bower_components/leaflet.zoomhome/dist/leaflet.zoomhome.css" />
     <link rel="stylesheet" href="../bower_components/leaflet-draw/dist/leaflet.draw.css" />
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../bower_components/wim-styles/core/css/wim.css" />
     <link rel="stylesheet" href="../bower_components/wim_angular/dist/css/wimLegend.css" />
     <link rel="stylesheet" href="../bower_components/angular-resizable/angular-resizable.min.css" />
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <!-- endbuild -->
     <!-- build:css styles/custom.min.css -->
     <link rel="stylesheet" href="css/main.css" />
@@ -41,11 +42,11 @@
     <script src="../bower_components/angularjs-toaster/toaster.js"></script>
     <script src="../bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
     <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="../bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.js"></script>   
+    <script src="../bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.js"></script>
     <script src="../bower_components/mobileangularui-checkbox/mobileangularui-checkbox.js"></script>
     <script src="../bower_components/ng-file-upload/ng-file-upload.js"></script>
     <script src="../bower_components/leaflet/dist/leaflet.js"></script>
-    <script src="../bower_components/esri-leaflet/dist/esri-leaflet.js"></script>  
+    <script src="../bower_components/esri-leaflet/dist/esri-leaflet.js"></script>
     <script src="../bower_components/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
     <script src="../bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
     <script src="../bower_components/leaflet.zoomhome/dist/leaflet.zoomhome.min.js"></script>
@@ -75,7 +76,7 @@
     <script src="../bower_components/lokijs/build/lokijs.min.js"></script>
     <script src="../bower_components/angular-multi-select-alexandernst/dist/prod/angular-multi-select.min.js"></script>
     <!-- endbuild -->
-    
+
     <!-- build:js scripts/custom.min.js -->
     <script src="Config.js"></script>
     <!-- Models ref-->
@@ -111,7 +112,7 @@
 </head>
 <body>
     <div ng-if="isShown" ui-view="navbar" class="navbar-app navbar-absolute-top"></div>
-    <div ng-if="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>     
+    <div ng-if="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>
     <div ui-view="map" class="app app-body"></div>
     <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
 </body>
