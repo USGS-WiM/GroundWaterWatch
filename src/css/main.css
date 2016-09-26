@@ -855,6 +855,16 @@ div.leaflet-top > .elevation {
 
 
 /*Additions by Mitch 09/26*/
+
+body,html{
+    font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+    font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif !important;
+}
+h1,h2,h3,h4,h5,h6,a,button,p{
+    font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif !important;
+}
+
+
 .modal-body p{
     font-size: 11pt;
     line-height: 1.5em;
