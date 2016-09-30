@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/aa8f544267457d7e6e6e02a1277151104730785c/leaflet/leaflet.d.ts",
+    "raw": "registry:dt/leaflet#0.7.3+20160613144025",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/aa8f544267457d7e6e6e02a1277151104730785c/leaflet/leaflet.d.ts"
+  }
+}

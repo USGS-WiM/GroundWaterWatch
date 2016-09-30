@@ -2,11 +2,11 @@
     <div class="scrollable-content">
         <div class="list-group">
             <div class="sidebar-item">
-                <a ng-class="vm.selectedProcedure == 1  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(1)">Search<div></div><h5 ng-show="vm.regionService.selectedRegion.Name"><strong>{{vm.regionService.selectedRegion.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 1 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <a ng-class="vm.selectedProcedure == 1  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(1)">Search<h5 ng-show="vm.regionService.selectedRegion.Name"><strong>{{vm.regionService.selectedRegion.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 1 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-hide="vm.selectedProcedure != 1">
                    <div class="group-wrapper" ng-show="vm.regionService.selectedRegion">
                         <button class="btn-wim-sm btn-wim-success btn-wim-group-1" ng-click="vm.regionService.resetView = !vm.regionService.resetView"><span><i class="fa fa-undo"></i>&nbsp;&nbsp;Start Over</span></button>
-                    </div>  
+                    </div>
 
                     <div id="searchWrapper">
                         <div class="wim-alert">Use the map or the search tool to zoom to an area of interest</div>
@@ -42,17 +42,17 @@
                 </div>
             </div>
             <div class="sidebar-item">
-                <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Primary Networks<div></div><h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Primary Networks<h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-if="vm.selectedProcedure == 2">
                     <div class="wim-alert">Click or Tap a minimap to switch network display</div>
-                    
+
                     <div ng-repeat="pn in vm.PrimaryNetworks" ng-controller="GroundWaterWatch.Controllers.MiniMapController" ng-init="vm.initialize(pn)">
                         <div class="miniMapPanel" ng-class="vm.isSelected  ? 'panel panel-success': 'panel panel-default'"
                              ng-click="vm.setMainNetwork()">
                             <div class=panel-heading>
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <h3 class=panel-title>{{vm.selectedNetwork.name}}</h3> 
+                                        <h3 class=panel-title>{{vm.selectedNetwork.name}}</h3>
                                     </div>
                                     <div class="col-md-2"><button class="btn-wim-sm btn-wim-info" ng-click="vm.showNetworkInfo = !vm.showNetworkInfo"><i class="fa fa-question-circle"></i></button></div>
                                 </div>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div class="sidebar-item">
-                <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Other Networks<div></div><i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
+                <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Other Networks<i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-hide="vm.selectedProcedure != 3">
                     <!--<div class="wim-alert">Use filters to limit groundwater sites by state and counties, principle aquifers, and State and local networks.</div>-->
                     <div class="wim-alert">Networks listed below allow you to open specific pages organized by State, Aquifer or local network.</div>
@@ -103,15 +103,15 @@
                     </div>-->
 
                     <select ng-model="selectedsItem" ng-if="vm.showStateNetworks">
-                        <option value="">Select a state network</option> <!-- not selected / blank option -->
+                        <option value="">Select a state network<b>&nbsp;&nbsp;&#9660;</b></option> <!-- not selected / blank option -->
                         <option ng-repeat="item in vm.States" title="{{item.name}}" ng-click="vm.OpenNetworkPage(1,item)" value="">{{item.name}} state network</option>
                     </select>
                     <select ng-model="selectedaItem">
-                        <option value="">Select an aquifer network</option> <!-- not selected / blank option -->
+                        <option value="">Select an aquifer network<b>&nbsp;&nbsp;&#9660;</b></option> <!-- not selected / blank option -->
                         <option ng-repeat="item in vm.Aquifers" title="{{item.name}}" ng-click="vm.OpenNetworkPage(2,item)" value="">{{item.name}} state network</option>
                     </select>
                     <select ng-model="selectedlItem">
-                        <option value="">Select a local network</option> <!-- not selected / blank option -->
+                        <option value="">Select a local network<b>&nbsp;&nbsp;&#9660;</b></option> <!-- not selected / blank option -->
                         <option ng-repeat="item in vm.LocalNetworks" title="{{item.name}}" ng-click="vm.OpenNetworkPage(3,item)" value="">{{item.name}}</option>
                     </select>
 
