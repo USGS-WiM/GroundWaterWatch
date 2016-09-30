@@ -60,18 +60,6 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(SidebarController.prototype, "showStateNetworks", {
-                get: function () {
-                    try {
-                        return (['LWL', 'LTN', 'SPR'].indexOf(this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) == -1);
-                    }
-                    catch (e) {
-                        return false;
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
             SidebarController.prototype.getLocations = function (term) {
                 return this.searchService.getLocations(term);
             };

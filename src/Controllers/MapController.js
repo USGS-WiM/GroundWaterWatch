@@ -172,18 +172,24 @@ var GroundWaterWatch;
                 if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S) {
                     var filterList = [];
                     if ($stateParams.ncd)
-                        $stateParams.ncd.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.NETWORK)); });
+                        $stateParams.ncd.split(",").forEach(function (fl) {
+                            fl = fl.toUpperCase();
+                            if (fl == "LTN") {
+                                fl = _this.getLTNTimeperiod($stateParams.d) + _this.getLTNFrequency($stateParams.a);
+                            }
+                            filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.NETWORK));
+                        });
                     if ($stateParams.sc && !$stateParams.cc)
-                        $stateParams.sc.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.STATE)); });
+                        $stateParams.sc.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl.toUpperCase() }, GroundWaterWatch.Models.FilterType.STATE)); });
                     else if ($stateParams.sc && $stateParams.cc) {
                         $stateParams.sc.split(",").forEach(function (sc) {
                             $stateParams.cc.split(",").forEach(function (cc) {
-                                filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: cc, statecode: sc }, GroundWaterWatch.Models.FilterType.COUNTY));
+                                filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: cc.toUpperCase(), statecode: sc.toUpperCase() }, GroundWaterWatch.Models.FilterType.COUNTY));
                             }); //next cc
                         }); //next state               
                     } //end if
                     if ($stateParams.S)
-                        $stateParams.S.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl }, GroundWaterWatch.Models.FilterType.SITE)); });
+                        $stateParams.S.split(",").forEach(function (fl) { filterList.push(new GroundWaterWatch.Models.GroundWaterFilterSite({ code: fl.toUpperCase() }, GroundWaterWatch.Models.FilterType.SITE)); });
                     this.gwwServices.AddFilterTypes(filterList);
                     $rootscope["isShown"] = false;
                 }
@@ -623,6 +629,43 @@ var GroundWaterWatch;
             MapController.prototype.clrm = function (id) {
                 if (id === void 0) { id = null; }
                 this.toaster.clear();
+            };
+            MapController.prototype.getLTNTimeperiod = function (val) {
+                try {
+                    switch (val) {
+                        case "1":
+                        case "20":
+                            return 20;
+                        case "2":
+                        case "30":
+                            return 30;
+                        case "3":
+                        case "50":
+                            return 50;
+                        default:
+                            return 20;
+                    } //end switch
+                }
+                catch (e) {
+                    return 20;
+                }
+            };
+            MapController.prototype.getLTNFrequency = function (val) {
+                try {
+                    switch (val) {
+                        case "1":
+                            return "List";
+                        case "2":
+                            return "Month";
+                        case "3":
+                            return "Daily";
+                        default:
+                            return "List";
+                    } //end switch
+                }
+                catch (e) {
+                    return "List";
+                }
             };
             //Constructro
             //-+-+-+-+-+-+-+-+-+-+-+-
