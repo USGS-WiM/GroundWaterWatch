@@ -60,6 +60,18 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(SidebarController.prototype, "showStateNetworks", {
+                get: function () {
+                    try {
+                        return (['LWL', 'LTN', 'SPR'].indexOf(this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) == -1);
+                    }
+                    catch (e) {
+                        return false;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
             SidebarController.prototype.getLocations = function (term) {
                 return this.searchService.getLocations(term);
             };
@@ -120,15 +132,20 @@ var GroundWaterWatch;
                 var url = 'http://groundwaterwatch.usgs.gov';
                 switch (networkType) {
                     case NetworkType.STATE:
-                        url += "/netmapT1L2.asp?ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code, SelectedNetworkType.code);
+                        var params = "?";
+                        if (this.groundwaterwatchService.SelectedPrimaryNetwork.code == "AWL")
+                            params += "sc={0}&sa={1}".format(SelectedNetworkType.code, SelectedNetworkType.abbr);
+                        else
+                            params += "ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code, SelectedNetworkType.code);
+                        url += this.getPrimaryNetworkResource() + params;
                         break;
                     case NetworkType.AQUIFER:
                     case NetworkType.LOCAL:
-                        url += "/netmapT4L1.asp?ncd=" + SelectedNetworkType.code;
+                        url += this.getNetworkResource(SelectedNetworkType.GWWMapType) + "?ncd=" + SelectedNetworkType.code;
                         break;
                 } //endswitch
                 this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", GroundWaterWatch.Models.NotificationType.e_wait, "Page Notification");
-                this.$window.open(url, "_self");
+                this.$window.open(url, "_self"); //_blank
             };
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -159,6 +176,37 @@ var GroundWaterWatch;
                     return false;
                 }
             };
+            SidebarController.prototype.getNetworkResource = function (mapType) {
+                //recieved from 
+                switch (mapType) {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                        return "/net/ogwnetwork.asp";
+                    case 2:
+                        return "/netmapT2L1.asp";
+                    case 4:
+                        return "/netmapT4L1.asp";
+                    case 6:
+                        return "/netmapT6L1.asp";
+                    case 8:
+                        return "/netmapT2L1.asp";
+                    case 9:
+                    case -1:
+                        return "/netmapT9L1.asp";
+                    default:
+                        return "";
+                }
+            };
+            SidebarController.prototype.getPrimaryNetworkResource = function () {
+                switch (this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) {
+                    case "AWL":
+                        return "/StateMap.asp";
+                    default:
+                        return "/NetMapT1L2.asp";
+                } //end switch
+            };
             SidebarController.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
                 if (title === void 0) { title = ""; }
                 if (showclosebtn === void 0) { showclosebtn = false; }
@@ -174,7 +222,7 @@ var GroundWaterWatch;
             //-+-+-+-+-+-+-+-+-+-+-+-
             SidebarController.$inject = ['$scope', 'toaster', '$stateParams', '$analytics', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ModalService', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager', '$window'];
             return SidebarController;
-        })(); //end class
+        }()); //end class
         var ProcedureType;
         (function (ProcedureType) {
             ProcedureType[ProcedureType["Search"] = 1] = "Search";

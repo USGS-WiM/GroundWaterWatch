@@ -68,6 +68,15 @@ module GroundWaterWatch.Controllers {
         public get PrimaryNetworks(): Array<Models.INetwork> {
             return this.groundwaterwatchService.PrimaryNetworkList;
         }
+        public get showStateNetworks(): boolean {
+            try {
+                return (['LWL', 'LTN', 'SPR'].indexOf(this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) == -1);
+            }
+            catch (e) {
+                return false;
+            }
+
+        }
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-
@@ -137,17 +146,22 @@ module GroundWaterWatch.Controllers {
             this.OpenedNetwork = -1;
             var url = 'http://groundwaterwatch.usgs.gov';
             switch (networkType) {
-                case NetworkType.STATE:
-                    url += "/netmapT1L2.asp?ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code,SelectedNetworkType.code);
+                case NetworkType.STATE: 
+                    var params: string = "?";
+                    if (this.groundwaterwatchService.SelectedPrimaryNetwork.code == "AWL")  
+                        params += "sc={0}&sa={1}".format(SelectedNetworkType.code, SelectedNetworkType.abbr);
+                    else
+                        params += "ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code, SelectedNetworkType.code);
+                    url += this.getPrimaryNetworkResource() + params;
                     break;
                 case NetworkType.AQUIFER: case NetworkType.LOCAL:
-                    url += "/netmapT4L1.asp?ncd="+SelectedNetworkType.code;
+
+                    url += this.getNetworkResource(SelectedNetworkType.GWWMapType)+"?ncd="+SelectedNetworkType.code;
                     break;
             }//endswitch
 
             this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", Models.NotificationType.e_wait, "Page Notification");
-            this.$window.open(url, "_self");
-
+            this.$window.open(url, "_self"); //_blank
         }
 
         //Helper Methods
@@ -179,6 +193,35 @@ module GroundWaterWatch.Controllers {
                 this.sm(e.message, Models.NotificationType.e_error, "Proceedure");
                 return false;
             }
+        }
+        private getNetworkResource(mapType: number): string {
+            //recieved from 
+            switch (mapType) {
+                case 1: case 3:case 5:case 7:
+                    return "/net/ogwnetwork.asp";
+                case 2:
+                    return "/netmapT2L1.asp";
+                case 4:
+                    return "/netmapT4L1.asp";
+                case 6:
+                    return "/netmapT6L1.asp";
+                case 8:
+                    return "/netmapT2L1.asp";
+                case 9: case -1:
+                    return "/netmapT9L1.asp";
+                default:
+                    return "";
+            }
+
+
+        }
+        private getPrimaryNetworkResource(): string {
+            switch (this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) {
+                case "AWL":
+                    return "/StateMap.asp";
+                default:
+                    return "/NetMapT1L2.asp"
+            }//end switch
         }
         private sm(m: string, t: Models.NotificationType, title: string = "", showclosebtn: boolean = false, id: number = null, tmout: number = 5000) {
             this.toaster.pop(new Models.Notification(m, t, title, showclosebtn, tmout, id));
