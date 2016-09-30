@@ -613,7 +613,7 @@ module GroundWaterWatch.Controllers {
                     onEachFeature: (feature, layer) => {
                         var strVar = "     <div>";
                         strVar += "          <h3>USGS Well Information <\/h3>";
-                        strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?mt=g&S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"],"AWL") + feature.properties["SITE_NO"] + "</a>";
+                       strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"], feature.properties["NETWORK_CD"]) + feature.properties["SITE_NO"] + "</a>";
                         strVar += "          <br \/>";
                         strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                         strVar += "          <br \/>";

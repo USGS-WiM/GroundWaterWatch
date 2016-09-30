@@ -93,6 +93,11 @@ select:hover {
     ===========================
     ===========================
 */
+/*remove stupid powered by Esri logo on map*/
+.esri-leaflet-logo {
+    display:none !important;
+}
+
 .ams-button {
     font-size: 10pt;
     padding: 6px 14px;

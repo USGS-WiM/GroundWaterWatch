@@ -102,7 +102,7 @@
                         <button class="btn-wim-sm btn-wim-default btn-group-justified" ng-click="vm.removeFilter($index,filter)"><i class="fa fa-times pull-right"></i>&nbsp;&nbsp;<span>{{filter.item.name}} </span></button>
                     </div>-->
 
-                    <select ng-model="selectedsItem">
+                    <select ng-model="selectedsItem" ng-if="vm.showStateNetworks">
                         <option value="">Select a state network<b>&nbsp;&nbsp;&#9660;</b></option> <!-- not selected / blank option -->
                         <option ng-repeat="item in vm.States" title="{{item.name}}" ng-click="vm.OpenNetworkPage(1,item)" value="">{{item.name}} state network</option>
                     </select>

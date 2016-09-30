@@ -2,6 +2,8 @@
     export interface IFilterSite {
         name?: string 
         code: string
+        GWWMapType?: number
+        abbr?:string
     }
     export interface IState extends IFilterSite {
         Counties: Array<ICounty>
