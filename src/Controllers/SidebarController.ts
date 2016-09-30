@@ -68,15 +68,7 @@ module GroundWaterWatch.Controllers {
         public get PrimaryNetworks(): Array<Models.INetwork> {
             return this.groundwaterwatchService.PrimaryNetworkList;
         }
-        public get showStateNetworks(): boolean {
-            try {
-                return (['LWL', 'LTN', 'SPR'].indexOf(this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) == -1);
-            }
-            catch (e) {
-                return false;
-            }
 
-        }
 
         //Constructor
         //-+-+-+-+-+-+-+-+-+-+-+-

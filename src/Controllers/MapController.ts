@@ -258,19 +258,26 @@ module GroundWaterWatch.Controllers {
 
             // check if parameters are being explicitly set. ncd&sc&cc&S
             if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S) {
+
                 var filterList: Array<Models.IGroundWaterFilterSite> = [];
-                if ($stateParams.ncd) (<string>$stateParams.ncd).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code:fl }, Models.FilterType.NETWORK)); });
+                if ($stateParams.ncd) (<string>$stateParams.ncd).split(",").forEach((fl) => {
+                    fl = fl.toUpperCase();
+                    if (fl == "LTN") {
+                        fl = this.getLTNTimeperiod($stateParams.d)+this.getLTNFrequency($stateParams.a);
+                    }
+                    filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.NETWORK));
+                });
                 if ($stateParams.sc && !$stateParams.cc)
-                    (<string>$stateParams.sc).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.STATE)); });
+                    (<string>$stateParams.sc).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl.toUpperCase() }, Models.FilterType.STATE)); });
                 else if ($stateParams.sc && $stateParams.cc) {
                     (<string>$stateParams.sc).split(",").forEach((sc) => {
                         (<string>$stateParams.cc).split(",").forEach((cc) => {
-                            filterList.push(new Models.GroundWaterFilterSite(<Models.ICounty>{ code: cc, statecode: sc }, Models.FilterType.COUNTY));
+                            filterList.push(new Models.GroundWaterFilterSite(<Models.ICounty>{ code: cc.toUpperCase(), statecode: sc.toUpperCase() }, Models.FilterType.COUNTY));
                         });//next cc
                     });//next state               
                 }//end if
 
-                if ($stateParams.S) (<string>$stateParams.S).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl }, Models.FilterType.SITE)); });
+                if ($stateParams.S) (<string>$stateParams.S).split(",").forEach((fl) => { filterList.push(new Models.GroundWaterFilterSite({ code: fl.toUpperCase() }, Models.FilterType.SITE)); });
                 this.gwwServices.AddFilterTypes(filterList);
                 $rootscope["isShown"] = false;
             }
@@ -754,7 +761,38 @@ module GroundWaterWatch.Controllers {
         private clrm(id: number = null) {
             this.toaster.clear();
         }
-
+        private getLTNTimeperiod(val: string):number {
+            try {
+                switch (val) {
+                    case "1": case "20":
+                        return 20;
+                    case "2": case "30":
+                        return 30;
+                    case "3": case "50":
+                        return 50;
+                    default:
+                        return 20;
+                }//end switch
+            } catch (e) {
+                return 20;
+            }
+        }
+        private getLTNFrequency(val: string): string {
+            try {
+                switch (val) {
+                    case "1":
+                        return "List";
+                    case "2":
+                        return "Month";
+                    case "3":
+                        return "Daily";
+                    default:
+                        return "List";
+                }//end switch
+            } catch (e) {
+                return "List";
+            }
+        }
     }//end class
 
     angular.module('GroundWaterWatch.Controllers')

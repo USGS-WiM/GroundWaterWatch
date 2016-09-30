@@ -14,11 +14,10 @@ module GroundWaterWatch {
                 //COUNTY_CD          = cc
                 //SITE_NO            = S
                 
-                //NAT_AQUIFER_CD     = 
-                //LOCAL_AQUIFER_CD   =
-                //AGENCY_CD          =
+                //LTN frequency      = a
+                //LTN timeperiod     = d
                 .state("main", {
-                url: '/?ncd&sc&cc&S',
+                url: '/?ncd&sc&cc&S&a&d',
                 template:'<ui-view/>',
                 views: {
                     'map': {

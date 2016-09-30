@@ -11,7 +11,7 @@ var GroundWaterWatch;
             this.$logProvider = $logProvider;
             this.$stateProvider
                 .state("main", {
-                url: '/?ncd&sc&cc&S',
+                url: '/?ncd&sc&cc&S&a&d',
                 template: '<ui-view/>',
                 views: {
                     'map': {
