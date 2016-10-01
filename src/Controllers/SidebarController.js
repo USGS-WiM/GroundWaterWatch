@@ -118,14 +118,19 @@ var GroundWaterWatch;
             SidebarController.prototype.OpenNetworkPage = function (networkType, SelectedNetworkType) {
                 this.OpenedNetwork = -1;
                 var url = 'http://groundwaterwatch.usgs.gov';
+                var pResource = this.groundwaterwatchService.SelectedPrimaryNetwork.code;
                 switch (networkType) {
                     case NetworkType.STATE:
                         var params = "?";
-                        if (this.groundwaterwatchService.SelectedPrimaryNetwork.code == "AWL")
+                        if (pResource == "AWL")
                             params += "sc={0}&sa={1}".format(SelectedNetworkType.code, SelectedNetworkType.abbr);
+                        else if (pResource.length > 3) {
+                            params += "sc={0}&a={1}&d={2}".format(SelectedNetworkType.code, this.getLTNFrequency(pResource.substr(2)), this.getLTNTimeperiod(pResource.substr(0, 2)));
+                            pResource = "LTN";
+                        }
                         else
-                            params += "ncd={0}&sc={1}".format(this.groundwaterwatchService.SelectedPrimaryNetwork.code, SelectedNetworkType.code);
-                        url += this.getPrimaryNetworkResource() + params;
+                            params += "ncd={0}&sc={1}".format(pResource, SelectedNetworkType.code);
+                        url += this.getPrimaryNetworkResource(pResource) + params;
                         break;
                     case NetworkType.AQUIFER:
                     case NetworkType.LOCAL:
@@ -187,13 +192,49 @@ var GroundWaterWatch;
                         return "";
                 }
             };
-            SidebarController.prototype.getPrimaryNetworkResource = function () {
-                switch (this.groundwaterwatchService.SelectedPrimaryNetwork.code.toUpperCase()) {
+            SidebarController.prototype.getPrimaryNetworkResource = function (NetworkRecsource) {
+                switch (NetworkRecsource) {
                     case "AWL":
                         return "/StateMap.asp";
+                    case "LTN":
+                        return "/ltn/StateMapLTN.asp";
                     default:
                         return "/NetMapT1L2.asp";
                 } //end switch
+            };
+            SidebarController.prototype.getLTNTimeperiod = function (val) {
+                try {
+                    switch (val) {
+                        case "20":
+                            return "1";
+                        case "30":
+                            return "2";
+                        case "50":
+                            return "3";
+                        default:
+                            return "1";
+                    } //end switch
+                }
+                catch (e) {
+                    return "1";
+                }
+            };
+            SidebarController.prototype.getLTNFrequency = function (val) {
+                try {
+                    switch (val) {
+                        case "List":
+                            return "1";
+                        case "Month":
+                            return "2";
+                        case "Daily":
+                            return "3";
+                        default:
+                            return "1";
+                    } //end switch
+                }
+                catch (e) {
+                    return "1";
+                }
             };
             SidebarController.prototype.sm = function (m, t, title, showclosebtn, id, tmout) {
                 if (title === void 0) { title = ""; }
