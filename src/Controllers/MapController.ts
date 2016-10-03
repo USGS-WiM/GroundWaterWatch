@@ -620,7 +620,7 @@ module GroundWaterWatch.Controllers {
                     onEachFeature: (feature, layer) => {
                         var strVar = "     <div>";
                         strVar += "          <h3>USGS Well Information <\/h3>";
-                       strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?S={0}&ncd={1}' target='_blank' >".format(feature.properties["SITE_NO"], feature.properties["NETWORK_CD"]) + feature.properties["SITE_NO"] + "</a>";
+                       strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/AWLSites.asp?{0}' target='_blank' >".format('S='+feature.properties["SITE_NO"] + this.getNetworkLinkParams(feature.properties["NETWORK_CD"])) + feature.properties["SITE_NO"] + "</a>";
                         strVar += "          <br \/>";
                         strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                         strVar += "          <br \/>";
@@ -761,7 +761,16 @@ module GroundWaterWatch.Controllers {
         private clrm(id: number = null) {
             this.toaster.clear();
         }
-        private getLTNTimeperiod(val: string):number {
+        private getNetworkLinkParams(networkCode: string): string {
+            if (networkCode.length == 3) return "&ncd=" + networkCode;
+            else
+                var tplookup = { "20": "1", "30": "2", "50": "3" };
+                var freqlookup = { "List": "1", "Month": "2", "Daily": "3" };
+
+                return "&ncd=LTN&a={0}&d={1}".format(freqlookup[networkCode.substr(2)], tplookup[networkCode.substr(0, 2)]);
+           
+        }
+        private getLTNTimeperiod(val: string): number {
             try {
                 switch (val) {
                     case "1": case "20":
