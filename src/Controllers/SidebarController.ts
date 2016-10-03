@@ -135,6 +135,7 @@ module GroundWaterWatch.Controllers {
         }
 
         public OpenNetworkPage(networkType: NetworkType, SelectedNetworkType: Models.IFilterSite) {
+            console.log("opening link " + networkType.toString());
             this.OpenedNetwork = -1;
             var url = 'http://groundwaterwatch.usgs.gov';
             var pResource:string = this.groundwaterwatchService.SelectedPrimaryNetwork.code;
@@ -156,7 +157,7 @@ module GroundWaterWatch.Controllers {
                     url += this.getNetworkResource(SelectedNetworkType.GWWMapType)+"?ncd="+SelectedNetworkType.code;
                     break;
             }//endswitch
-
+            console.log(url);
             this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", Models.NotificationType.e_wait, "Page Notification");
             this.$window.open(url, "_self"); //_blank
         }

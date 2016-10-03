@@ -116,6 +116,7 @@ var GroundWaterWatch;
                 return -1;
             };
             SidebarController.prototype.OpenNetworkPage = function (networkType, SelectedNetworkType) {
+                console.log("opening link " + networkType.toString());
                 this.OpenedNetwork = -1;
                 var url = 'http://groundwaterwatch.usgs.gov';
                 var pResource = this.groundwaterwatchService.SelectedPrimaryNetwork.code;
@@ -137,6 +138,7 @@ var GroundWaterWatch;
                         url += this.getNetworkResource(SelectedNetworkType.GWWMapType) + "?ncd=" + SelectedNetworkType.code;
                         break;
                 } //endswitch
+                console.log(url);
                 this.sm("Opening " + SelectedNetworkType.name + " page. Please wait.", GroundWaterWatch.Models.NotificationType.e_wait, "Page Notification");
                 this.$window.open(url, "_self"); //_blank
             };
