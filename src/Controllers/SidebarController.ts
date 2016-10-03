@@ -56,11 +56,44 @@ module GroundWaterWatch.Controllers {
         public SelectedFilters: Array<Models.IGroundWaterFilterSite>;   
         public OpenedNetwork: NetworkType; 
 
+        private _selectedStateNetworkItem: Models.IFilterSite;
+        public get selectedStateNetworkItem(): Models.IFilterSite {
+            return this._selectedStateNetworkItem;
+        }
+        public set selectedStateNetworkItem(val: Models.IFilterSite) {
+            if (!val.hasOwnProperty("name")) return;
+            if (this._selectedStateNetworkItem == val || val == null) return;
+
+            this._selectedStateNetworkItem = val;
+            this.OpenNetworkPage(NetworkType.STATE, val);
+        }
         public get States(): Array<Models.IState> {
             return this.groundwaterwatchService.StateList;
         }
+        private _selectedAquiferNetworkItem: Models.IFilterSite;
+        public get selectedAquiferNetworkItem(): Models.IFilterSite {
+            return this._selectedStateNetworkItem;
+        }
+        public set selectedAquiferNetworkItem(val: Models.IFilterSite) {
+            if (!val.hasOwnProperty("name")) return;
+            if (this._selectedStateNetworkItem == val || val == null) return;
+
+            this._selectedStateNetworkItem = val;
+            this.OpenNetworkPage(NetworkType.AQUIFER, val);
+        }
         public get Aquifers(): Array<Models.IAquifer> {
             return this.groundwaterwatchService.AquiferList;
+        }
+        private _selectedLocalNetworkItem: Models.IFilterSite;
+        public get selectedLocalNetworkItem(): Models.IFilterSite {
+            return this._selectedStateNetworkItem;
+        }
+        public set selectedLocalNetworkItem(val: Models.IFilterSite) {
+            if (!val.hasOwnProperty("name")) return;
+            if (this._selectedStateNetworkItem == val || val == null) return;
+
+            this._selectedStateNetworkItem = val;
+            this.OpenNetworkPage(NetworkType.LOCAL, val);
         }
         public get LocalNetworks(): Array<Models.INetwork> {
             return this.groundwaterwatchService.NetworkList;

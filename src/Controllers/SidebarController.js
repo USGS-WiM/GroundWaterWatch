@@ -32,6 +32,21 @@ var GroundWaterWatch;
                 this.eventManager = eventmanager;
                 this.init();
             }
+            Object.defineProperty(SidebarController.prototype, "selectedStateNetworkItem", {
+                get: function () {
+                    return this._selectedStateNetworkItem;
+                },
+                set: function (val) {
+                    if (!val.hasOwnProperty("name"))
+                        return;
+                    if (this._selectedStateNetworkItem == val || val == null)
+                        return;
+                    this._selectedStateNetworkItem = val;
+                    this.OpenNetworkPage(NetworkType.STATE, val);
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(SidebarController.prototype, "States", {
                 get: function () {
                     return this.groundwaterwatchService.StateList;
@@ -39,9 +54,39 @@ var GroundWaterWatch;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(SidebarController.prototype, "selectedAquiferNetworkItem", {
+                get: function () {
+                    return this._selectedStateNetworkItem;
+                },
+                set: function (val) {
+                    if (!val.hasOwnProperty("name"))
+                        return;
+                    if (this._selectedStateNetworkItem == val || val == null)
+                        return;
+                    this._selectedStateNetworkItem = val;
+                    this.OpenNetworkPage(NetworkType.AQUIFER, val);
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(SidebarController.prototype, "Aquifers", {
                 get: function () {
                     return this.groundwaterwatchService.AquiferList;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(SidebarController.prototype, "selectedLocalNetworkItem", {
+                get: function () {
+                    return this._selectedStateNetworkItem;
+                },
+                set: function (val) {
+                    if (!val.hasOwnProperty("name"))
+                        return;
+                    if (this._selectedStateNetworkItem == val || val == null)
+                        return;
+                    this._selectedStateNetworkItem = val;
+                    this.OpenNetworkPage(NetworkType.LOCAL, val);
                 },
                 enumerable: true,
                 configurable: true
