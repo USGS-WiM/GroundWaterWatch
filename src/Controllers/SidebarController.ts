@@ -176,8 +176,9 @@ module GroundWaterWatch.Controllers {
                 case NetworkType.STATE: 
                     var params: string = "?";
                     if (pResource == "AWL")  
-                        params += "sc={0}&sa={1}".format(SelectedNetworkType.code, SelectedNetworkType.abbr);
-                    else if (pResource.length > 3) {                        
+                        params += "sc={0}&sa={1}".format(SelectedNetworkType.code, SelectedNetworkType.abbr);                        
+                    else if (pResource.length > 3) {
+                        //redigest longtermnetwork query
                         params += "sc={0}&a={1}&d={2}".format(SelectedNetworkType.code, this.getLTNFrequency(pResource.substr(2)), this.getLTNTimeperiod(pResource.substr(0, 2))); 
                         pResource = "LTN"
                     }
@@ -229,17 +230,17 @@ module GroundWaterWatch.Controllers {
             //recieved from 
             switch (mapType) {
                 case 1: case 3:case 5:case 7:
-                    return "/net/ogwnetwork.asp";
+                    return configuration.redirects["NetworkResource1357"];
                 case 2:
-                    return "/netmapT2L1.asp";
+                    return configuration.redirects["NetworkResource2"];
                 case 4:
-                    return "/netmapT4L1.asp";
+                    return configuration.redirects["NetworkResource4"];
                 case 6:
-                    return "/netmapT6L1.asp";
+                    return configuration.redirects["NetworkResource6"];
                 case 8:
-                    return "/netmapT2L1.asp";
+                    return configuration.redirects["NetworkResource8"];
                 case 9: case -1:
-                    return "/netmapT9L1.asp";
+                    return configuration.redirects["NetworkResource9"];
                 default:
                     return "";
             }
@@ -249,11 +250,11 @@ module GroundWaterWatch.Controllers {
         private getPrimaryNetworkResource(NetworkRecsource:string): string {
             switch (NetworkRecsource) {
                 case "AWL":
-                    return "/StateMap.asp";
+                    return configuration.redirects["StateMap"];
                 case "LTN":
-                    return "/ltn/StateMapLTN.asp";
+                    return configuration.redirects["LTNStateMap"];
                 default:
-                    return "/NetMapT1L2.asp"
+                    return configuration.redirects["NetMap"];
             }//end switch
         }
         private getLTNTimeperiod(val: string): string {
