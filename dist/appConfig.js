@@ -5,7 +5,7 @@ configuration.baseurls =
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    'GroundWaterWatch': 'http://cida-test.er.usgs.gov/gww-geoserver'
+    'GroundWaterWatch': 'https://cida.usgs.gov/gww-geoserver/'
 }
 
 configuration.queryparams =
@@ -14,7 +14,6 @@ configuration.queryparams =
     'NLCDQueryService': '/LandCover/USGS_EROS_LandCover_NLCD/MapServer/4',
     'WMSquery': '/groundwaterwatch/wms?INFO_FORMAT=application/json&EXCEPTIONS=application/json&REQUEST=GetFeatureInfo&SERVICE=wms&VERSION=1.1.0&WIDTH={0}&HEIGHT={1}&X={2}&Y={3}&BBOX={4}&LAYERS=groundwaterwatch:Latest_WL_Percentile&QUERY_LAYERS=groundwaterwatch:Latest_WL_Percentile&buffer=10',
     'WFSquery': '/groundwaterwatch/wfs?SERVICE=wfs&VERSION=1.1.0&outputFormat=application/json&REQUEST=getfeature&typename=groundwaterwatch:Latest_WL_Percentile'
-
 }
 
 configuration.basemaps =
@@ -92,6 +91,18 @@ configuration.basemaps =
     }
 }// end baselayer
 
+configuration.redirects = {
+    Site: "AWLSitesTEST.asp",
+    StateMap: "/StateMapTEST.asp",
+    LTNStateMap: "/ltn/StateMapLTN.asp",
+    NetMap: "/NetMapT1L2.asp",
+    NetworkResource1357:"/net/ogwnetwork.asp",
+    NetworkResource2:"/netmapT2L1.asp",
+    NetworkResource4:"/netmapT4L1.asp",
+    NetworkResource6:"/netmapT6L1.asp",
+    NetworkResource8:"/netmapT2L1.asp",
+    NetworkResource9:"/netmapT9L1.asp"
+}
 configuration.overlayedLayers = {
     draw: {
         "name": 'draw',
