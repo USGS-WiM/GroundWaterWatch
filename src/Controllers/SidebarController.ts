@@ -170,7 +170,7 @@ module GroundWaterWatch.Controllers {
         public OpenNetworkPage(networkType: NetworkType, SelectedNetworkType: Models.IFilterSite) {
             console.log("opening link " + networkType.toString());
             this.OpenedNetwork = -1;
-            var url = 'http://groundwaterwatch.usgs.gov';
+            var url = configuration.baseurls["gwwURL"];
             var pResource:string = this.groundwaterwatchService.SelectedPrimaryNetwork.code;
             switch (networkType) {
                 case NetworkType.STATE: 

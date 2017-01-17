@@ -163,7 +163,7 @@ var GroundWaterWatch;
             SidebarController.prototype.OpenNetworkPage = function (networkType, SelectedNetworkType) {
                 console.log("opening link " + networkType.toString());
                 this.OpenedNetwork = -1;
-                var url = 'http://groundwaterwatch.usgs.gov';
+                var url = configuration.baseurls["gwwURL"];
                 var pResource = this.groundwaterwatchService.SelectedPrimaryNetwork.code;
                 switch (networkType) {
                     case NetworkType.STATE:
