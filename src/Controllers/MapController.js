@@ -492,7 +492,7 @@ var GroundWaterWatch;
                         onEachFeature: function (feature, layer) {
                             var strVar = "     <div>";
                             strVar += "          <h3>USGS Well Information <\/h3>";
-                            strVar += "          <strong>Station: <\/strong><a href='http://groundwaterwatch.usgs.gov/{0}?{1}' target='_blank' >".format(configuration.redirects["Site"], 'S=' + feature.properties["SITE_NO"] + _this.getNetworkLinkParams(feature.properties["NETWORK_CD"])) + feature.properties["SITE_NO"] + "</a>";
+                            strVar += "          <strong>Station: <\/strong><a href='{0}/{1}?{2}' target='_blank' >".format(configuration.baseurls["gwwURL"], configuration.redirects["Site"], 'S=' + feature.properties["SITE_NO"] + _this.getNetworkLinkParams(feature.properties["NETWORK_CD"])) + feature.properties["SITE_NO"] + "</a>";
                             strVar += "          <br \/>";
                             strVar += "          <strong>Name: <\/strong>" + feature.properties["SITE_NAME"];
                             strVar += "          <br \/>";

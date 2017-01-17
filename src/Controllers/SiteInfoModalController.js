@@ -58,7 +58,8 @@ var GroundWaterWatch;
             SiteInfoModalController.prototype.getOldGWWpage = function () {
                 var _this = this;
                 this.pagecontent = '';
-                var url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fgroundwaterwatch.usgs.gov%2FAWLSites.asp%3Fmt%3Dg%26S%3D" + this.gwwServices.SelectedGWSite['properties']['SITE_NO'] + "%26ncd%3Dawl'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+                var url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'{0}/AWLSites.asp%3Fmt%3Dg%26S%3D" + this.gwwServices.SelectedGWSite['properties']['SITE_NO'] + "%26ncd%3Dawl'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+                url = url.format(configuration.baseurls["gwwURL"]);
                 var request = new WiM.Services.Helpers.RequestInfo(url, true);
                 this.Execute(request).then(function (response) {
                     _this.siteLoaded = true;
@@ -70,13 +71,13 @@ var GroundWaterWatch;
                         //change relative URLs
                         replaced = _this.replaceAll(replaced, 'iframe', 'div');
                         replaced = _this.replaceAll(replaced, '<td valign="top" width="550">', '<td valign="top" width="550" style="display:none;">');
-                        replaced = _this.replaceAll(replaced, 'src="../', 'src="http://groundwaterwatch.usgs.gov/');
-                        replaced = _this.replaceAll(replaced, 'src="images/', 'src="http://groundwaterwatch.usgs.gov/images/');
-                        replaced = _this.replaceAll(replaced, 'src="../images/', 'src="http://groundwaterwatch.usgs.gov/images/');
-                        replaced = _this.replaceAll(replaced, 'src="BandPlots-small/', 'src="http://groundwaterwatch.usgs.gov/BandPlots-small/');
-                        replaced = _this.replaceAll(replaced, 'src="DVPlotsSmall/', 'src="http://groundwaterwatch.usgs.gov/DVPlotsSmall/');
-                        replaced = _this.replaceAll(replaced, 'src="wlplotssmall/', 'src="http://groundwaterwatch.usgs.gov/wlplotssmall/');
-                        replaced = _this.replaceAll(replaced, 'src="plots-prsmall/', 'src="http://groundwaterwatch.usgs.gov/plots-prsmall/');
+                        replaced = _this.replaceAll(replaced, 'src="../', 'src="' + configuration.baseurls["gwwURL"]);
+                        replaced = _this.replaceAll(replaced, 'src="images/', 'src="{0}/images/'.format(configuration.baseurls["gwwURL"]));
+                        replaced = _this.replaceAll(replaced, 'src="../images/', 'src="{}0/images/'.format(configuration.baseurls["gwwURL"]));
+                        replaced = _this.replaceAll(replaced, 'src="BandPlots-small/', 'src="{0}/BandPlots-small/'.format(configuration.baseurls["gwwURL"]));
+                        replaced = _this.replaceAll(replaced, 'src="DVPlotsSmall/', 'src="{0}/DVPlotsSmall/'.format(configuration.baseurls["gwwURL"]));
+                        replaced = _this.replaceAll(replaced, 'src="wlplotssmall/', 'src="{0}/wlplotssmall/'.format(configuration.baseurls["gwwURL"]));
+                        replaced = _this.replaceAll(replaced, 'src="plots-prsmall/', 'src="{0}/plots-prsmall/'.format(configuration.baseurls["gwwURL"]));
                         replaced = _this.replaceAll(replaced, 'color="red"', 'color="black"');
                         _this.pagecontent = replaced;
                     }

@@ -3,6 +3,7 @@ configuration.projectName = "Groundwater Watch";
 configuration.baseurls =
 {   
     'NWISurl': 'http://waterservices.usgs.gov/nwis',
+    'gwwURL': 'http://152.61.235.95',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
     'GroundWaterWatch': 'https://cida.usgs.gov/gww-geoserver/'
