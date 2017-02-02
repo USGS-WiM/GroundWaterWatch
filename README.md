@@ -1,5 +1,7 @@
 # GroundWaterWatch
 
+[![Join the chat at https://gitter.im/USGS-WiM/GroundWaterWatch](https://badges.gitter.im/USGS-WiM/GroundWaterWatch.svg)](https://gitter.im/USGS-WiM/GroundWaterWatch?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Project setup
 
 ##### required software
