@@ -26,4 +26,10 @@ typings install
 ```
 [upgrade from tsd to typings] (https://github.com/DefinitelyTyped/tsd/issues/269)
 
+#### 2.  Run project
+
+```bash
+gulp watch
+```
+
 ------

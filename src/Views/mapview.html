@@ -2,11 +2,13 @@
     <leaflet id="mainMap" layers="vm.layers" geojson="vm.geojson" geojson-nested="true" center="vm.center" controls="vm.controls" markers="vm.markers" defaults="vm.mapDefaults" bounds="vm.bounds" ng-style="{cursor:vm.cursorStyle}">
         <!--<i id="loadingSpinner" class="fa fa-spinner fa-5x fa-spin"></i>-->
         <wim-legend></wim-legend>
-        <div class="map-position leaflet-bottom leaflet-left">
+        
+        <div class="map-position leaflet-bottom leaflet-left map-info">
             <span>Zoom Level: {{vm.center.zoom}}</span> <br />
             <span id="mapscale">Map Scale: 1:{{vm.nominalZoomLevel}}</span> <br />
             <span>Lat: {{(vm.mapPoint.lat).toFixed(4)}}, Lon: {{(vm.mapPoint.lng).toFixed(4)}}</span>
         </div>
+
         <div ng-if="isShown" ng-class="vm.explorationToolsExpanded ? 'exploration-tools-expanded ' : 'exploration-tools-collapsed '" ng-click="vm.explorationToolsExpanded = true; $event.stopPropagation(); $event.preventDefault();" ng-init="vm.explorationToolsExpanded == false">
             <div ng-show="vm.explorationToolsExpanded">
                 <div class="row exploration-tools-header">
@@ -31,6 +33,15 @@
             </div>
         </div>
     </leaflet>
+
+
+    <!-- LEGEND -->
+    <button class="legend-image-toggle">Legend</button>
+    <div class="legend-image">
+        <img src="https://cloud.githubusercontent.com/assets/12058013/19658290/69a82164-99f5-11e6-8851-13fce5a28033.png" />
+    </div>
+
+    
     <!--sitelist Table if just-->
 </div>
 <div ng-if="vm.SiteListEnabled" class="well well-sm" ng-show="vm.SiteList.length > 0">
