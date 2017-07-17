@@ -565,6 +565,8 @@ var GroundWaterWatch;
                 var _this = this;
                 if (!this.initialized)
                     return;
+                //remove any selected sites
+                this.removeGeoJson("gwwsite", true);
                 this.leafletData.getMap("mainMap").then(function (map) {
                     _this.leafletData.getLayers("mainMap").then(function (maplayers) {
                         //gww sites

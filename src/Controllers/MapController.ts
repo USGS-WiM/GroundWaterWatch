@@ -701,6 +701,10 @@ module GroundWaterWatch.Controllers {
         }
         private updateMapFilters() {
             if (!this.initialized) return;
+
+            //remove any selected sites
+            this.removeGeoJson("gwwsite", true);
+
             this.leafletData.getMap("mainMap").then((map: any) => {
             this.leafletData.getLayers("mainMap").then((maplayers: any) => {
                 //gww sites
