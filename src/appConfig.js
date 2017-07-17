@@ -106,11 +106,11 @@ configuration.redirects = {
 }
 configuration.overlayedLayers = {
     draw: {
-        "name": 'draw',
-        "type": 'group',
-        "visible": true,
-        "layerParams": {
-            "showOnSelector": false,
+        name: 'draw',
+        type: 'group',
+        visible: true,
+        layerParams: {
+            'showOnSelector': false,
         }
     },
     states: {
@@ -121,6 +121,9 @@ configuration.overlayedLayers = {
         layerOptions: {
             layers: [7],
             opacity: 1
+        },
+        layerParams: {
+            'showOnSelector': false,
         }
     },
     counties: {
@@ -133,6 +136,9 @@ configuration.overlayedLayers = {
             minZoom: 7,
             maxZoom: 20,
             opacity: 1
+        },
+        layerParams: {
+            'showOnSelector': false,
         }
     },
     gww: {
