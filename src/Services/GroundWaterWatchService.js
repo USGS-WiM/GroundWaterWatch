@@ -266,7 +266,7 @@ var GroundWaterWatch;
                 this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
-                this.mapCenter = new Center(39, -100, 3);
+                this.mapCenter = new Center(38, -96, 4);
             };
             GroundWaterWatchService.prototype.loadLookups = function () {
                 this.loadStates();
