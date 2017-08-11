@@ -1,8 +1,8 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/07c949931fc7a0582a52eaad94a64fd052681d56/angularjs/angular.d.ts",
-    "raw": "registry:dt/angular#1.5.0+20160613151008",
-    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/07c949931fc7a0582a52eaad94a64fd052681d56/angularjs/angular.d.ts"
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/1c4a34873c9e70cce86edd0e61c559e43dfa5f75/angularjs/angular.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#1c4a34873c9e70cce86edd0e61c559e43dfa5f75",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/1c4a34873c9e70cce86edd0e61c559e43dfa5f75/angularjs/angular.d.ts"
   }
 }

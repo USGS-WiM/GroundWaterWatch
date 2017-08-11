@@ -43,9 +43,9 @@ function inc(importance) {
 }
 
 //tasks for version tags
-gulp.task('patch', ['dist'], function () { return inc('patch'); })
-gulp.task('feature', ['dist'], function () { return inc('minor'); })
-gulp.task('release', ['dist'], function () { return inc('major'); })
+gulp.task('patch', ['dist'], function () { return inc('patch'); });
+gulp.task('feature', ['dist'], function () { return inc('minor'); });
+gulp.task('release', ['dist'], function () { return inc('major'); });
 
 //push task for versioning
 gulp.task('push', function () {
@@ -121,10 +121,17 @@ gulp.task('leaflet', function () {
         .pipe(size());
 });
 
+// usgs-search-api
+gulp.task('usgs-search-api', function () {
+    return gulp.src('node_modules/usgs-search-api/dist/*.gif')
+        .pipe(gulp.dest('dist/styles/images'))
+        .pipe(size());
+});
+
 // appConfig
 gulp.task('appConfig', function () {
-    return gulp.src(['src/appConfig.js', 'src/ncd.js', 'src/sc.js', 'src/acd.js','src/lcd.js', 'src/version.js', 'web.config'])
-        .pipe(gulp.dest('dist/'))
+    return gulp.src(['src/appConfig.js', 'src/ncd.js', 'src/sc.js', 'src/acd.js', 'src/lcd.js', 'src/version.js', 'web.config'])
+        .pipe(gulp.dest('dist/'));
 });
 
 // Clean
@@ -139,7 +146,7 @@ gulp.task('clean', function (cb) {
 });
 
 // build dist
-gulp.task('dist', ['html', 'images', 'leaflet', 'appConfig']);
+gulp.task('dist', ['html', 'images', 'leaflet', 'usgs-search-api', 'appConfig']);
 
 // Default task
 gulp.task('default', ['clean'], function () {

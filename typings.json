@@ -1,9 +1,9 @@
 {
   "globalDependencies": {
-    "angular": "registry:dt/angular#1.5.0+20160613151008",
-    "angular-ui-bootstrap": "registry:dt/angular-ui-bootstrap#0.13.3+20160602140119",
-    "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
-    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
-    "leaflet": "registry:dt/leaflet#0.7.3+20160613144025"
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#1c4a34873c9e70cce86edd0e61c559e43dfa5f75",
+    "angular-ui-bootstrap": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-bootstrap/angular-ui-bootstrap.d.ts#5d3116c83ea2aa0afcfef61c8cbbf6d7a4cbc09f",
+    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#655f8c1bf3c71b0e1ba415b36309604f79326ac8",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#470954c4f427e0805a2d633636a7c6aa7170def8",
+    "leaflet": "github:DefinitelyTyped/DefinitelyTyped/leaflet/leaflet.d.ts#dd638012d63e069f2c99d06ef4dcc9616a943ee4"
   }
 }

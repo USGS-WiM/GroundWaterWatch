@@ -118,9 +118,6 @@ module GroundWaterWatch.Controllers {
             this.init();
         }
 
-        public getLocations(term: string):ng.IPromise<Array<WiM.Services.ISearchAPIOutput>> {
-            return this.searchService.getLocations(term);
-        }
         public setProcedureType(pType: ProcedureType) {
             if (this.selectedProcedure == pType) { this.selectedProcedure = 0; return;}
             if (!this.canUpdateProcedure(pType)) {

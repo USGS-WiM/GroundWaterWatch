@@ -9,34 +9,32 @@
                     </div>
 
                     <div id="searchWrapper">
-                        <div class="wim-alert">Use the map or the search tool to zoom to an area of interest</div>
+                        <div id="searchBox"></div>
+                        <button class="btn-link fullwidth" ng-click="vm.showSearchHelp = !vm.showSearchHelp">
+                            <span ng-show="!vm.showSearchHelp"><i class="fa fa-question-circle"></i> Help</span>
+                            <span ng-show="vm.showSearchHelp"><i class="fa fa-close"></i> Close Help</span>
+                        </button>
 
-                        <div class="row">
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                  <div id="sapi_searchTextBoxDiv">Loading Search Bar...</div>
-                                  <span class="input-group-btn">
-                                    <button id="searchSubmit" class="btn-wim-sm btn-wim-success" type="button" ng-click="vm.startSearch($event)">Go!</button>
-                                  </span>
-                                </div><!-- /input-group -->
-                                </div>
-                            <div class="col-md-2"><button class="btn-wim-sm btn-wim-info" ng-click="vm.showSearchHelp = !vm.showSearchHelp"><i class="fa fa-question-circle"></i></button></div>
-                        </div>
-                        <div ng-init="vm.showSearchHelp = false" ng-show="vm.showSearchHelp">
-                            <div class="wim-alert">
-                                <h6 class="wim-list-header">Supported search strings:</h6>
-                                <p>Use 'enter' key or "Go!" button to submit</p>
-                                <ul>
-                                    <li>GNIS locations</li>
-                                    <li>USGS Sites</li>
-                                    <li>Zip Codes</li>
-                                    <li>Area Codes</li>
-                                    <li>States</li>
-                                    <li>Lat/Long (ie. '43.9,-72.1')</li>
-                                    <li>Street Address</li>
-                                </ul>
+                        <!-- supported search strings -->
+                        <div class="banner info banner-no-icon" ng-init="vm.showSearchHelp = false" ng-show="vm.showSearchHelp" style="margin-top: 0px;">
+                            <div class="banner-body">
+                                <h5>Supported search strings:</h5>
+                                <p>
+                                    <br />
+                                    GNIS locations<br />
+                                    USGS Sites<br />
+                                    Zip Codes<br />
+                                    Area Codes<br />
+                                    States<br />
+                                    Lat/Long ('43.9,-72.1' or '43.9N,72.1W')<br />
+                                    Street Address<br />
+                                    Hydrologic Unit<br />
+                                    <br />
+                                    Search provided by<br /><a href="https://txpub.usgs.gov/dss/search_api/2.0/" target="_blank" style="text-decoration:underline !important; padding: 0 !important;">USGS Search JavaScript API</a>
+                                </p>
                             </div>
-                        </div>
+                        </div><!-- End supported search strings -->
+
                     </div>
 
                 </div>
@@ -87,7 +85,8 @@
                                 </div>
                             </div>
                             <div class="panel-body nopadding">
-                                <leaflet ng-attr-id="{{pn.code}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
+                                <leaflet ng-if="pn.code != 'NCH'" ng-attr-id="{{pn.code}}" width="100%" height="200px" defaults="vm.defaults" layers="vm.layers" center="vm.center"></leaflet>
+                                <img ng-if="pn.code == 'NCH'" src="./images/nch.jpg" alt="National Composite Hydrographs" height="200">
                             </div>
                         </div>
                     </div>

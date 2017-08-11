@@ -26,16 +26,16 @@ var GroundWaterWatch;
                 this.Type = t;
             }
             return GroundWaterFilterSite;
-        }());
-        Models.GroundWaterFilterSite = GroundWaterFilterSite; //end class
+        }()); //end class
+        Models.GroundWaterFilterSite = GroundWaterFilterSite;
+        var FilterType;
         (function (FilterType) {
             FilterType[FilterType["STATE"] = 1] = "STATE";
             FilterType[FilterType["COUNTY"] = 2] = "COUNTY";
             FilterType[FilterType["NETWORK"] = 3] = "NETWORK";
             FilterType[FilterType["AQUIFER"] = 4] = "AQUIFER";
             FilterType[FilterType["SITE"] = 5] = "SITE";
-        })(Models.FilterType || (Models.FilterType = {}));
-        var FilterType = Models.FilterType;
+        })(FilterType = Models.FilterType || (Models.FilterType = {}));
     })(Models = GroundWaterWatch.Models || (GroundWaterWatch.Models = {}));
 })(GroundWaterWatch || (GroundWaterWatch = {})); //end module 
 //# sourceMappingURL=SitesFilter.js.map

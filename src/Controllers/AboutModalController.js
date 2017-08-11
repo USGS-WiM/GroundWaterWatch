@@ -85,11 +85,11 @@ var GroundWaterWatch;
             AboutModalController.prototype.eraseCookie = function (name) {
                 this.createCookie(name, "", -1);
             };
-            //Constructor
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            AboutModalController.$inject = ['$scope', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
             return AboutModalController;
         }()); //end  class
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        AboutModalController.$inject = ['$scope', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.AboutModalController', AboutModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

@@ -45,16 +45,16 @@ var GroundWaterWatch;
                 } //end switch
             };
             return Notification;
-        }());
-        Models.Notification = Notification; //end class
+        }()); //end class
+        Models.Notification = Notification;
+        var NotificationType;
         (function (NotificationType) {
             NotificationType[NotificationType["e_error"] = -1] = "e_error";
             NotificationType[NotificationType["e_info"] = 0] = "e_info";
             NotificationType[NotificationType["e_wait"] = 1] = "e_wait";
             NotificationType[NotificationType["e_success"] = 2] = "e_success";
             NotificationType[NotificationType["e_warning"] = 3] = "e_warning";
-        })(Models.NotificationType || (Models.NotificationType = {}));
-        var NotificationType = Models.NotificationType;
+        })(NotificationType = Models.NotificationType || (Models.NotificationType = {}));
     })(Models = GroundWaterWatch.Models || (GroundWaterWatch.Models = {}));
 })(GroundWaterWatch || (GroundWaterWatch = {})); //end module   
 //# sourceMappingURL=Notification.js.map

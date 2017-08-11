@@ -1,11 +1,16 @@
 //------------------------------------------------------------------------------
 //----- SiteInfoModalController -------------------------------------------------
 //------------------------------------------------------------------------------
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
@@ -27,21 +32,21 @@ var GroundWaterWatch;
         var SiteInfoModalController = (function (_super) {
             __extends(SiteInfoModalController, _super);
             function SiteInfoModalController($scope, $http, $sce, modal, gwwservice, eventManager) {
-                var _this = this;
-                _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
-                $scope.vm = this;
-                this.sce = $sce;
-                this.modalInstance = modal;
-                this.gwwServices = gwwservice;
-                this.eventManager = eventManager;
-                this.siteLoaded = false;
-                this.init();
+                var _this = _super.call(this, $http, configuration.baseurls['GroundWaterWatch']) || this;
+                $scope.vm = _this;
+                _this.sce = $sce;
+                _this.modalInstance = modal;
+                _this.gwwServices = gwwservice;
+                _this.eventManager = eventManager;
+                _this.siteLoaded = false;
+                _this.init();
                 //subscribe to events
-                this.eventManager.SubscribeToEvent(GroundWaterWatch.Services.onSelectedGWSiteChanged, new WiM.Event.EventHandler(function () {
+                _this.eventManager.SubscribeToEvent(GroundWaterWatch.Services.onSelectedGWSiteChanged, new WiM.Event.EventHandler(function () {
                     console.log('detected a mouse click/gww site query', _this.gwwServices.SelectedGWSite);
                     if (_this.gwwServices.SelectedGWSite)
                         _this.getOldGWWpage();
                 }));
+                return _this;
             }
             //Methods  
             //-+-+-+-+-+-+-+-+-+-+-+-
@@ -96,11 +101,11 @@ var GroundWaterWatch;
                 //place anything that needs to be initialized here
                 this.pagecontent = '';
             };
-            //Constructor
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            SiteInfoModalController.$inject = ['$scope', '$http', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
             return SiteInfoModalController;
         }(WiM.Services.HTTPServiceBase)); //end  class
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        SiteInfoModalController.$inject = ['$scope', '$http', '$sce', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService', 'WiM.Event.EventManager'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.SiteInfoModalController', SiteInfoModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

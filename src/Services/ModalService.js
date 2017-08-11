@@ -91,12 +91,12 @@ var GroundWaterWatch;
             };
             return ModalService;
         }()); //end class
+        var ModalType;
         (function (ModalType) {
             ModalType[ModalType["e_filter"] = 1] = "e_filter";
             ModalType[ModalType["e_about"] = 2] = "e_about";
             ModalType[ModalType["e_siteinfo"] = 3] = "e_siteinfo";
-        })(Services.ModalType || (Services.ModalType = {}));
-        var ModalType = Services.ModalType;
+        })(ModalType = Services.ModalType || (Services.ModalType = {}));
         factory.$inject = ['$modal'];
         function factory($modal) {
             return new ModalService($modal);
