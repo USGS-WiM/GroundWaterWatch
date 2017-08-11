@@ -93,7 +93,7 @@ var GroundWaterWatch;
                 this.center = {
                     lat: 38,
                     lng: -96,
-                    zoom: 4
+                    zoom: 1
                 };
                 this.defaults = {
                     scrollWheelZoom: false,
@@ -102,7 +102,8 @@ var GroundWaterWatch;
                     boxZoom: false,
                     keyboard: false,
                     zoomControl: false,
-                    attributionControl: false
+                    attributionControl: false,
+                    dragging: false
                 };
                 this.layers = {
                     //baselayers: {

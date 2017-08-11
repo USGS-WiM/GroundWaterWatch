@@ -40,7 +40,7 @@ var GroundWaterWatch;
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
         'angulartics', 'angulartics.google.analytics',
-        'toaster', 'ngAnimate', 'ngFileUpload',
+        'toaster', 'ngFileUpload',
         'leaflet-directive',
         'GroundWaterWatch.Services',
         'GroundWaterWatch.Controllers',

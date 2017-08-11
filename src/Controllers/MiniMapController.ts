@@ -121,7 +121,7 @@ module GroundWaterWatch.Controllers {
             this.center = {
                 lat: 38,
                 lng: -96,
-                zoom: 4
+                zoom: 1
             }
             this.defaults = {
                 scrollWheelZoom: false,
@@ -130,7 +130,8 @@ module GroundWaterWatch.Controllers {
                 boxZoom: false,
                 keyboard: false,
                 zoomControl: false,
-                attributionControl: false
+                attributionControl: false,
+                dragging: false
             }
             this.layers = {
                 //baselayers: {

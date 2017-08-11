@@ -42,7 +42,12 @@
             <div class="sidebar-item">
                 <a ng-class="vm.selectedProcedure == 2  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(2)">Primary Networks<h5 ng-show="vm.SelectedNetwork"><strong>{{vm.SelectedNetwork.Name}}</strong><i ng-click="vm.openStatePage($event, vm.regionService.selectedRegion.Name)" class="fa fa-info-circle"></i></h5><i ng-class="vm.selectedProcedure == 2 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-if="vm.selectedProcedure == 2">
-                    <div class="wim-alert">Click or Tap a minimap to switch network display</div>
+                    <div class="wim-alert">Select a state network OR click/tap a minimap to switch network display</div>
+
+                    <select ng-model="vm.selectedStateNetworkItem"
+                            ng-options="item.name for item in vm.States">
+                        <option value="">-- Select a state network -- </option>
+                    </select>
 
                     <div ng-repeat="pn in vm.PrimaryNetworks" ng-controller="GroundWaterWatch.Controllers.MiniMapController" ng-init="vm.initialize(pn)">
                         <div class="miniMapPanel" ng-class="vm.isSelected  ? 'panel panel-success': 'panel panel-default'"
@@ -89,6 +94,11 @@
                                 <img ng-if="pn.code == 'NCH'" src="./images/nch.jpg" alt="National Composite Hydrographs" height="200">
                             </div>
                         </div>
+                        
+                    <!--<select ng-model="vm.selectedStateNetworkItem"
+                            ng-options="item.name for item in vm.States">
+                        <option value="">-- Select a state network -- <b>&nbsp;&nbsp;&#9660;</b></option>
+                    </select>-->
                     </div>
                 </div>
             </div>
@@ -96,24 +106,24 @@
                 <a ng-class="vm.selectedProcedure == 3  ? 'list-group-item-active': 'list-group-item'" ng-click="vm.setProcedureType(3)">Other Networks<i ng-class="vm.selectedProcedure == 3 ? 'fa fa-chevron-right pull-right': 'fa fa-chevron-down pull-right'"></i></a>
                 <div class="list-group-body" ng-hide="vm.selectedProcedure != 3">
                     <!--<div class="wim-alert">Use filters to limit groundwater sites by state and counties, principle aquifers, and State and local networks.</div>-->
-                    <div class="wim-alert">Networks listed below allow you to open specific pages organized by State, Aquifer or local network.</div>
+                    <div class="wim-alert">Networks listed below allow you to open specific pages organized by Aquifer or local network.</div>
                     <!--<div ng-repeat="filter in vm.SelectedFilters track by $index">
                         <button class="btn-wim-sm btn-wim-default btn-group-justified" ng-click="vm.removeFilter($index,filter)"><i class="fa fa-times pull-right"></i>&nbsp;&nbsp;<span>{{filter.item.name}} </span></button>
                     </div>-->
 
-                    <select ng-model="vm.selectedStateNetworkItem"
+                    <!--<select ng-model="vm.selectedStateNetworkItem"
                             ng-options="item.name for item in vm.States">
-                        <option value="">-- Select a state network -- <b>&nbsp;&nbsp;&#9660;</b></option>
-                    </select>
+                        <option value="">-- Select a state network --</option>
+                    </select>-->
 
                     <select ng-model="vm.selectedAquiferNetworkItem"
                             ng-options="item.name for item in vm.Aquifers">
-                        <option value="">-- Select an aquifer network -- <b>&nbsp;&nbsp;&#9660;</b></option>
+                        <option value="">-- Select an aquifer network --</option>
                     </select>
                     
                     <select ng-model="vm.selectedLocalNetworkItem"
                             ng-options="item.name for item in vm.LocalNetworks">
-                        <option value="">-- Select a local network -- <b>&nbsp;&nbsp;&#9660;</b></option>
+                        <option value="">-- Select a local network --</option>
                     </select>
 
                     <!--<div class="row">

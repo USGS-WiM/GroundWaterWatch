@@ -7,7 +7,6 @@
     <title>Groundwater Watch</title>
      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script>document.write('<base href="' + document.location + '" />');</script>
-    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" href="styles/vendor.min.css">
     <link rel="stylesheet" href="styles/custom.min.css">
     <script src="scripts/vendor.min.js"></script>
@@ -22,10 +21,10 @@
         ga('create', 'UA-61219868-13', 'auto');
     </script>
 </head>
-<body>
-    <div ui-view="navbar" class="wim-nav"></div>
-    <div ui-view="sidebar" class="sidebar sidebar-left"></div>
-    <div ui-view="map" class="app app-body"></div>
+<body ng-class="!isShown ? 'no-padding':''">
+    <div ng-if="isShown" ui-view="navbar" class="wim-nav"></div>
+    <div ng-show="isShown" ui-view="sidebar" class="sidebar sidebar-left"></div>
+    <div ng-class="!isShown ? 'no-margin no padding':'app-body'" ui-view="map" class="app"></div>
     <toaster-container toaster-options="{'position-class': 'toast-bottom-right', 'close-button':false, 'prevent-duplicates': true}"></toaster-container>    
 </body>
 </html>
