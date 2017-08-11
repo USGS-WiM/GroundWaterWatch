@@ -123,7 +123,7 @@ gulp.task('leaflet', function () {
 
 // usgs-search-api
 gulp.task('usgs-search-api', function () {
-    return gulp.src('node_modules/usgs-search-api/dist/*.gif')
+    return gulp.src('bower_components/usgs-search-api/dist/*.gif')
         .pipe(gulp.dest('dist/styles/images'))
         .pipe(size());
 });
