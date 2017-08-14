@@ -6,8 +6,8 @@ configuration.baseurls =
     'gwwURL': 'http://152.61.235.95',
     'SearchAPI': 'http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx',
     'NationalMapRasterServices': 'http://raster.nationalmap.gov/arcgis/rest/services',
-    //'GroundWaterWatch': 'https://cida.usgs.gov/gww-geoserver/',
-    'GroundWaterWatch': 'https://cida-test.er.usgs.gov/gww-geoserver/',
+    'GroundWaterWatch': 'https://cida.usgs.gov/gww-geoserver/',
+    //'GroundWaterWatch': 'https://cida-test.er.usgs.gov/gww-geoserver/',
     'NationalCompositeHydrographs': 'https://groundwaterwatch.usgs.gov/composite.asp'
 }
 

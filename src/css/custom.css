@@ -32,6 +32,19 @@
     box-shadow: none !important;
 }
 
+.explanation-collapsed.ng-scope:after {
+    font-size: 14px;
+    display: block;
+    content: 'Explanation';
+    background-color: white;
+    letter-spacing: 0.25px;
+    width: 115px;
+    margin-left: 35px;
+    box-sizing: border-box;
+    padding: 7.5px 3px 7.5px 0;
+    text-align: left;
+    margin-top: 0;
+}
 
 .exploration-tools-collapsed.ng-scope:after {
     font-size: 14px;
@@ -61,6 +74,11 @@
         width: 89% !important;
         top: 70px !important;
     }
+    .explanation-expanded {
+        width: 89% !important;
+        top: 70px !important;
+    }
+
 }
 #mainMap .leaflet-top .leaflet-control{
     margin-top: 55px !important;

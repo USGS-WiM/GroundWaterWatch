@@ -174,7 +174,60 @@ div.leaflet-top > .elevation {
     left:10px;
 }
 
+.explanation-header {
+    height: 30px;
+    display: inline-block;
+    float: right;
+}
 
+.explanation-header .close {
+    font-size: 22pt;
+    margin: 0 auto;
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+    background-color: white;
+    border-radius: 50%;
+    box-sizing: border-box;
+    padding: 0 0 2px 0;
+    float: right;
+    color: rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 5px #333;
+    position: relative;
+    left: 10px;
+    top: -25px;
+}
+
+.explanation-header .close:hover {
+    border: none;
+    color: rgba(44,116,183,.5);
+}
+
+.explanation-collapsed {
+    position: absolute;
+    background: white;
+    z-index: 100;
+    right: 120px;
+    bottom: 200px;
+    transition: all .2s;
+    font-size: 12pt;
+    box-sizing: border-box;
+    padding: 0;
+    height: 36px;
+    width: 36px;
+}
+
+.explanation-expanded {
+    position: absolute;
+    background: white;
+    z-index: 100;
+    width: 600px;
+    right: 120px;
+    bottom: 200px;
+    box-shadow: 1px 1px 5px #333;
+    padding: 10px;
+    transition: all .2s;
+}
 
 .exploration-tools-header {
     height: 30px;

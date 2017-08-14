@@ -30,6 +30,17 @@
                 </div>
             </div>
         </div>
+        <div ng-if="isShown" ng-class="vm.explanationExpanded ? 'explanation-expanded ' : 'explanation-collapsed '" ng-click="vm.explanationExpanded = true; $event.stopPropagation(); $event.preventDefault();" ng-init="vm.explanationExpanded == false">
+            <div ng-show="vm.explanationExpanded">
+                <div class="row exploration-tools-header">
+                    <h4 >Explanation</h4>
+                    <button class="close explanation-close-button" ng-click="vm.explanationExpanded= false; $event.stopPropagation();">&times;</button>
+                </div>
+                <div class="group-wrapper">
+                    <img src="./images/ptile4.gif" alt="Explanation" style="width:573px;height:80px;">
+                </div>
+            </div>
+        </div>
     </leaflet>
     <!--sitelist Table if just-->
 <!--</div>-->
