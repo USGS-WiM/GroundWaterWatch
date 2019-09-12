@@ -32,11 +32,11 @@ var GroundWaterWatch;
             SiteListController.prototype.toggleShown = function () {
                 this.isShown = !this.isShown;
             };
-            //Constructor
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            SiteListController.$inject = ['$scope', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return SiteListController;
         }()); //end class
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        SiteListController.$inject = ['$scope', 'GroundWaterWatch.Services.GroundWaterWatchService'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.SiteListController', SiteListController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

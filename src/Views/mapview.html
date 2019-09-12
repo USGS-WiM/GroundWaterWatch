@@ -1,4 +1,4 @@
-﻿<div ng-class="vm.SiteListEnabled? 'map-wrapper resizableMapTop-enabled':'map-wrapper'" resizable r-directions=" ['bottom']">
+﻿<!--<div ng-class="vm.SiteListEnabled? 'map-wrapper resizableMapTop-enabled':'map-wrapper'" resizable r-directions=" ['bottom']">-->
     <leaflet id="mainMap" layers="vm.layers" geojson="vm.geojson" geojson-nested="true" center="vm.center" controls="vm.controls" markers="vm.markers" defaults="vm.mapDefaults" bounds="vm.bounds" ng-style="{cursor:vm.cursorStyle}">
         <!--<i id="loadingSpinner" class="fa fa-spinner fa-5x fa-spin"></i>-->
         <wim-legend></wim-legend>
@@ -30,10 +30,21 @@
                 </div>
             </div>
         </div>
+        <div ng-if="isShown" ng-class="vm.explanationExpanded ? 'explanation-expanded ' : 'explanation-collapsed '" ng-click="vm.explanationExpanded = true; $event.stopPropagation(); $event.preventDefault();" ng-init="vm.explanationExpanded == false">
+            <div ng-show="vm.explanationExpanded">
+                <div class="row exploration-tools-header">
+                    <h4 >Explanation</h4>
+                    <button class="close explanation-close-button" ng-click="vm.explanationExpanded= false; $event.stopPropagation();">&times;</button>
+                </div>
+                <div class="group-wrapper">
+                    <img src="./images/ptile4.gif" alt="Explanation" style="width:573px;height:80px;">
+                </div>
+            </div>
+        </div>
     </leaflet>
     <!--sitelist Table if just-->
-</div>
-<div ng-if="vm.SiteListEnabled" class="well well-sm" ng-show="vm.SiteList.length > 0">
+<!--</div>-->
+<!--<div ng-if="vm.SiteListEnabled" class="well well-sm" ng-show="vm.SiteList.length > 0">
     <h4>Available Sites</h4>
     <table class="table table-condensed">
         <thead class="param-table">
@@ -60,7 +71,7 @@
             </tr>
         </tbody>
     </table>
-</div> 
+</div>--> 
 
 
 

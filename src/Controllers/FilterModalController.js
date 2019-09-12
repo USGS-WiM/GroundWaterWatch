@@ -107,11 +107,11 @@ var GroundWaterWatch;
                 this.SelectedCounties = [];
                 this.SelectedState = [];
             };
-            //Constructor
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            FilterModalController.$inject = ['$scope', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService'];
             return FilterModalController;
         }()); //end  class
+        //Constructor
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        FilterModalController.$inject = ['$scope', '$modalInstance', 'GroundWaterWatch.Services.GroundWaterWatchService'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.FilterModalController', FilterModalController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

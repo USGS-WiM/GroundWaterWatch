@@ -1,11 +1,16 @@
 //------------------------------------------------------------------------------
 //----- GroundWaterWatchService -----------------------------------------------------
 //------------------------------------------------------------------------------
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
@@ -35,9 +40,10 @@ var GroundWaterWatch;
             function GWSiteSelectionEventArgs(featurelist, bbox) {
                 if (featurelist === void 0) { featurelist = []; }
                 if (bbox === void 0) { bbox = null; }
-                _super.call(this);
-                this.featurelist = featurelist;
-                this.bbox = bbox;
+                var _this = _super.call(this) || this;
+                _this.featurelist = featurelist;
+                _this.bbox = bbox;
+                return _this;
             }
             return GWSiteSelectionEventArgs;
         }(WiM.Event.EventArgs));
@@ -57,16 +63,17 @@ var GroundWaterWatch;
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             function GroundWaterWatchService($http, evntmngr, $stateParams, toaster) {
-                _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
-                this.toaster = toaster;
-                this.SelectedGWFilters = [];
-                this.mapCenter = null;
-                this._eventManager = evntmngr;
-                this.queriedGWsite = false;
-                this.init();
+                var _this = _super.call(this, $http, configuration.baseurls['GroundWaterWatch']) || this;
+                _this.toaster = toaster;
+                _this.SelectedGWFilters = [];
+                _this.mapCenter = null;
+                _this._eventManager = evntmngr;
+                _this.queriedGWsite = false;
+                _this.init();
                 if ($stateParams.ncd || $stateParams.sc || $stateParams.cc || $stateParams.S)
-                    return;
-                this.loadLookups();
+                    return _this;
+                _this.loadLookups();
+                return _this;
             }
             Object.defineProperty(GroundWaterWatchService.prototype, "GWSiteList", {
                 get: function () {
@@ -266,7 +273,7 @@ var GroundWaterWatch;
                 this._GWSiteList = [];
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
                 this._eventManager.AddEvent(Services.onSelectedGWSiteChanged);
-                this.mapCenter = new Center(39, -100, 3);
+                this.mapCenter = new Center(38, -96, 4);
             };
             GroundWaterWatchService.prototype.loadLookups = function () {
                 this.loadStates();

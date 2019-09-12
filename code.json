@@ -1,0 +1,48 @@
+[
+  {
+    "name": "GroundWaterWatch",
+    "organization": "U.S. Geological Survey",
+    "description": "Groundwaterwatch client mapping application",
+    "version": "v0.0.1",
+    "statusOptionsURL":"https://github.com/GSA/code-gov-web/blob/master/src/assets/schemas/2.0.0.json#L144-L152",
+	"status": "preliminary",	
+
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain, CC0-1.0",
+          "URL": "https://github.com/usgs/best-practices/blob/master/LICENSE.md"
+        }
+      ]
+    },
+
+    "homepageURL": "https://wim.usgs.gov",
+    "downloadURL": "https://github.com/USGS-WiM/GroundWaterWatch/archive/master.zip",
+    "disclaimerURL": "https://github.com/USGS-WiM/GroundWaterWatch/blob/master/DISCLAIMER.md",
+    "repositoryUrl": "https://github.com/USGS-WiM/GroundWaterWatch",
+    "vcs": "git",
+
+    "laborHours": null,
+
+    "tags": [
+      "Streamstats",
+      "Services",
+	  "REST",
+	  "Navigation"
+    ],
+
+    "languages": [
+      "c#"
+    ],
+
+    "contact": {
+      "name": "Jeremy Newson",
+      "email": "jknewson@usgs.gov"
+    },
+
+    "date": {
+      "metadataLastUpdated": "2017-10-25"
+    }
+  }
+]

@@ -292,7 +292,7 @@ module GroundWaterWatch.Services {
             this._eventManager.AddEvent(onSelectedGWSiteChanged);
             this._eventManager.AddEvent<GWSiteSelectionEventArgs>(onSelectedGWSiteChanged);
 
-            this.mapCenter = new Center(39, -100, 3);
+            this.mapCenter = new Center(38, -96, 4);
         }
         private loadLookups(): void {
             this.loadStates();

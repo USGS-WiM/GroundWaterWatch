@@ -33,14 +33,14 @@ var GroundWaterWatch;
             //turns of angular-leaflet console spam
             this.$logProvider.debugEnabled(false);
         } //end constructor
-        config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
         return config;
     }()); //end class
+    config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider'];
     angular.module('GroundWaterWatch', [
         'ui.router', 'ui.bootstrap', 'ui.checkbox',
         'mobile-angular-ui',
         'angulartics', 'angulartics.google.analytics',
-        'toaster', 'ngAnimate', 'ngFileUpload',
+        'toaster', 'ngFileUpload',
         'leaflet-directive',
         'GroundWaterWatch.Services',
         'GroundWaterWatch.Controllers',

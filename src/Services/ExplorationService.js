@@ -1,11 +1,16 @@
 //------------------------------------------------------------------------------
 //----- StudyAreaService -------------------------------------------------------
 //------------------------------------------------------------------------------
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
@@ -32,14 +37,15 @@ var GroundWaterWatch;
             //Constructor
             //-+-+-+-+-+-+-+-+-+-+-+-
             function ExplorationService($http, $q, toaster) {
-                _super.call(this, $http, configuration.baseurls['GroundWaterWatch']);
-                this.$q = $q;
-                this.toaster = toaster;
-                this.drawElevationProfile = false;
-                this.drawMeasurement = false;
-                this.showElevationChart = false;
-                this.allowStreamgageQuery = false;
-                this.measurementData = '';
+                var _this = _super.call(this, $http, configuration.baseurls['GroundWaterWatch']) || this;
+                _this.$q = $q;
+                _this.toaster = toaster;
+                _this.drawElevationProfile = false;
+                _this.drawMeasurement = false;
+                _this.showElevationChart = false;
+                _this.allowStreamgageQuery = false;
+                _this.measurementData = '';
+                return _this;
             }
             //Methods
             //-+-+-+-+-+-+-+-+-+-+-+-

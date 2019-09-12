@@ -1,11 +1,16 @@
 //------------------------------------------------------------------------------
 //----- MapController ----------------------------------------------------------
 //------------------------------------------------------------------------------
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //-------1---------2---------3---------4---------5---------6---------7---------8
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
@@ -70,12 +75,13 @@ var GroundWaterWatch;
         var BoundingBoxChangedEventArgs = (function (_super) {
             __extends(BoundingBoxChangedEventArgs, _super);
             function BoundingBoxChangedEventArgs(bbox, zoomlevel) {
-                _super.call(this);
-                this.zoomlevel = zoomlevel;
-                this.northern = bbox.northEast.lng;
-                this.southern = bbox.southWest.lng;
-                this.eastern = bbox.northEast.lat;
-                this.western = bbox.southWest.lat;
+                var _this = _super.call(this) || this;
+                _this.zoomlevel = zoomlevel;
+                _this.northern = bbox.northEast.lng;
+                _this.southern = bbox.southWest.lng;
+                _this.eastern = bbox.northEast.lat;
+                _this.western = bbox.southWest.lat;
+                return _this;
             }
             return BoundingBoxChangedEventArgs;
         }(WiM.Event.EventArgs));
@@ -91,6 +97,7 @@ var GroundWaterWatch;
                 this.mapPoint = null;
                 this.bounds = null;
                 this.markers = null;
+                this.paths = null;
                 this.geojson = null;
                 this.events = null;
                 this.layercontrol = null;
@@ -429,22 +436,34 @@ var GroundWaterWatch;
             MapController.prototype.onSelectedAreaOfInterestChanged = function (sender, e) {
                 //ga event
                 this.angulartics.eventTrack('Search', { category: 'Sidebar' });
-                this.markers = {};
+                this.paths = {};
                 var AOI = e.selectedAreaOfInterest;
-                if (AOI.Category == "U.S. State or Territory")
-                    var zoomlevel = 9;
-                else
-                    var zoomlevel = 14;
-                this.markers['AOI'] = {
-                    lat: AOI.Latitude,
-                    lng: AOI.Longitude,
-                    message: AOI.Name,
-                    focus: true,
-                    draggable: false
+                this.paths['AOI'] = {
+                    type: "circleMarker",
+                    radius: 15,
+                    color: '#ff0000',
+                    fillOpacity: 0.6,
+                    stroke: false,
+                    latlngs: {
+                        lat: AOI.properties['Lat'],
+                        lng: AOI.properties['Lon'],
+                    }
                 };
-                //this.center = new Center(AOI.Latitude, AOI.Longitude, zoomlevel);
                 this.leafletData.getMap("mainMap").then(function (map) {
-                    map.setView([AOI.Latitude, AOI.Longitude], zoomlevel);
+                    map.fitBounds([
+                        [AOI.properties['LatMin'], AOI.properties['LonMin']],
+                        [AOI.properties['LatMax'], AOI.properties['LonMax']]
+                    ]);
+                    //force level 8
+                    setTimeout(function () {
+                        if (map.getZoom() < 8)
+                            map.setZoom(8);
+                    }, 500);
+                    map.openPopup(// open popup at location listing all properties
+                    $.map(Object.keys(AOI.properties), function (property) {
+                        if (["Label", "ElevFt", "Lat", "Lon", "Source"].indexOf(property) != 0 - 1)
+                            return "<b>" + property + ": </b>" + AOI.properties[property];
+                    }).join("<br/>"), [AOI.properties['Lat'], AOI.properties['Lon']]);
                 });
             };
             MapController.prototype.onGWSiteSelectionChanged = function (sender, e) {
@@ -514,6 +533,9 @@ var GroundWaterWatch;
                             style: {
                                 "fillOpacity": 0
                             }
+                            //onEachFeature: (feature, layer) => {
+                            //    layer.bindLabel(LayerName, { noHide: true })
+                            //}
                         };
                 }
             };
@@ -524,6 +546,11 @@ var GroundWaterWatch;
                     else {
                         //get feature
                         var value = null;
+                        //for (var i = 0; i < this.studyArea.selectedStudyArea.Features.length; i++) {
+                        //    var item = angular.fromJson(angular.toJson(this.studyArea.selectedStudyArea.Features[i]));
+                        //    if (item.name == e.LayerName)
+                        //        this.addGeoJSON(e.LayerName, item.feature);
+                        //}//next
                     } //end if  
                 } //end if
             };
@@ -565,6 +592,8 @@ var GroundWaterWatch;
                 var _this = this;
                 if (!this.initialized)
                     return;
+                //remove any selected sites
+                this.removeGeoJson("gwwsite", true);
                 this.leafletData.getMap("mainMap").then(function (map) {
                     _this.leafletData.getLayers("mainMap").then(function (maplayers) {
                         //gww sites
@@ -675,11 +704,11 @@ var GroundWaterWatch;
                     return "List";
                 }
             };
-            //Constructro
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MapController;
         }()); //end class
+        //Constructro
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        MapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Services.SearchAPIService', 'GroundWaterWatch.Services.ExplorationService', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MapController', MapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

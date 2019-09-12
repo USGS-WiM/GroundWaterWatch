@@ -63,7 +63,12 @@ var GroundWaterWatch;
             MiniMapController.prototype.setMainNetwork = function () {
                 if (!this.selectedNetwork)
                     return;
-                this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+                if (this.selectedNetwork.code == 'NCH') {
+                    window.open(configuration.baseurls.NationalCompositeHydrographs);
+                }
+                else {
+                    this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+                }
             };
             MiniMapController.prototype.updateNetworkDescriptor = function (propertyName, value) {
                 var _this = this;
@@ -84,7 +89,12 @@ var GroundWaterWatch;
             //Helper Methods
             //-+-+-+-+-+-+-+-+-+-+-+-
             MiniMapController.prototype.init = function () {
-                this.center = this.gwwService.mapCenter;
+                //this.center = this.gwwService.mapCenter;
+                this.center = {
+                    lat: 38,
+                    lng: -96,
+                    zoom: 1
+                };
                 this.defaults = {
                     scrollWheelZoom: false,
                     touchZoom: false,
@@ -92,9 +102,17 @@ var GroundWaterWatch;
                     boxZoom: false,
                     keyboard: false,
                     zoomControl: false,
-                    attributionControl: false
+                    attributionControl: false,
+                    dragging: false
                 };
                 this.layers = {
+                    //baselayers: {
+                    //    aquifers: {
+                    //        name: 'Aquifers',
+                    //        url: 'https://nwismapper.s3.amazonaws.com/pr_aq/{z}/{y}/{x}.png',
+                    //        type: 'xyz'
+                    //    }
+                    //},
                     baselayers: configuration.basemaps,
                     overlays: { gww: configuration.overlayedLayers.gww }
                 };
@@ -109,11 +127,11 @@ var GroundWaterWatch;
                     maplayers.overlays["gww"].redraw();
                 });
             };
-            //Constructro
-            //-+-+-+-+-+-+-+-+-+-+-+-
-            MiniMapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
             return MiniMapController;
         }()); //end class
+        //Constructro
+        //-+-+-+-+-+-+-+-+-+-+-+-
+        MiniMapController.$inject = ['$scope', '$rootScope', 'toaster', '$analytics', '$location', '$stateParams', 'leafletBoundsHelpers', 'leafletData', 'WiM.Event.EventManager', 'GroundWaterWatch.Services.GroundWaterWatchService', 'GroundWaterWatch.Services.ModalService', '$timeout'];
         angular.module('GroundWaterWatch.Controllers')
             .controller('GroundWaterWatch.Controllers.MiniMapController', MiniMapController);
     })(Controllers = GroundWaterWatch.Controllers || (GroundWaterWatch.Controllers = {}));

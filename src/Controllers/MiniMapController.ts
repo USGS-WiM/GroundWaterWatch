@@ -92,7 +92,12 @@ module GroundWaterWatch.Controllers {
         }
         public setMainNetwork() {
             if (!this.selectedNetwork) return;
-            this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+            if (this.selectedNetwork.code == 'NCH') {
+                window.open(configuration.baseurls.NationalCompositeHydrographs);
+            }
+            else {
+                this.gwwService.SelectedPrimaryNetwork = this.selectedNetwork;
+            }
         }
         public updateNetworkDescriptor(propertyName: string, value: any) {
             if (this.NetworkDescriptor.hasOwnProperty(propertyName)) this.NetworkDescriptor[propertyName] = value;
@@ -112,7 +117,12 @@ module GroundWaterWatch.Controllers {
         //-+-+-+-+-+-+-+-+-+-+-+-
         private init(): void {
 
-            this.center = this.gwwService.mapCenter;
+            //this.center = this.gwwService.mapCenter;
+            this.center = {
+                lat: 38,
+                lng: -96,
+                zoom: 1
+            }
             this.defaults = {
                 scrollWheelZoom: false,
                 touchZoom: false,
@@ -120,9 +130,17 @@ module GroundWaterWatch.Controllers {
                 boxZoom: false,
                 keyboard: false,
                 zoomControl: false,
-                attributionControl: false
+                attributionControl: false,
+                dragging: false
             }
             this.layers = {
+                //baselayers: {
+                //    aquifers: {
+                //        name: 'Aquifers',
+                //        url: 'https://nwismapper.s3.amazonaws.com/pr_aq/{z}/{y}/{x}.png',
+                //        type: 'xyz'
+                //    }
+                //},
                 baselayers: configuration.basemaps,
                 overlays: { gww: configuration.overlayedLayers.gww }
             }
